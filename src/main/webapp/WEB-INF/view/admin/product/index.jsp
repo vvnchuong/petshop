@@ -12,7 +12,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content=" - Dự án Petshop" />
                 <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
+                <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -29,8 +29,8 @@
                             <div class="row">
                                 <div class="col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
-                                        <h3>Table products</h3>
-                                        <a href="/admin/product/create" class="btn btn-primary">Create a product</a>
+                                        <h3>Danh sách sản phẩm</h3>
+                                        <a href="/admin/product/create" class="btn btn-primary">Thêm sản phẩm</a>
                                     </div>
 
                                     <hr />
@@ -38,10 +38,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Id</th>
-                                                <th>Name</th>
-                                                <th>Price</th>
-                                                <th>Factory</th>
-                                                <th>Action</th>
+                                                <th>Tên sản phẩm</th>
+                                                <th>Giá</th>
+                                                <th>Thương hiệu</th>
+                                                <th>Thực hiện</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -52,14 +52,14 @@
                                                     <td><fmt:formatNumber
                                                                         value="${product.price}"
                                                                         type="number" groupingUsed="true" /> đ</td>
-                                                    <td>${product.factory}</td>
+                                                    <td>${product.brand.name}</td>
                                                     <td>
                                                         <a href="/admin/product/${product.id}"
-                                                            class="btn btn-success">View</a>
+                                                            class="btn btn-success">Chi tiết</a>
                                                         <a href="/admin/product/update/${product.id}"
-                                                            class="btn btn-warning">Update</a>
+                                                            class="btn btn-warning">Cập nhật</a>
                                                         <a href="/admin/product/delete/${product.id}"
-                                                            class="btn btn-danger">Delete</a>
+                                                            class="btn btn-danger">Xóa</a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

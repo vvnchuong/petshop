@@ -20,6 +20,8 @@ public class Subcategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    String name;
+
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
     PetType petType;

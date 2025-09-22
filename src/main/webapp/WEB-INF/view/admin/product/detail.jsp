@@ -12,7 +12,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content=" - Dự án Petshop" />
                 <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
+                <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -32,30 +32,31 @@
                             <div class="row">
                                 <div class="col-md-6 col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
-                                        <h3>User detail with id = ${product.id}</h3>
+                                        <h3>Thông tin chi tiết</h3>
                                     </div>
-                                    <!-- product map với product trong ProductController -->
                                     <hr />
+
                                     <div class="card" style="width: 60%">
                                         <div class="card-header">
-                                            Product Information
+                                            Thông tin sản phẩm
                                         </div>
-                                        <img src="/images/product/${product.image}" alt="laptop"
+                                        <img src="/images/product/${product.imageUrl}" alt="product"
                                             class="mb-3">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">Id: ${product.id}</li>
-                                            <li class="list-group-item">Name: ${product.name}</li>
-                                            <li class="list-group-item">Price: ${product.price}</li>
-                                            <li class="list-group-item">Detail description: ${product.detailDesc}</li>
-                                            <li class="list-group-item">Short description: ${product.shortDesc}</li>
-                                            <li class="list-group-item">Quantity: ${product.quantity}</li>
-                                            <li class="list-group-item">Sold: ${product.sold}</li>
-                                            <li class="list-group-item">Factory: ${product.factory}</li>
-                                            <li class="list-group-item">Target: ${product.target}</li>
+                                            <li class="list-group-item">Tên sản phẩm: ${product.name}</li>
+                                            <li class="list-group-item">Danh mục: ${product.subcategory.category.name}
+                                            </li>
+                                            <li class="list-group-item">Danh mục phụ: ${product.subcategory.name}</li>
+                                            <li class="list-group-item">Thương hiệu: ${product.brand.name}</li>
+                                            <li class="list-group-item">Mô tả: ${product.description}</li>
+                                            <li class="list-group-item">Dành cho: ${product.subcategory.petType.name}</li>
+                                            <li class="list-group-item">Giá: ${product.price}</li>
+                                            <li class="list-group-item">Số lượng: ${product.stock}</li>
                                         </ul>
                                     </div>
                                     <div class="mt-3">
-                                        <a href="/admin/product" class="btn btn-success">Back</a>
+                                        <a href="/admin/product" class="btn btn-success">Quay lại</a>
                                     </div>
                                 </div>
                             </div>

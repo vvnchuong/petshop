@@ -29,7 +29,7 @@
                                 <div class="col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
                                         <h3>Danh sách người dùng</h3>
-                                        <a href="/admin/user/create" class="btn btn-primary">Tạo người dùng</a>
+                                        <a href="/admin/user/create" class="btn btn-primary">Thêm người dùng</a>
                                     </div>
 
                                     <hr />
