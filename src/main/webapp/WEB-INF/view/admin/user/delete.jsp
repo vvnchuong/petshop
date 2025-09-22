@@ -12,7 +12,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content=" - Dự án Petshop" />
                 <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
+                <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -32,17 +32,17 @@
                             <div class="row">
                                 <div class="col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
-                                        <h3>User detail with id = ${id}</h3>
+                                        <h3>Xóa người dùng</h3>
                                     </div>
 
                                     <hr />
                                     <div class="md-6" style="width: 60%">
                                         <div class="alert alert-danger" role="alert">
-                                            Are you sure to remove this user?
+                                            Bạn có muốn chắc chắn sẽ xóa người dùng này không?
                                         </div>
                                     </div>
                                     <form:form method="post" action="/admin/user/delete/${id}">
-                                        <button class="btn btn-danger">Delete</button>
+                                        <button class="btn btn-danger">Xóa</button>
                                     </form:form>
                                 </div>
                             </div>

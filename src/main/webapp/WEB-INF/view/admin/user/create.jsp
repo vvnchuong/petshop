@@ -38,7 +38,7 @@
                         <div class="container mt-5">
                             <div class="row">
                                 <div class="col-md-6 col-12 mx-auto">
-                                    <h3>Create a user</h3>
+                                    <h3>Tạo mới người dùng</h3>
                                     <hr />
                                     <form:form method="post" action="/admin/user/create" modelAttribute="newUser"
                                      enctype="multipart/form-data">
@@ -54,17 +54,27 @@
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
+                                                <c:set var="errorUsername">
+                                                    <form:errors path="email" cssClass="invalid-feedback"/>
+                                                </c:set>
+                                                <div class="form-label">Tên đăng nhập</div>
+                                                <form:input type="text" class="form-control ${not empty errorUsername ? 'is-invalid' : ''}" 
+                                                    path="username" /> ${errorUsername}
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
                                                 <c:set var="errorPassword">
                                                     <form:errors path="password" cssClass="invalid-feedback"/>
                                                 </c:set>
-                                                <div class="form-label">Password</div>
+                                                <div class="form-label">Mật khẩu</div>
                                                 <form:input type="password" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" 
                                                     path="password" />${errorPassword}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
-                                                <div class="form-label">Phone number</div>
+                                                <div class="form-label">Số điện thoại</div>
                                                 <form:input type="text" class="form-control" path="phone" />
                                             </div>
                                         </div>
@@ -73,27 +83,27 @@
                                                  <c:set var="errorFullName">
                                                     <form:errors path="fullName" cssClass="invalid-feedback"/>
                                                 </c:set>
-                                                <div class="form-label">Full Name</div>
+                                                <div class="form-label">Họ tên</div>
                                                 <form:input type="text" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" 
                                                     path="fullName" />${errorFullName}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12">
-                                                <div class="form-label">Address</div>
+                                                <div class="form-label">Địa chỉ</div>
                                                 <form:input type="text" class="form-control" path="address" />
                                             </div>
                                         </div>
 
                                         <div class="mb-3 col-12 col-md-6">
-                                            <label class="form-label">Role</label>
+                                            <label class="form-label">Vai trò</label>
                                             <form:select class="form-select" path="role.name">
                                                 <form:option value="ADMIN">ADMIN</form:option>
-                                                <form:option value="USER">USER</form:option>
+                                                <form:option value="CUSTOMER">CUSTOMER</form:option>
                                             </form:select>
                                         </div>
                                         <div class="mb-3 col-12 col-md-6">
-                                            <label for="avatarFile" class="form-label">Avatar</label>
+                                            <label for="avatarFile" class="form-label">Ảnh đại diện</label>
                                             <input type="file" class="form-control" id="avatarFile"
                                                 name="inputFile"
                                                 accept=".png, .jpg, .jpeg">
@@ -104,7 +114,7 @@
                                         </div>
 
                                         <div class="col-12 mb-5">
-                                            <button type="submit" class="btn btn-primary">Create</button>
+                                            <button type="submit" class="btn btn-primary">Tạo mới</button>
                                         </div>
                                     </form:form>
                                 </div>

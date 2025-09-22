@@ -11,7 +11,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content=" - Dự án Petshop" />
                 <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
+                <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -28,8 +28,8 @@
                             <div class="row">
                                 <div class="col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
-                                        <h3>Table users</h3>
-                                        <a href="/admin/user/create" class="btn btn-primary">Create a user</a>
+                                        <h3>Danh sách người dùng</h3>
+                                        <a href="/admin/user/create" class="btn btn-primary">Tạo người dùng</a>
                                     </div>
 
                                     <hr />
@@ -38,9 +38,9 @@
                                             <tr>
                                                 <th>Id</th>
                                                 <th>Email</th>
-                                                <th>Full name</th>
-                                                <th>Role</th>
-                                                <th>Action</th>
+                                                <th>Họ tên</th>
+                                                <th>Vai trò</th>
+                                                <th>Thực hiện</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -52,11 +52,11 @@
                                                     <td>${user.role.name}</td>
                                                     <td>
                                                         <a href="/admin/user/${user.id}"
-                                                            class="btn btn-success">View</a>
+                                                            class="btn btn-success">Chi tiết</a>
                                                         <a href="/admin/user/update/${user.id}"
-                                                            class="btn btn-warning">Update</a>
+                                                            class="btn btn-warning">Cập nhật</a>
                                                         <a href="/admin/user/delete/${user.id}"
-                                                            class="btn btn-danger">Delete</a>
+                                                            class="btn btn-danger">Xóa</a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

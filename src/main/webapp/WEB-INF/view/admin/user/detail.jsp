@@ -12,7 +12,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content=" - Dự án Petshop" />
                 <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
+                <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -32,26 +32,26 @@
                             <div class="row">
                                 <div class="col-md-6 col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
-                                        <h3>User detail with id = ${user.id}</h3>
+                                        <h3>Thông tin chi tiết</h3>
                                     </div>
 
                                     <hr />
                                     <div class="card" style="width: 60%">
                                         <div class="card-header">
-                                            User Information
+                                            Thông tin người dùng
                                         </div>
 
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">Id: ${user.id}</li>
                                             <li class="list-group-item">Email: ${user.email}</li>
-                                            <li class="list-group-item">Full Name: ${user.fullName}</li>
-                                            <li class="list-group-item">Role: ${user.role.name}</li>
-                                            <li class="list-group-item">Phone number: ${user.phone}</li>
-                                            <li class="list-group-item">Address: ${user.address}</li>
+                                            <li class="list-group-item">Họ tên: ${user.fullName}</li>
+                                            <li class="list-group-item">Vai trò: ${user.role.name}</li>
+                                            <li class="list-group-item">Số điện thoại: ${user.phone}</li>
+                                            <li class="list-group-item">Địa chỉ: ${user.address}</li>
                                         </ul>
                                     </div>
                                     <div class="mt-3">
-                                        <a href="/admin/user" class="btn btn-success">Back</a>
+                                        <a href="/admin/user" class="btn btn-success">Quay lại</a>
                                     </div>
                                 </div>
                             </div>

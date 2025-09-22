@@ -12,7 +12,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content=" - Dự án Petshop" />
                 <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
+                <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -31,31 +31,31 @@
                         <div class="container mt-5">
                             <div class="row">
                                 <div class="col-md-6 col-12 mx-auto">
-                                    <h3>Update user with id = ${id}</h3>
+                                    <h3>Cập nhật thông tin người dùng</h3>
                                     <hr />
                                     <form:form method="post" action="/admin/user/update/${id}" modelAttribute="newUser">
                                         <div class="mb-3">
-                                            <div class="form-label">id</div>
-                                            <form:input type="number" class="form-control" path="id" />
+                                            <div class="form-label">Id</div>
+                                            <form:input type="number" class="form-control" path="id" disabled="true" />
                                         </div>
                                         <div class="mb-3">
                                             <div class="form-label">Email</div>
-                                            <form:input type="email" class="form-control" path="email" />
+                                            <form:input type="email" class="form-control" path="email" disabled="true" />
                                         </div>
                                         <div class="mb-3">
-                                            <div class="form-label">Phone number</div>
+                                            <div class="form-label">Số điện thoại</div>
                                             <form:input type="text" class="form-control" path="phone" />
                                         </div>
                                         <div class="mb-3">
-                                            <div class="form-label">Full Name</div>
+                                            <div class="form-label">Họ tên</div>
                                             <form:input type="text" class="form-control" path="fullName" />
                                         </div>
                                         <div class="mb-3">
-                                            <div class="form-label">Address</div>
+                                            <div class="form-label">Địa chỉ</div>
                                             <form:input type="text" class="form-control" path="address" />
                                         </div>
 
-                                        <button type="submit" class="btn btn-warning">Update</button>
+                                        <button type="submit" class="btn btn-warning">Cập nhật</button>
                                     </form:form>
                                 </div>
                             </div>
