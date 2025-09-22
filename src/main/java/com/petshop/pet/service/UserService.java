@@ -1,6 +1,8 @@
 package com.petshop.pet.service;
 
+import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,11 +14,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final RoleRepository roleRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
+                       RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -31,7 +37,10 @@ public class UserService {
     public User createUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-       return userRepository.save(user);
+        Role role = roleRepository.findByName(user.getRole().getName());
+        user.setRole(role);
+
+        return userRepository.save(user);
     }
 
     public User updateUser(long id, User userUpdate){
