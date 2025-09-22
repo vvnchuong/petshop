@@ -38,7 +38,7 @@
                         <div class="container mt-5">
                             <div class="row">
                                 <div class="col-md-6 col-12 mx-auto">
-                                    <h3>Tạo mới người dùng</h3>
+                                    <h3>Thêm người dùng mới</h3>
                                     <hr />
                                     <form:form method="post" action="/admin/user/create" modelAttribute="newUser"
                                      enctype="multipart/form-data">
@@ -114,7 +114,7 @@
                                         </div>
 
                                         <div class="col-12 mb-5">
-                                            <button type="submit" class="btn btn-primary">Tạo mới</button>
+                                            <button type="submit" class="btn btn-primary">Thêm mới</button>
                                         </div>
                                     </form:form>
                                 </div>
