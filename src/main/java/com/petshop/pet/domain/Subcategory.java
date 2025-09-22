@@ -6,35 +6,29 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "products")
-public class Product {
+@Table(name = "subcategories")
+public class Subcategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    String name;
-
-    @Column(columnDefinition = "MEDIUMTEXT")
-    String description;
-
-    double price;
-
-    int stock;
-
-    String imageUrl;
-
-    Instant createdAt;
-    Instant updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "pet_type_id")
+    PetType petType;
 
     @ManyToOne
-    @JoinColumn(name = "subcategory_id")
-    Subcategory subcategory;
+    @JoinColumn(name = "category_id")
+    Category category;
+
+    @OneToMany(mappedBy = "subcategory")
+    List<Product> products = new ArrayList<>();
 
 }

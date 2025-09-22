@@ -6,14 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "products")
-public class Product {
+@Table(name = "pet_types")
+public class PetType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,20 +22,7 @@ public class Product {
 
     String name;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
-    String description;
-
-    double price;
-
-    int stock;
-
-    String imageUrl;
-
-    Instant createdAt;
-    Instant updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "subcategory_id")
-    Subcategory subcategory;
+    @OneToMany(mappedBy = "petType")
+    List<Subcategory> categories = new ArrayList<>();
 
 }
