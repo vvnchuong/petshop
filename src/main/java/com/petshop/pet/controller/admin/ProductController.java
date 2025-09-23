@@ -47,4 +47,19 @@ public class ProductController {
         return "redirect:/admin/product";
     }
 
+    @GetMapping("/admin/product/update/{id}")
+    public String getUpdateProductPage(Model model,
+                                       @PathVariable("id") long id){
+        Product product = productService.getProductById(id);
+        model.addAttribute("newProduct", product);
+        return "admin/product/update";
+    }
+
+    @PostMapping("/admin/product/update/{id}")
+    public String updateProduct(@PathVariable("id") long id,
+                                @ModelAttribute("newProduct") Product product){
+        productService.updateProduct(id, product);
+        return "redirect:/admin/product";
+    }
+
 }

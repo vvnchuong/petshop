@@ -56,6 +56,36 @@ public class ProductService {
                 product.getSubcategory().getPetType().getId());
         product.getSubcategory().setPetType(petType);
 
+        product.setCreatedAt(Instant.now());
+
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(long id, Product productUpdate){
+        Product product = productRepository.findById(id).get();
+
+        product.setName(productUpdate.getName());
+        product.setDescription(productUpdate.getDescription());
+        product.setPrice(productUpdate.getPrice());
+        product.setStock(productUpdate.getStock());
+
+        Brand brand = brandRepository.findById(productUpdate.getBrand().getId());
+        product.setBrand(brand);
+
+        Subcategory subcategory = subcategoryRepository.findById(
+                productUpdate.getSubcategory().getId());
+        product.setSubcategory(subcategory);
+
+        Category category = categoryRepository.findById(
+                productUpdate.getSubcategory().getCategory().getId());
+        product.getSubcategory().setCategory(category);
+
+        PetType petType = petTypeRepository.findById(
+                productUpdate.getSubcategory().getPetType().getId());
+        product.getSubcategory().setPetType(petType);
+
+        product.setUpdatedAt(Instant.now());
+
         return productRepository.save(product);
     }
 
