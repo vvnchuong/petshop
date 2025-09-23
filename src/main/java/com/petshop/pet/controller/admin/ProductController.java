@@ -62,4 +62,15 @@ public class ProductController {
         return "redirect:/admin/product";
     }
 
+    @GetMapping("/admin/product/delete/{id}")
+    public String getDeleteProductPage(@PathVariable("id") long id){
+        return "admin/product/delete";
+    }
+
+    @PostMapping("/admin/product/delete/{id}")
+    public String deleteProduct(@PathVariable("id") long id){
+        productService.deleteProduct(id);
+        return "redirect:/admin/product";
+    }
+
 }
