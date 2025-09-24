@@ -33,6 +33,8 @@ public class Product {
     Instant createdAt;
     Instant updatedAt;
 
+    String slug;
+
     @ManyToOne
     @JoinColumn(name = "subcategory_id")
     Subcategory subcategory;

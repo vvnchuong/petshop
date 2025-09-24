@@ -2,6 +2,7 @@ package com.petshop.pet.service;
 
 import com.petshop.pet.domain.*;
 import com.petshop.pet.repository.*;
+import com.petshop.pet.utils.SlugUtil;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -58,6 +59,10 @@ public class ProductService {
 
         product.setCreatedAt(Instant.now());
 
+        if(product.getSlug() == null || product.getSlug().isEmpty()){
+            product.setSlug(SlugUtil.toSlug(product.getName()));
+        }
+
         return productRepository.save(product);
     }
 
@@ -85,6 +90,8 @@ public class ProductService {
         product.getSubcategory().setPetType(petType);
 
         product.setUpdatedAt(Instant.now());
+
+        product.setSlug(SlugUtil.toSlug(productUpdate.getName()));
 
         return productRepository.save(product);
     }

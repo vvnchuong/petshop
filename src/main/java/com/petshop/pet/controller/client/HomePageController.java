@@ -44,7 +44,7 @@ public class HomePageController {
     }
 
     @GetMapping("/{pet}/{subcategory}")
-    public String gétSubPetPage(Model model,
+    public String getSubPetPage(Model model,
                                 @PathVariable("pet") String pet,
                                 @PathVariable("subcategory") String sub){
         List<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub);
