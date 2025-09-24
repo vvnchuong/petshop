@@ -22,6 +22,8 @@ public class PetType {
 
     String name;
 
+    String slug;
+
     @OneToMany(mappedBy = "petType")
     List<Subcategory> categories = new ArrayList<>();
 

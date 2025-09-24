@@ -377,7 +377,7 @@
                                 <h2 class="accordion-header" id="headingThree">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseThree">
-                                        03. Kin Neko có cung cấp các sản phẩm liên quan đến chữa bệnh cho thú cưng
+                                        03. Petshop có cung cấp các sản phẩm liên quan đến chữa bệnh cho thú cưng
                                         không?
                                     </button>
                                 </h2>
@@ -397,7 +397,7 @@
                                 <h2 class="accordion-header" id="headingFour">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseFour">
-                                        04. Kin Neko hiện đang có các chương trình ưu đãi nào không?
+                                        04. Petshop hiện đang có các chương trình ưu đãi nào không?
                                     </button>
                                 </h2>
                                 <div id="collapseFour" class="accordion-collapse collapse"

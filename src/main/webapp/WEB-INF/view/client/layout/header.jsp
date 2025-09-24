@@ -20,26 +20,26 @@
 
                     <!-- SHOP CHO CHÓ -->
                     <li class="nav-item dropdown mega-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">SHOP CHO CHÓ</a>
+                        <a href="/shop-cho" class="nav-link dropdown-toggle">SHOP CHO CHÓ</a>
                         <div class="dropdown-menu mega-menu p-4">
                             <div class="row">
                                 <div class="col-md-4">
                                     <h6 class="fw-bold border-bottom pb-2">Thức ăn cho chó</h6>
-                                    <a class="dropdown-item" href="#">Thức ăn hạt</a>
-                                    <a class="dropdown-item" href="#">Pate</a>
-                                    <a class="dropdown-item" href="#">Bánh thưởng</a>
+                                    <a class="dropdown-item" href="/shop-cho/thuc-an-hat-cho-cho">Thức ăn hạt</a>
+                                    <a class="dropdown-item" href="/shop-cho/pate-cho-cho">Pate</a>
+                                    <a class="dropdown-item" href="/shop-cho/banh-thuong-cho-cho">Bánh thưởng</a>
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="fw-bold border-bottom pb-2">Vệ sinh & chăm sóc</h6>
-                                    <a class="dropdown-item" href="#">Khay vệ sinh</a>
-                                    <a class="dropdown-item" href="#">Sửa tắm</a>
-                                    <a class="dropdown-item" href="#">Chăm sóc tai/mắt/miệng</a>
+                                    <a class="dropdown-item" href="/shop-cho/khay-ve-sinh-cho-cho">Khay vệ sinh</a>
+                                    <a class="dropdown-item" href="/shop-cho/sua-tam-cho-cho">Sửa tắm</a>
+                                    <a class="dropdown-item" href="/shop-cho/cham-soc-tai-mat-mieng">Chăm sóc tai/mắt/miệng</a>
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="fw-bold border-bottom pb-2">Phụ kiện</h6>
-                                    <a class="dropdown-item" href="#">Đồ chơi</a>
-                                    <a class="dropdown-item" href="#">Quần áo</a>
-                                    <a class="dropdown-item" href="#">Dây dắt</a>
+                                    <a class="dropdown-item" href="/shop-cho/phu-kien-cho-cho">Đồ chơi</a>
+                                    <a class="dropdown-item" href="/shop-cho/quan-ao-cho-cho">Quần áo</a>
+                                    <a class="dropdown-item" href="/shop-cho/day-dat-cho-cho">Dây dắt</a>
                                 </div>
                             </div>
                         </div>
@@ -47,29 +47,29 @@
 
                     <!-- SHOP CHO MÈO -->
                     <li class="nav-item dropdown mega-dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">SHOP CHO MÈO</a>
+                        <a href="/shop-meo" class="nav-link dropdown-toggle">SHOP CHO MÈO</a>
                         <div class="dropdown-menu mega-menu p-4">
                             <div class="row">
                                 <div class="col-md-4">
                                     <h6 class="fw-bold border-bottom pb-2">Thức ăn cho mèo</h6>
-                                    <a class="dropdown-item" href="#">Thức Ăn Hạt</a>
-                                    <a class="dropdown-item" href="#">Pate</a>
-                                    <a class="dropdown-item" href="#">Súp Thưởng</a>
+                                    <a class="dropdown-item" href="/shop-meo/thuc-an-hat-cho-meo">Thức Ăn Hạt</a>
+                                    <a class="dropdown-item" href="/shop-meo/pate-cho-meo">Pate</a>
+                                    <a class="dropdown-item" href="/shop-meo/sup-thuong-cho-meo">Súp Thưởng</a>
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="fw-bold border-bottom pb-2">Vệ sinh, chăm sóc</h6>
-                                    <a class="dropdown-item" href="#">Cát Vệ Sinh</a>
-                                    <a class="dropdown-item" href="#">Nhà Vệ Sinh</a>
-                                    <a class="dropdown-item" href="#">Sữa Tắm</a>
+                                    <a class="dropdown-item" href="/shop-meo/cat-ve-sinh-cho-meo">Cát Vệ Sinh</a>
+                                    <a class="dropdown-item" href="/shop-meo/nha-ve-sinh-cho-meo">Nhà Vệ Sinh</a>
+                                    <a class="dropdown-item" href="/shop-meo/sua-tam-cho-meo">Sữa Tắm</a>
                                 </div>
                                 <div class="col-md-4">
                                     <h6 class="fw-bold border-bottom pb-2">Phụ kiện, đồ chơi</h6>
-                                    <a class="dropdown-item" href="#">Cào Móng & Đệm Ngủ</a>
-                                    <a class="dropdown-item" href="#">Đồ Chơi</a>
-                                    <a class="dropdown-item" href="#">Quần Áo</a>
-                                    <a class="dropdown-item" href="#">Vòng Cổ, Dây Dắt</a>
-                                    <a class="dropdown-item" href="#">Lồng Vận Chuyển</a>
-                                    <a class="dropdown-item" href="#">Bát Ăn</a>
+                                    <a class="dropdown-item" href="/shop-meo/nha-cho-meo">Cào Móng & Đệm Ngủ</a>
+                                    <a class="dropdown-item" href="/shop-meo/phu-kien-cho-meo">Đồ Chơi</a>
+                                    <a class="dropdown-item" href="/shop-meo/quan-ao-cho-meo">Quần Áo</a>
+                                    <a class="dropdown-item" href="/shop-meo/vong-co-cho-meo">Vòng Cổ, Dây Dắt</a>
+                                    <a class="dropdown-item" href="/shop-meo/long-van-chuyen-cho-meo">Lồng Vận Chuyển</a>
+                                    <a class="dropdown-item" href="/shop-meo/bat-an-cho-meo">Bát Ăn</a>
                                 </div>
                             </div>
                         </div>

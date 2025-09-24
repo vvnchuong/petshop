@@ -93,4 +93,12 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public List<Product> getAllPetProducts(String pet){
+        return productRepository.findBySubcategoryPetTypeSlug(pet);
+    }
+
+    public List<Product> getAllProductsByPetAndSubcategory(String pet, String sub){
+        return productRepository.findBySubcategoryPetTypeSlugAndSubcategorySlug(pet, sub);
+    }
+
 }

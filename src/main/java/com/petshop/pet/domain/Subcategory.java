@@ -22,6 +22,8 @@ public class Subcategory {
 
     String name;
 
+    String slug;
+
     @ManyToOne
     @JoinColumn(name = "pet_type_id")
     PetType petType;
