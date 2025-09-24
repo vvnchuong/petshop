@@ -14,7 +14,7 @@
                 <meta name="author" content="" />
                 <title>Dashboard</title>
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-                <link href="/css/styles.css" rel="stylesheet" />
+                <link href="/admin/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
 
@@ -40,7 +40,7 @@
                                         <div class="card-header">
                                             Thông tin sản phẩm
                                         </div>
-                                        <img src="/images/product/${product.imageUrl}" alt="product"
+                                        <img src="/admin/images/product/${product.imageUrl}" alt="product"
                                             class="mb-3">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">Id: ${product.id}</li>

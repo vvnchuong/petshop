@@ -8,7 +8,7 @@
 
                 <head>
                     <meta charset="utf-8">
-                    <title>Shop chó</title>
+                    <title>Sản phẩm</title>
                     <meta content="width=device-width, initial-scale=1.0" name="viewport">
                     <meta content="" name="keywords">
                     <meta content="" name="description">
@@ -130,7 +130,7 @@
                                                     <div class="col-md-6 col-lg-4 col-xl-3">
                                                         <div class="rounded position-relative fruite-item">
                                                             <div class="fruite-img">
-                                                                <img src="/images/product/${product.imageUrl}"
+                                                                <img src="/admin/images/product/${product.imageUrl}"
                                                                     class="img-fluid w-100 rounded-top" alt="">
                                                             </div>
                                                             <div

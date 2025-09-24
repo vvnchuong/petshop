@@ -129,7 +129,7 @@
                                                             <div class="col-md-6 col-lg-4 col-xl-3">
                                                                 <div class="rounded position-relative fruite-item">
                                                                     <div class="fruite-img">
-                                                                        <img src="/images/product/${product.imageUrl}"
+                                                                        <img src="/admin/images/product/${product.imageUrl}"
                                                                             class="img-fluid w-100 rounded-top" alt="">
                                                                     </div>
 
@@ -181,7 +181,7 @@
                                                         <div class="col-md-6 col-lg-4 col-xl-3">
                                                             <div class="rounded position-relative fruite-item">
                                                                 <div class="fruite-img">
-                                                                    <img src="/images/product/${product.imageUrl}"
+                                                                    <img src="/admin/images/product/${product.imageUrl}"
                                                                         class="img-fluid w-100 rounded-top" alt="">
                                                                 </div>
 
@@ -232,7 +232,7 @@
                                                         <div class="col-md-6 col-lg-4 col-xl-3">
                                                             <div class="rounded position-relative fruite-item">
                                                                 <div class="fruite-img">
-                                                                    <img src="/images/product/${product.imageUrl}"
+                                                                    <img src="/admin/images/product/${product.imageUrl}"
                                                                         class="img-fluid w-100 rounded-top" alt="">
                                                                 </div>
 
@@ -282,7 +282,7 @@
                                                         <div class="col-md-6 col-lg-4 col-xl-3">
                                                             <div class="rounded position-relative fruite-item">
                                                                 <div class="fruite-img">
-                                                                    <img src="/images/product/${product.imageUrl}"
+                                                                    <img src="/admin/images/product/${product.imageUrl}"
                                                                         class="img-fluid w-100 rounded-top" alt="">
                                                                 </div>
 
