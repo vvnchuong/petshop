@@ -13,10 +13,72 @@
                         <span class="fa fa-bars text-primary"></span>
                     </button>
                     <div class="collapse navbar-collapse bg-white justify-content-between mx-5" id="navbarCollapse">
-                        <div class="navbar-nav">
-                            <a href="/" class="nav-item nav-link active">Trang chủ</a>
-                            <a href="shop.html" class="nav-item nav-link">Sản phẩm</a>
+                        <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link active">TRANG CHỦ</a>
+                    </li>
+
+                    <!-- SHOP CHO CHÓ -->
+                    <li class="nav-item dropdown mega-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">SHOP CHO CHÓ</a>
+                        <div class="dropdown-menu mega-menu p-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold border-bottom pb-2">Thức ăn cho chó</h6>
+                                    <a class="dropdown-item" href="#">Thức ăn hạt</a>
+                                    <a class="dropdown-item" href="#">Pate</a>
+                                    <a class="dropdown-item" href="#">Bánh thưởng</a>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold border-bottom pb-2">Vệ sinh & chăm sóc</h6>
+                                    <a class="dropdown-item" href="#">Khay vệ sinh</a>
+                                    <a class="dropdown-item" href="#">Sửa tắm</a>
+                                    <a class="dropdown-item" href="#">Chăm sóc tai/mắt/miệng</a>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold border-bottom pb-2">Phụ kiện</h6>
+                                    <a class="dropdown-item" href="#">Đồ chơi</a>
+                                    <a class="dropdown-item" href="#">Quần áo</a>
+                                    <a class="dropdown-item" href="#">Dây dắt</a>
+                                </div>
+                            </div>
                         </div>
+                    </li>
+
+                    <!-- SHOP CHO MÈO -->
+                    <li class="nav-item dropdown mega-dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">SHOP CHO MÈO</a>
+                        <div class="dropdown-menu mega-menu p-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold border-bottom pb-2">Thức ăn cho mèo</h6>
+                                    <a class="dropdown-item" href="#">Thức Ăn Hạt</a>
+                                    <a class="dropdown-item" href="#">Pate</a>
+                                    <a class="dropdown-item" href="#">Súp Thưởng</a>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold border-bottom pb-2">Vệ sinh, chăm sóc</h6>
+                                    <a class="dropdown-item" href="#">Cát Vệ Sinh</a>
+                                    <a class="dropdown-item" href="#">Nhà Vệ Sinh</a>
+                                    <a class="dropdown-item" href="#">Sữa Tắm</a>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6 class="fw-bold border-bottom pb-2">Phụ kiện, đồ chơi</h6>
+                                    <a class="dropdown-item" href="#">Cào Móng & Đệm Ngủ</a>
+                                    <a class="dropdown-item" href="#">Đồ Chơi</a>
+                                    <a class="dropdown-item" href="#">Quần Áo</a>
+                                    <a class="dropdown-item" href="#">Vòng Cổ, Dây Dắt</a>
+                                    <a class="dropdown-item" href="#">Lồng Vận Chuyển</a>
+                                    <a class="dropdown-item" href="#">Bát Ăn</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-danger">KHUYẾN MÃI</a>
+                    </li>
+                </ul>
                         <div class="d-flex m-3 me-0">
                             <c:if test="${not empty pageContext.request.userPrincipal}">
 

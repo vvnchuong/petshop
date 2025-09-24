@@ -178,7 +178,7 @@
 
 /*** Hero Header ***/
 .hero-header {
-    background: linear-gradient(rgba(248, 223, 173, 0.1), rgba(248, 223, 173, 0.1)), url(../img/hero-img.jpg);
+    background: linear-gradient(rgba(248, 223, 173, 0.1), rgba(248, 223, 173, 0.1)), url(../img/hero-imga.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -495,3 +495,35 @@
 }
 /*** Footer End ***/
 
+/* Mega dropdown */
+.mega-dropdown {
+    position: relative !important;
+}
+
+.mega-dropdown .dropdown-menu {
+    width: 900px;
+    position: absolute;
+    top: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border: none;
+    border-radius: 0;
+    margin-top: 0;
+    display: none;
+}
+.mega-dropdown:hover > .dropdown-menu {
+    display: block;
+}
+
+
+/* End Mega dropdown */
+
+.dropdown-menu .dropdown-item {
+    color: #000 !important;
+    font-weight: 600; 
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #f1f1f1 !important;
+    color: #000 !important;          
+}
