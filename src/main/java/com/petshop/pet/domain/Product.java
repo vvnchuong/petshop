@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -45,5 +47,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "brand_id")
     Brand brand;
+
+    @OneToMany(mappedBy = "product")
+    List<CartDetail> cartDetails = new ArrayList<>();
 
 }

@@ -309,9 +309,22 @@
     overflow: hidden;
     transition: 0.5s;
     border-radius: 10px 10px 0 0;
+    width: 306px;
+    height: 306px;
+}
+
+.fruite .fruite-item .fruitep-img {
+    overflow: hidden;
+    transition: 0.5s;
+    border-radius: 10px 10px 0 0;
+    width: 223.5px;
+    height: 223.5px;
 }
 
 .fruite .fruite-item .fruite-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: 0.5s;
 }
 

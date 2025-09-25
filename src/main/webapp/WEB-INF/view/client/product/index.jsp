@@ -129,7 +129,7 @@
                                                 <c:forEach var="product" items="${products}">
                                                     <div class="col-md-6 col-lg-4 col-xl-3">
                                                         <div class="rounded position-relative fruite-item">
-                                                            <div class="fruite-img">
+                                                            <div class="fruitep-img">
                                                                 <img src="/admin/images/product/${product.imageUrl}"
                                                                     class="img-fluid w-100 rounded-top" alt="">
                                                             </div>

@@ -112,12 +112,12 @@
 
                                                                     <div
                                                                         class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                                        <h4>
-                                                                            <a href="/product/${product.id}">
+                                                                        <h4 class="multiline-ellipsis">
+                                                                            <a href="/product/${product.slug}">
                                                                                 ${product.name}
                                                                             </a>
                                                                         </h4>
-                                                                        <p>${product.description}</p>
+                                                                        <p class="multiline-ellipsis">${product.shortDesc}</p>
                                                                         <div
                                                                             class="d-flex flex-lg-wrap justify-content-center">
                                                                             <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -164,12 +164,12 @@
 
                                                                 <div
                                                                     class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                                    <h4>
-                                                                        <a href="/product/${product.id}">
+                                                                    <h4 class="multiline-ellipsis">
+                                                                        <a href="/product/${product.slug}">
                                                                             ${product.name}
                                                                         </a>
                                                                     </h4>
-                                                                    <p>${product.description}</p>
+                                                                    <p class="multiline-ellipsis">${product.shortDesc}</p>
                                                                     <div
                                                                         class="d-flex flex-lg-wrap justify-content-center">
                                                                         <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -215,12 +215,12 @@
 
                                                                 <div
                                                                     class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                                    <h4>
-                                                                        <a href="/product/${product.id}">
+                                                                    <h4 class="multiline-ellipsis">
+                                                                        <a href="/product/${product.slug}">
                                                                             ${product.name}
                                                                         </a>
                                                                     </h4>
-                                                                    <p>${product.description}</p>
+                                                                    <p class="multiline-ellipsis">${product.shortDesc}</p>
                                                                     <div
                                                                         class="d-flex flex-lg-wrap justify-content-center">
                                                                         <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -265,12 +265,14 @@
 
                                                                 <div
                                                                     class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                                    <h4>
-                                                                        <a href="/product/${product.id}">
+                                                                    <h4 class="multiline-ellipsis">
+                                                                        <a href="/product/${product.slug}">
                                                                             ${product.name}
                                                                         </a>
                                                                     </h4>
-                                                                    <p>${product.description}</p>
+                                                                    <p class="multiline-ellipsis">
+                                                                    ${product.shortDesc}
+                                                                </p>
                                                                     <div
                                                                         class="d-flex flex-lg-wrap justify-content-center">
                                                                         <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -392,12 +394,12 @@
                             <!-- Item 5 -->
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingFive">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseFive">
                                         05. Phí giao hàng được tính như thế nào?
                                     </button>
                                 </h2>
-                                <div id="collapseFive" class="accordion-collapse collapse show"
+                                <div id="collapseFive" class="accordion-collapse collapse"
                                     data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
                                         Phí giao hàng sẽ tùy thuộc vào địa điểm giao hàng và khối lượng sản phẩm bạn

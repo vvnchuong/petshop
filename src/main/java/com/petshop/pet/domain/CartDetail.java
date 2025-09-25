@@ -6,41 +6,27 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
-
 @Entity
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users")
-public class User {
+@Table(name = "cart_detail")
+public class CartDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    String username;
+    int quantity;
 
-    String password;
-
-    String email;
-
-    String fullName;
-
-    String phone;
-
-    String address;
-
-    String avatarUrl;
-
-    Instant createdAt;
-    Instant updatedAt;
+    double price;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    Role role;
-
-    @OneToOne(mappedBy = "user")
+    @JoinColumn(name = "cart_id")
     Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    Product product;
 
 }
