@@ -118,7 +118,7 @@
                                 </nav>
                                 <div class="tab-content mb-5">
                                     <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
-                                       {$product.description}
+                                       ${product.description}
                                     </div>
                                     
                                 </div>

@@ -24,6 +24,9 @@ public class Product {
     @Column(columnDefinition = "MEDIUMTEXT")
     String description;
 
+    @Column(columnDefinition = "MEDIUMTEXT")
+    String shortDesc;
+
     double price;
 
     int stock;

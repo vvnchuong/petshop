@@ -52,4 +52,9 @@ public class HomePageController {
         return "client/product/index";
     }
 
+    @GetMapping("/account/login")
+    public String getLoginPage(){
+        return "client/auth/login";
+    }
+
 }
