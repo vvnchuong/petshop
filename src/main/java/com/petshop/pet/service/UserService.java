@@ -7,6 +7,7 @@ import com.petshop.pet.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -39,6 +40,7 @@ public class UserService {
 
         Role role = roleRepository.findByName(user.getRole().getName());
         user.setRole(role);
+        user.setCreatedAt(Instant.now());
 
         return userRepository.save(user);
     }
@@ -48,6 +50,7 @@ public class UserService {
         user.setFullName(userUpdate.getFullName());
         user.setPhone(userUpdate.getPhone());
         user.setAddress(userUpdate.getAddress());
+        user.setUpdatedAt(Instant.now());
         return userRepository.save(user);
     }
 

@@ -1,13 +1,12 @@
 package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.User;
+import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,8 +15,12 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService){
+    private final UploadService uploadService;
+
+    public UserController(UserService userService,
+                          UploadService uploadService){
         this.userService = userService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/admin/user")
@@ -43,8 +46,13 @@ public class UserController {
 
     @PostMapping("/admin/user/create")
     public String createUser(Model model,
-                             @ModelAttribute("newUser") User user){
+                             @ModelAttribute("newUser") User user,
+                             @RequestParam("inputFile") MultipartFile file){
+        String avatar = uploadService.handleUploadFile(file, "avatar");
+        user.setAvatarUrl(avatar);
+
         userService.createUser(user);
+
         return "redirect:/admin/user";
     }
 

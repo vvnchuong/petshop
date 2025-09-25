@@ -40,7 +40,8 @@
                                         <div class="card-header">
                                             Thông tin người dùng
                                         </div>
-
+                                        <img src="/admin/images/avatar/${user.avatarUrl}" alt="avatar"
+                                            class="mb-3">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">Id: ${user.id}</li>
                                             <li class="list-group-item">Email: ${user.email}</li>

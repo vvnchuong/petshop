@@ -2,12 +2,11 @@ package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.service.ProductService;
+import com.petshop.pet.service.UploadService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,8 +15,12 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService){
+    private final UploadService uploadService;
+
+    public ProductController(ProductService productService,
+                             UploadService uploadService){
         this.productService = productService;
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/admin/product")
@@ -42,8 +45,13 @@ public class ProductController {
     }
 
     @PostMapping("/admin/product/create")
-    public String createProduct(@ModelAttribute("newProduct") Product product){
+    public String createProduct(@ModelAttribute("newProduct") Product product,
+                                @RequestParam("productFile") MultipartFile file){
+        String image = uploadService.handleUploadFile(file, "product");
+        product.setImageUrl(image);
+
         productService.createProduct(product);
+
         return "redirect:/admin/product";
     }
 

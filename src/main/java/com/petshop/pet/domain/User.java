@@ -31,6 +31,8 @@ public class User {
 
     String address;
 
+    String avatarUrl;
+
     Instant createdAt;
     Instant updatedAt;
 

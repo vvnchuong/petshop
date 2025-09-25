@@ -120,7 +120,7 @@
                                                             for="rangeInput">0</output>
                                                     </div>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
 
@@ -135,12 +135,14 @@
                                                             </div>
                                                             <div
                                                                 class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                                <h4>
+                                                                <h4 class="multiline-ellipsis">
                                                                     <a href="/product/${product.slug}">
                                                                         ${product.name}
                                                                     </a>
                                                                 </h4>
-                                                                <p>${product.description}</p>
+                                                                <p class="multiline-ellipsis">
+                                                                    ${product.shortDesc}
+                                                                </p>
                                                                 <div class="d-flex flex-lg-wrap justify-content-center">
                                                                     <p style="font-size: 15px; text-align: center; width: 100%;"
                                                                         class="text-dark fw-bold mb-3">
