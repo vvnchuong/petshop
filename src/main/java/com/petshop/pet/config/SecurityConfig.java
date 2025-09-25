@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -36,7 +37,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/account/login")
                         .loginProcessingUrl("/doLogin")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(customSuccessHandler())
                         .failureUrl("/account/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
@@ -48,6 +49,11 @@ public class SecurityConfig {
 
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler(){
+        return new CustomLoginSuccessHandler();
     }
 
     @Bean

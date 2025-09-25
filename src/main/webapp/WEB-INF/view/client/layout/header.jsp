@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
         <!-- Navbar start -->
         <div class="container-fluid fixed-top">
 
@@ -106,7 +107,7 @@
                                             <img style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden;"
                                                 src="/images/avatar/${sessionScope.avatar}" />
                                             <div class="text-center my-3">
-                                                <c:out value="${sessionScope.name}" />
+                                                <sec:authentication property="principal.fullName"/>
                                             </div>
                                         </li>
 
