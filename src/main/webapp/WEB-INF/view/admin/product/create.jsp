@@ -50,8 +50,15 @@
 
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
-                                                <div class="form-label">Mô tả sản phẩm</div>
-                                                <form:input type="text" class="form-control" path="description" />
+                                                <div class="form-label">Mô tả ngắn</div>
+                                                <form:textarea type="text" class="form-control" path="shortDesc" />
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <div class="form-label">Mô tả chi tiết</div>
+                                                <form:textarea type="text" class="form-control" path="description" />
                                             </div>
                                         </div>
 

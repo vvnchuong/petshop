@@ -108,4 +108,8 @@ public class ProductService {
         return productRepository.findBySubcategoryPetTypeSlugAndSubcategorySlug(pet, sub);
     }
 
+    public Product getProductNameBySlug(String slug){
+        return productRepository.findBySlug(slug);
+    }
+
 }

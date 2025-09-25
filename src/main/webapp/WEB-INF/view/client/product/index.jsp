@@ -136,7 +136,7 @@
                                                             <div
                                                                 class="p-4 border border-secondary border-top-0 rounded-bottom">
                                                                 <h4>
-                                                                    <a href="/product/${product.id}">
+                                                                    <a href="/product/${product.slug}">
                                                                         ${product.name}
                                                                     </a>
                                                                 </h4>
