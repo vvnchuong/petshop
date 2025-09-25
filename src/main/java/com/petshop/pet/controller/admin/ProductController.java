@@ -47,7 +47,7 @@ public class ProductController {
     @PostMapping("/admin/product/create")
     public String createProduct(@ModelAttribute("newProduct") Product product,
                                 @RequestParam("productFile") MultipartFile file){
-        String image = uploadService.handleUploadFile(file, "product");
+        String image = uploadService.handleUploadFile(file, "product", true);
         product.setImageUrl(image);
 
         productService.createProduct(product);
@@ -65,8 +65,13 @@ public class ProductController {
 
     @PostMapping("/admin/product/update/{id}")
     public String updateProduct(@PathVariable("id") long id,
-                                @ModelAttribute("newProduct") Product product){
+                                @ModelAttribute("newProduct") Product product,
+                                @RequestParam("productFile") MultipartFile file){
+        String imageUpdate = uploadService.handleUploadFile(file, "product", false);
+        product.setImageUrl(imageUpdate);
+
         productService.updateProduct(id, product);
+
         return "redirect:/admin/product";
     }
 

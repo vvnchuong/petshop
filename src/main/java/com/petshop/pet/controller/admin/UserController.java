@@ -48,7 +48,7 @@ public class UserController {
     public String createUser(Model model,
                              @ModelAttribute("newUser") User user,
                              @RequestParam("inputFile") MultipartFile file){
-        String avatar = uploadService.handleUploadFile(file, "avatar");
+        String avatar = uploadService.handleUploadFile(file, "avatar", true);
         user.setAvatarUrl(avatar);
 
         userService.createUser(user);
@@ -66,8 +66,13 @@ public class UserController {
 
     @PostMapping("/admin/user/update/{id}")
     public String updateUser(@PathVariable("id") long id,
-                             @ModelAttribute("newUser") User newUser){
+                             @ModelAttribute("newUser") User newUser,
+                             @RequestParam("inputFile") MultipartFile file){
+        String avatarUpdate = uploadService.handleUploadFile(file, "avatar", false);
+        newUser.setAvatarUrl(avatarUpdate);
+
         userService.updateUser(id, newUser);
+
         return "redirect:/admin/user";
     }
 

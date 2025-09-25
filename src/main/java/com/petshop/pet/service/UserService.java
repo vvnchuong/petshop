@@ -51,6 +51,9 @@ public class UserService {
         user.setPhone(userUpdate.getPhone());
         user.setAddress(userUpdate.getAddress());
         user.setUpdatedAt(Instant.now());
+        if(userUpdate.getAvatarUrl() != null)
+            user.setAvatarUrl(userUpdate.getAvatarUrl());
+
         return userRepository.save(user);
     }
 

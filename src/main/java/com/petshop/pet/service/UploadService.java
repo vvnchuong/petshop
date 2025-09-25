@@ -18,10 +18,16 @@ public class UploadService {
         this.servletContext = servletContext;
     }
 
-    public String handleUploadFile(MultipartFile file, String targetFolder) {
+    public String handleUploadFile(MultipartFile file,
+                                   String targetFolder,
+                                   boolean required) {
         // 1. Kiểm tra có file không
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("Please choose an image to upload");
+            if(required) {
+                throw new RuntimeException("Please choose an image to upload");
+            }else{
+                return null;
+            }
         }
 
         // 2. Kiểm tra kiểu file (chỉ cho phép ảnh)

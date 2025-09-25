@@ -71,6 +71,7 @@ public class ProductService {
 
         product.setName(productUpdate.getName());
         product.setDescription(productUpdate.getDescription());
+        product.setShortDesc(productUpdate.getShortDesc());
         product.setPrice(productUpdate.getPrice());
         product.setStock(productUpdate.getStock());
 
@@ -92,6 +93,9 @@ public class ProductService {
         product.setUpdatedAt(Instant.now());
 
         product.setSlug(SlugUtil.toSlug(productUpdate.getName()));
+
+        if(productUpdate.getImageUrl() != null)
+            product.setImageUrl(productUpdate.getImageUrl());
 
         return productRepository.save(product);
     }

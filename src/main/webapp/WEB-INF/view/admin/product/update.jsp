@@ -16,6 +16,17 @@
                 <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
                 <link href="/admin/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                <script>
+                    $(document).ready(() => {
+                        const productFile = $("#productFile");
+                        productFile.change(function (e) {
+                            const imgURL = URL.createObjectURL(e.target.files[0]);
+                            $("#productPreview").attr("src", imgURL);
+                            $("#productPreview").css({ "display": "block" });
+                        });
+                    });
+                </script>
             </head>
 
             <body class="sb-nav-fixed">
@@ -33,7 +44,8 @@
                                 <div class="col-md-6 col-12 mx-auto">
                                     <h3>Cập nhật thông tin sản phẩm</h3>
                                     <hr />
-                                    <form:form method="post" action="/admin/product/update/${id}" modelAttribute="newProduct">
+                                    <form:form method="post" action="/admin/product/update/${id}" modelAttribute="newProduct"
+                                    enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <div class="form-label">Tên sản phẩm</div>
@@ -43,7 +55,14 @@
 
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
-                                                <div class="form-label">Mô tả sản phẩm</div>
+                                                <div class="form-label">Mô tả chi ngắn</div>
+                                                <form:input type="text" class="form-control" path="shortDesc" />
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <div class="form-label">Mô tả chi tiết</div>
                                                 <form:input type="text" class="form-control" path="description" />
                                             </div>
                                         </div>

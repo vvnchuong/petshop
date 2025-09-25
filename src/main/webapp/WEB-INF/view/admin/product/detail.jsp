@@ -49,7 +49,8 @@
                                             </li>
                                             <li class="list-group-item">Danh mục phụ: ${product.subcategory.name}</li>
                                             <li class="list-group-item">Thương hiệu: ${product.brand.name}</li>
-                                            <li class="list-group-item">Mô tả: ${product.description}</li>
+                                            <li class="list-group-item">Mô tả ngắn: ${product.shortDesc}</li>
+                                            <li class="list-group-item">Mô tả chi tiết: ${product.description}</li>
                                             <li class="list-group-item">Dành cho: ${product.subcategory.petType.name}</li>
                                             <li class="list-group-item">Giá: ${product.price}</li>
                                             <li class="list-group-item">Số lượng: ${product.stock}</li>
