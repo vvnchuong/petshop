@@ -149,3 +149,36 @@
 
 })(jQuery);
 
+document.addEventListener("DOMContentLoaded", function () {
+    const addToCartBtn = document.getElementById("addToCartBtn");
+    if (!addToCartBtn) return; // tránh lỗi nếu nút không tồn tại
+
+    addToCartBtn.addEventListener("click", function () {
+        const slug = this.dataset.slug;
+        const url = "/cart/" + encodeURIComponent(slug);
+        console.log("URL fetch:", url);
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data.message);
+
+            // Cập nhật badge giỏ hàng
+            let badge = document.getElementById("cartBadge");
+            if (!badge) {
+                badge = document.createElement("span");
+                badge.id = "cartBadge";
+                badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
+                badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
+                document.querySelector("a[href='/cart']").appendChild(badge);
+            }
+            badge.innerText = data.cartQuantity;
+        })
+        .catch(err => console.error("Error adding product to cart:", err));
+    });
+});

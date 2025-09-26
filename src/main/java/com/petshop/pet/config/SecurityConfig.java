@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .dispatcherTypeMatchers(DispatcherType.FORWARD,
                         DispatcherType.INCLUDE) .permitAll()
                 .requestMatchers("/", "/account/login", "/product/**",
-                        "/client/**", "/admin/js/**",
+                        "/shop-*", "/client/**", "/admin/js/**",
                         "/admin/images/**", "/admin/css/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
@@ -45,7 +45,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .permitAll());
+                        .permitAll()).csrf().disable();
 
 
         return httpSecurity.build();

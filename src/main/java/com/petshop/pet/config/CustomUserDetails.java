@@ -58,4 +58,11 @@ public class CustomUserDetails implements UserDetails {
         return user.getAvatarUrl();
     }
 
+    public Integer getCartQuantity(){
+        if (user.getCart() == null || user.getCart().getQuantity() == 0) {
+            return null;
+        }
+        return user.getCart().getQuantity();
+    }
+
 }

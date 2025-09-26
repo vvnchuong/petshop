@@ -20,6 +20,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    Integer quantity;
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     User user;
