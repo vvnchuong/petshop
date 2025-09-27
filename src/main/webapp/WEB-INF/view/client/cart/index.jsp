@@ -48,16 +48,6 @@
                             <!-- Giỏ hàng -->
                             <div class="table-responsive">
                                 <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Sản phẩm</th>
-                                            <th>Tên</th>
-                                            <th>Giá</th>
-                                            <th>Số lượng</th>
-                                            <th>Thành tiền</th>
-                                            <th>Xử lý</th>
-                                        </tr>
-                                    </thead>
                                     <form:form method="post" action="/confirm-checkout">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
@@ -74,20 +64,21 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <c:forEach var="cart" items="${carts}" varStatus="status">
+                                                    <c:forEach var="cartDetail" items="${cartDetails}"
+                                                        varStatus="status">
                                                         <tr>
                                                             <td>
-                                                                <img src="/images/product/${cart.product.image}"
+                                                                <img src="/admin/images/product/${cartDetail.product.imageUrl}"
                                                                     class="img-fluid rounded-circle"
                                                                     style="width: 80px; height: 80px;" alt="">
                                                             </td>
                                                             <td>
-                                                                <p class="mb-0 mt-4">${cart.product.name}</p>
+                                                                <p class="mb-0 mt-4">${cartDetail.product.name}</p>
                                                             </td>
                                                             <td>
                                                                 <p class="mb-0 mt-4 product-price"
-                                                                    data-price="${cart.price}">
-                                                                    <fmt:formatNumber value="${cart.price}"
+                                                                    data-price="${cartDetail.price}">
+                                                                    <fmt:formatNumber value="${cartDetail.price}"
                                                                         type="number" groupingUsed="true" /> đ
                                                                 </p>
                                                             </td>
@@ -95,7 +86,7 @@
                                                                 <!-- Hidden productId -->
                                                                 <input type="hidden"
                                                                     name="cartDetails[${status.index}].id"
-                                                                    value="${cart.id}" />
+                                                                    value="${cartDetail.id}" />
 
                                                                 <!-- Quantity input -->
                                                                 <div class="input-group quantity mt-4"
@@ -109,7 +100,7 @@
                                                                     <input type="text"
                                                                         class="form-control form-control-sm text-center border-0 quantity-input"
                                                                         name="cartDetails[${status.index}].quantity"
-                                                                        value="${cart.quantity}" />
+                                                                        value="${cartDetail.quantity}" />
                                                                     <div class="input-group-btn">
                                                                         <button type="button"
                                                                             class="btn btn-sm btn-plus rounded-circle bg-light border">
@@ -121,13 +112,13 @@
                                                             <td>
                                                                 <p class="mb-0 mt-4 line-total">
                                                                     <fmt:formatNumber
-                                                                        value="${cart.price * cart.quantity}"
+                                                                        value="${cartDetail.price * cartDetail.quantity}"
                                                                         type="number" groupingUsed="true" /> đ
                                                                 </p>
                                                             </td>
                                                             <td>
                                                                 <!-- chưa fix chỗ này spring không nhận form lồng form -->
-                                                                <!-- <form action="/delete-cart-product/${cart.id}"
+                                                                <form action="/delete-cart-product/${cart.id}"
                                                                     method="post">
                                                                     <input type="hidden" name="${_csrf.parameterName}"
                                                                         value="${_csrf.token}" />
@@ -135,7 +126,7 @@
                                                                         class="btn btn-md rounded-circle bg-light border mt-4">
                                                                         <i class="fa fa-times text-danger"></i>
                                                                     </button>
-                                                                </form> -->
+                                                                </form>
                                                             </td>
                                                         </tr>
                                                     </c:forEach>
@@ -152,8 +143,9 @@
                                                     <div class="d-flex justify-content-between mb-4">
                                                         <h5 class="mb-0 me-4">Tạm tính:</h5>
                                                         <p class="mb-0" id="total-price">
-                                                            <fmt:formatNumber value="${totalPrice}" type="number"
-                                                                groupingUsed="true" /> đ
+                                                            <fmt:formatNumber
+                                                                value="${cartDetail.quantity * cartDetail.price}"
+                                                                type="number" groupingUsed="true" /> đ
                                                         </p>
                                                     </div>
                                                     <div class="d-flex justify-content-between">
@@ -165,8 +157,9 @@
                                                     class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                                     <h5 class="mb-0 ps-4 me-4">Tổng số tiền</h5>
                                                     <p class="mb-0 pe-4" id="grand-total">
-                                                        <fmt:formatNumber value="${totalPrice}" type="number"
-                                                            groupingUsed="true" /> đ
+                                                        <fmt:formatNumber
+                                                            value="${cartDetail.quantity * cartDetail.price}"
+                                                            type="number" groupingUsed="true" /> đ
                                                     </p>
                                                 </div>
 
@@ -185,7 +178,7 @@
                                 </table>
                             </div>
 
-                           
+
                         </div>
                     </div>
 
@@ -199,57 +192,6 @@
                     <script src="/client/lib/lightbox/js/lightbox.min.js"></script>
                     <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
                     <script src="/client/js/main.js"></script>
-
-                    <!-- Script cập nhật tự động giá tiền -->
-                    <script>
-                        function formatNumber(num) {
-                            return num.toLocaleString('vi-VN');
-                        }
-
-                        function updateTotals() {
-                            let totalPrice = 0;
-                            $('.quantity-input').each(function () {
-                                let quantity = parseInt($(this).val());
-                                if (isNaN(quantity) || quantity < 1) {
-                                    quantity = 1;
-                                    $(this).val(1);
-                                }
-
-                                let price = parseFloat($(this).closest('tr').find('.product-price').data('price'));
-                                let lineTotal = price * quantity;
-
-                                $(this).closest('tr').find('.line-total').text(formatNumber(lineTotal) + ' đ');
-                                totalPrice += lineTotal;
-                            });
-
-                            $('#total-price').text(formatNumber(totalPrice) + ' đ');
-                            $('#grand-total').text(formatNumber(totalPrice) + ' đ');
-                        }
-
-                        $(document).ready(function () {
-                            // Gỡ bỏ handler cũ trước khi gán (đề phòng gán trùng)
-                            $('.btn-plus, .btn-minus').off('click').on('click', function () {
-                                let input = $(this).closest('.quantity').find('.quantity-input');
-                                let currentVal = parseInt(input.val()) || 1;
-
-                                if ($(this).hasClass('btn-plus')) {
-                                    input.val(currentVal + 1);
-                                } else {
-                                    if (currentVal > 1) {
-                                        input.val(currentVal - 1);
-                                    }
-                                }
-                                updateTotals();
-                            });
-
-                            $('.quantity-input').off('change').on('change', function () {
-                                updateTotals();
-                            });
-
-                            // Cập nhật tổng ban đầu
-                            updateTotals();
-                        });
-                    </script>
 
                 </body>
 

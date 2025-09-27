@@ -70,4 +70,8 @@ public class CartService {
         return cart != null ? cart.getQuantity() : 0;
     }
 
+    public Cart getCartByUsername(String username){
+        return cartRepository.findByUserUsername(username);
+    }
+
 }

@@ -5,8 +5,12 @@ import com.petshop.pet.domain.CartDetail;
 import com.petshop.pet.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
 
     CartDetail findByCartAndProduct(Cart cart, Product product);
+
+    List<CartDetail> findAllByCart(Cart cart);
 
 }

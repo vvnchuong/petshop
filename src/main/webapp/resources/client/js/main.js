@@ -26,20 +26,20 @@
             } else {
                 $('.fixed-top').removeClass('shadow').css('top', 0);
             }
-        } 
+        }
     });
-    
-    
-   // Back to top button
-   $(window).scroll(function () {
-    if ($(this).scrollTop() > 300) {
-        $('.back-to-top').fadeIn('slow');
-    } else {
-        $('.back-to-top').fadeOut('slow');
-    }
+
+
+    // Back to top button
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 300) {
+            $('.back-to-top').fadeIn('slow');
+        } else {
+            $('.back-to-top').fadeOut('slow');
+        }
     });
     $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
+        $('html, body').animate({ scrollTop: 0 }, 1500, 'easeInOutExpo');
         return false;
     });
 
@@ -52,27 +52,27 @@
         dots: true,
         loop: true,
         margin: 25,
-        nav : true,
-        navText : [
+        nav: true,
+        navText: [
             '<i class="bi bi-arrow-left"></i>',
             '<i class="bi bi-arrow-right"></i>'
         ],
         responsiveClass: true,
         responsive: {
-            0:{
-                items:1
+            0: {
+                items: 1
             },
-            576:{
-                items:1
+            576: {
+                items: 1
             },
-            768:{
-                items:1
+            768: {
+                items: 1
             },
-            992:{
-                items:2
+            992: {
+                items: 2
             },
-            1200:{
-                items:2
+            1200: {
+                items: 2
             }
         }
     });
@@ -86,27 +86,27 @@
         dots: true,
         loop: true,
         margin: 25,
-        nav : true,
-        navText : [
+        nav: true,
+        navText: [
             '<i class="bi bi-arrow-left"></i>',
             '<i class="bi bi-arrow-right"></i>'
         ],
         responsiveClass: true,
         responsive: {
-            0:{
-                items:1
+            0: {
+                items: 1
             },
-            576:{
-                items:1
+            576: {
+                items: 1
             },
-            768:{
-                items:2
+            768: {
+                items: 2
             },
-            992:{
-                items:3
+            992: {
+                items: 3
             },
-            1200:{
-                items:4
+            1200: {
+                items: 4
             }
         }
     });
@@ -132,19 +132,59 @@
 
 
     // Product Quantity
-    $('.quantity button').on('click', function () {
-        var button = $(this);
-        var oldValue = button.parent().parent().find('input').val();
-        if (button.hasClass('btn-plus')) {
-            var newVal = parseFloat(oldValue) + 1;
-        } else {
-            if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 0;
+    function formatNumber(num) {
+        return num.toLocaleString('vi-VN');
+    }
+
+    function updateTotals() {
+        let totalPrice = 0;
+        $('.quantity-input').each(function () {
+            let quantity = parseInt($(this).val()) || 1;
+            let price = parseFloat($(this).closest('tr').find('.product-price').data('price'));
+            let lineTotal = price * quantity;
+
+            $(this).closest('tr').find('.line-total').text(formatNumber(lineTotal) + ' đ');
+            totalPrice += lineTotal;
+        });
+
+        $('#total-price').text(formatNumber(totalPrice) + ' đ');
+        $('#grand-total').text(formatNumber(totalPrice) + ' đ');
+    }
+
+    // Hàm gọi API cập nhật server
+    function saveQuantity(id, quantity) {
+        $.post("/cart/update", { id: id, quantity: quantity })
+            .done(() => console.log("Đã lưu " + id + " = " + quantity))
+            .fail(() => alert("Lỗi lưu số lượng!"));
+    }
+
+    $(document).ready(function () {
+        $('.btn-plus, .btn-minus').on('click', function () {
+            let input = $(this).closest('.quantity').find('.quantity-input');
+            let currentVal = parseInt(input.val()) || 1;
+            if ($(this).hasClass('btn-plus')) {
+                input.val(currentVal + 1);
+            } else if (currentVal > 1) {
+                input.val(currentVal - 1);
             }
-        }
-        button.parent().parent().find('input').val(newVal);
+            updateTotals();
+
+            // Lấy id của cartDetail từ input hidden trong cùng <tr>
+            const cartId = $(this).closest('tr').find('input[type=hidden]').val();
+            saveQuantity(cartId, input.val());
+        });
+
+        $('.quantity-input').on('change', function () {
+            let qty = parseInt($(this).val()) || 1;
+            if (qty < 1) qty = 1;
+            $(this).val(qty);
+            updateTotals();
+
+            const cartId = $(this).closest('tr').find('input[type=hidden]').val();
+            saveQuantity(cartId, qty);
+        });
+
+        updateTotals();
     });
 
 })(jQuery);
@@ -164,21 +204,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-Requested-With": "XMLHttpRequest"
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log(data.message);
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.message);
 
-            // Cập nhật badge giỏ hàng
-            let badge = document.getElementById("cartBadge");
-            if (!badge) {
-                badge = document.createElement("span");
-                badge.id = "cartBadge";
-                badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
-                badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
-                document.querySelector("a[href='/cart']").appendChild(badge);
-            }
-            badge.innerText = data.cartQuantity;
-        })
-        .catch(err => console.error("Error adding product to cart:", err));
+                // Cập nhật badge giỏ hàng
+                let badge = document.getElementById("cartBadge");
+                if (!badge) {
+                    badge = document.createElement("span");
+                    badge.id = "cartBadge";
+                    badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
+                    badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
+                    document.querySelector("a[href='/cart']").appendChild(badge);
+                }
+                badge.innerText = data.cartQuantity;
+            })
+            .catch(err => console.error("Error adding product to cart:", err));
     });
 });

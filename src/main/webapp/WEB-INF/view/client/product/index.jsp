@@ -154,11 +154,11 @@
                                                                         <input type="hidden"
                                                                             name="${_csrf.parameterName}"
                                                                             value="${_csrf.token}" />
-                                                                        <button
-                                                                            class="mx-auto btn border border-secondary rounded-pill px-3 text-primary"><i
-                                                                                class="fa fa-shopping-bag me-2 text-primary"></i>
+                                                                        <a href="javascript:void(0);" id="addToCartBtn"
+                                                                            data-slug="${product.slug}" class="btn border border-secondary
+                                                                            rounded-pill px-4 py-2 mb-4 text-primary">
                                                                             Thêm vào giỏ hàng
-                                                                        </button>
+                                                                        </a>
                                                                     </form>
                                                                 </div>
                                                             </div>
