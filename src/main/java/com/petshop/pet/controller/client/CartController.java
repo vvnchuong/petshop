@@ -85,11 +85,16 @@ public class CartController {
     @PostMapping("/cart/update")
     @ResponseBody
     public void updateCart(@RequestParam("id") Long id,
-                           @RequestParam("quantity") Integer quantity,
-                           @AuthenticationPrincipal CustomUserDetails currentUser){
+                           @RequestParam("quantity") Integer quantity){
         cartDetailService.updateQuantity(id, quantity);
     }
 
+    @PostMapping("/cart/delete/{productSlug}")
+    @ResponseBody
+    public void deleteProduct(@PathVariable("productSlug") String slug,
+                              @AuthenticationPrincipal CustomUserDetails currentUser){
 
+        cartDetailService.deleteProductInCartDetail(slug, currentUser.getUsername());
+    }
 
 }

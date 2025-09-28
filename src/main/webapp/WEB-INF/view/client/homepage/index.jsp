@@ -49,7 +49,7 @@
 
                     <jsp:include page="../layout/header.jsp" />
 
-                    
+
 
                     <jsp:include page="../layout/banner.jsp" />
 
@@ -117,7 +117,8 @@
                                                                                 ${product.name}
                                                                             </a>
                                                                         </h4>
-                                                                        <p class="multiline-ellipsis">${product.shortDesc}</p>
+                                                                        <p class="multiline-ellipsis">
+                                                                            ${product.shortDesc}</p>
                                                                         <div
                                                                             class="d-flex flex-lg-wrap justify-content-center">
                                                                             <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -125,16 +126,14 @@
                                                                                 <fmt:formatNumber type="number"
                                                                                     value="${product.price}" />đ
                                                                             </p>
-                                                                            <form
-                                                                                action="/add-product-to-cart/${product.id}"
-                                                                                method="post">
+                                                                            <form action="/product/${product.slug}">
                                                                                 <input type="hidden"
                                                                                     name="${_csrf.parameterName}"
                                                                                     value="${_csrf.token}" />
                                                                                 <button
                                                                                     class="mx-auto btn border border-secondary rounded-pill px-3 text-primary"><i
                                                                                         class="fa fa-shopping-bag me-2 text-primary"></i>
-                                                                                    Thêm vào giỏ hàng
+                                                                                    xem sản phẩm
                                                                                 </button>
                                                                             </form>
                                                                         </div>
@@ -169,7 +168,8 @@
                                                                             ${product.name}
                                                                         </a>
                                                                     </h4>
-                                                                    <p class="multiline-ellipsis">${product.shortDesc}</p>
+                                                                    <p class="multiline-ellipsis">${product.shortDesc}
+                                                                    </p>
                                                                     <div
                                                                         class="d-flex flex-lg-wrap justify-content-center">
                                                                         <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -177,16 +177,14 @@
                                                                             <fmt:formatNumber type="number"
                                                                                 value="${product.price}" />đ
                                                                         </p>
-                                                                        <form
-                                                                            action="/add-product-to-cart/${product.id}"
-                                                                            method="post">
+                                                                        <form action="/product/${product.slug}">
                                                                             <input type="hidden"
                                                                                 name="${_csrf.parameterName}"
                                                                                 value="${_csrf.token}" />
                                                                             <button
                                                                                 class="mx-auto btn border border-secondary rounded-pill px-3 text-primary"><i
                                                                                     class="fa fa-shopping-bag me-2 text-primary"></i>
-                                                                                Thêm vào giỏ hàng
+                                                                                xem sản phẩm
                                                                             </button>
                                                                         </form>
                                                                     </div>
@@ -220,7 +218,8 @@
                                                                             ${product.name}
                                                                         </a>
                                                                     </h4>
-                                                                    <p class="multiline-ellipsis">${product.shortDesc}</p>
+                                                                    <p class="multiline-ellipsis">${product.shortDesc}
+                                                                    </p>
                                                                     <div
                                                                         class="d-flex flex-lg-wrap justify-content-center">
                                                                         <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -228,16 +227,14 @@
                                                                             <fmt:formatNumber type="number"
                                                                                 value="${product.price}" />đ
                                                                         </p>
-                                                                        <form
-                                                                            action="/add-product-to-cart/${product.id}"
-                                                                            method="post">
+                                                                        <form action="/product/${product.slug}">
                                                                             <input type="hidden"
                                                                                 name="${_csrf.parameterName}"
                                                                                 value="${_csrf.token}" />
                                                                             <button
                                                                                 class="mx-auto btn border border-secondary rounded-pill px-3 text-primary"><i
                                                                                     class="fa fa-shopping-bag me-2 text-primary"></i>
-                                                                                Thêm vào giỏ hàng
+                                                                                xem sản phẩm
                                                                             </button>
                                                                         </form>
                                                                     </div>
@@ -271,8 +268,8 @@
                                                                         </a>
                                                                     </h4>
                                                                     <p class="multiline-ellipsis">
-                                                                    ${product.shortDesc}
-                                                                </p>
+                                                                        ${product.shortDesc}
+                                                                    </p>
                                                                     <div
                                                                         class="d-flex flex-lg-wrap justify-content-center">
                                                                         <p style="font-size: 15px; text-align: center; width: 100%;"
@@ -280,16 +277,14 @@
                                                                             <fmt:formatNumber type="number"
                                                                                 value="${product.price}" />đ
                                                                         </p>
-                                                                        <form
-                                                                            action="/add-product-to-cart/${product.id}"
-                                                                            method="post">
+                                                                        <form action="/product/${product.slug}">
                                                                             <input type="hidden"
                                                                                 name="${_csrf.parameterName}"
                                                                                 value="${_csrf.token}" />
                                                                             <button
                                                                                 class="mx-auto btn border border-secondary rounded-pill px-3 text-primary"><i
                                                                                     class="fa fa-shopping-bag me-2 text-primary"></i>
-                                                                                Thêm vào giỏ hàng
+                                                                                xem sản phẩm
                                                                             </button>
                                                                         </form>
                                                                     </div>

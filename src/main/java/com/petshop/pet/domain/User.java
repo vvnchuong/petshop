@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,5 +44,8 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     Cart cart;
+
+    @OneToMany(mappedBy = "user")
+    List<Order> orders = new ArrayList<>();
 
 }

@@ -154,8 +154,8 @@
     // Hàm gọi API cập nhật server
     function saveQuantity(id, quantity) {
         $.post("/cart/update", { id: id, quantity: quantity })
-            .done(() => console.log("Đã lưu " + id + " = " + quantity))
-            .fail(() => alert("Lỗi lưu số lượng!"));
+            .done(() => console.log("Saved " + id + " = " + quantity))
+            .fail(() => alert("Error to save quantity!"));
     }
 
     $(document).ready(function () {
@@ -167,11 +167,15 @@
             } else if (currentVal > 1) {
                 input.val(currentVal - 1);
             }
-            updateTotals();
 
-            // Lấy id của cartDetail từ input hidden trong cùng <tr>
-            const cartId = $(this).closest('tr').find('input[type=hidden]').val();
-            saveQuantity(cartId, input.val());
+            if ($(this).closest('tr').length) {
+                updateTotals();
+
+                const cartId = $(this).closest('tr').find('input[type=hidden]').val();
+                if (cartId) {
+                    saveQuantity(cartId, input.val());
+                }
+            }
         });
 
         $('.quantity-input').on('change', function () {
@@ -189,9 +193,10 @@
 
 })(jQuery);
 
+// count number product types
 document.addEventListener("DOMContentLoaded", function () {
     const addToCartBtn = document.getElementById("addToCartBtn");
-    if (!addToCartBtn) return; // tránh lỗi nếu nút không tồn tại
+    if (!addToCartBtn) return;
 
     addToCartBtn.addEventListener("click", function () {
         const slug = this.dataset.slug;
@@ -208,7 +213,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 console.log(data.message);
 
-                // Cập nhật badge giỏ hàng
                 let badge = document.getElementById("cartBadge");
                 if (!badge) {
                     badge = document.createElement("span");
@@ -220,5 +224,74 @@ document.addEventListener("DOMContentLoaded", function () {
                 badge.innerText = data.cartQuantity;
             })
             .catch(err => console.error("Error adding product to cart:", err));
+    });
+});
+
+// delete product in cart detail
+$(document).ready(function () {
+    $(".btn-delete").on("click", function () {
+        const btn = $(this);
+        const slug = btn.data("slug");
+
+        $.ajax({
+            url: "/cart/delete/" + slug,
+            type: "POST",
+            headers: { "X-CSRF-TOKEN": "${_csrf.token}" },
+            success: function () {
+                btn.closest("tr").remove();
+
+                let badge = document.getElementById("cartBadge");
+                if (badge) {
+                    let currentQty = parseInt(badge.innerText) || 0;
+                    badge.innerText = Math.max(currentQty - 1, 0);
+                    if (currentQty - 1 <= 0) badge.remove();
+                }
+
+                if ($("tbody tr").length === 0) {
+                    $(".table-responsive").hide();
+                    $("#emptyCartMessage").show();
+                }
+
+                updateTotal();
+            },
+            error: function () {
+                alert("Error to delete product!");
+            }
+        });
+    });
+
+    function updateTotal() {
+        let total = 0;
+        $(".line-total").each(function () {
+            const value = $(this).text().replace(/[^\d]/g, "");
+            total += parseInt(value) || 0;
+        });
+        $("#total-price, #grand-total").text(total.toLocaleString() + " đ");
+    }
+});
+
+
+// count number of product in product detail
+$(document).ready(function () {
+    $('.btn-plus, .btn-minus').on('click', function () {
+        let input = $(this).closest('.quantity').find('input[type="text"]');
+        let currentVal = parseInt(input.val()) || 1;
+
+        if ($(this).hasClass('btn-plus')) {
+            input.val(currentVal + 1);
+        } else if (currentVal > 1) {
+            input.val(currentVal - 1);
+        }
+    });
+
+    $('#addToCartBtn').on('click', function () {
+        const slug = $(this).data('slug');
+        const qty = parseInt($('#productQuantity').val()) || 1;
+
+        $.post('/cart/update', { slug: slug, quantity: qty })
+            .done(() => {
+                alert(`Đã thêm ${qty} sản phẩm vào giỏ hàng!`);
+            })
+            .fail(() => alert('Lỗi cập nhật giỏ hàng!'));
     });
 });
