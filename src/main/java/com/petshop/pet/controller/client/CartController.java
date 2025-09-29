@@ -63,13 +63,8 @@ public class CartController {
     public String getCartPage(Model model,
                               @AuthenticationPrincipal CustomUserDetails currentUser){
 
-        Cart cart = cartService.getCartByUsername(currentUser.getUsername());
-        List<CartDetail> cartDetails;
-        if(cart == null) {
-            cartDetails = new ArrayList<>();
-        }else{
-            cartDetails = cartDetailService.getAllProductsInCart(cart);
-        }
+        List<CartDetail> cartDetails = cartDetailService.
+                getAllProductsInCartByUser(currentUser.getUsername());
 
         double totalPrice = 0;
         for(CartDetail cartDetail : cartDetails){
@@ -110,13 +105,8 @@ public class CartController {
     public String getCheckoutPage(Model model,
                                   @AuthenticationPrincipal CustomUserDetails currentUser){
 
-        Cart cart = cartService.getCartByUsername(currentUser.getUsername());
-        List<CartDetail> cartDetails;
-        if(cart == null) {
-            cartDetails = new ArrayList<>();
-        }else{
-            cartDetails = cartDetailService.getAllProductsInCart(cart);
-        }
+        List<CartDetail> cartDetails = cartDetailService.
+                getAllProductsInCartByUser(currentUser.getUsername());
 
         double totalPrice = 0;
         for(CartDetail cartDetail : cartDetails){

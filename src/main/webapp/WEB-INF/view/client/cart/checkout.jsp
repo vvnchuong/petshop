@@ -46,7 +46,7 @@
                                 </nav>
                             </div>
 
-                            <form action="/place-order" method="post">
+                            <form action="/checkout" method="post">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
                                 <div class="row g-4">
@@ -151,7 +151,7 @@
                                                 </div>
                                             </div>
 
-                                            <button class="btn btn-primary w-100 fw-bold">Đặt hàng</button>
+                                            <button type="submit" class="btn btn-primary w-100 fw-bold">Đặt hàng</button>
                                         </div>
                                     </div>
 

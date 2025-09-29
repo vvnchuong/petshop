@@ -29,8 +29,6 @@ public class Order {
 
     String receiverPhone;
 
-    String receiverAddress;
-
     Instant createdAt;
     Instant updatedAt;
 

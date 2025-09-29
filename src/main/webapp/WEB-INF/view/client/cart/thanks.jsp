@@ -3,67 +3,37 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đặt hàng thành công</title>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .success-wrapper {
-            max-width: 600px;
-            margin: 100px auto;
-            background: #fff;
-            border-radius: 8px;
-            padding: 40px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .success-icon {
-            font-size: 60px;
-            color: #28a745;
-        }
-
-        .btn-home, .btn-support {
-            padding: 10px 24px;
-            border-radius: 30px;
-        }
-
-        .btn-home {
-            border: 1px solid #28a745;
-            color: #28a745;
-        }
-
-        .btn-home:hover {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .btn-support {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-support:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="success-wrapper text-center">
-        <div class="success-icon mb-4">
-            ✅
-        </div>
-        <h2 class="mb-3">Cảm ơn bạn đã mua hàng!</h2>
-        <p>Đơn hàng của bạn đã được đặt thành công.<br>Chúng tôi sẽ sớm liên hệ để xác nhận và giao hàng.</p>
 
-        <!-- Mã đơn hàng (bạn truyền từ controller) -->
-        <p class="mt-3">Mã đơn hàng của bạn: <strong>#ORD123456</strong></p>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="bg-light rounded p-5 text-center shadow-sm">
+                <div class="mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="green" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.08-.02l3.992-4.99a.75.75 0 1 0-1.14-.976L7.477 9.417 5.324 7.262a.75.75 0 1 0-1.06 1.06l2.707 2.708z"/>
+                    </svg>
+                </div>
+                <h2 class="text-success mb-3">Đặt hàng thành công!</h2>
+                <p class="lead">Cảm ơn bạn đã mua sản phẩm của chúng tôi.</p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="/" class="btn btn-outline-primary px-4">
+                        Tiếp tục mua sắm
+                    </a>
+                    <a href="/orders/${orderId}" class="btn btn-primary px-4">
+                        Xem chi tiết đơn hàng
+                    </a>
+                </div>
 
-        <div class="mt-4 d-flex justify-content-center gap-3">
-            <a href="/" class="btn btn-home">Về trang chủ</a>
-            <a href="/contact" class="btn btn-support">Liên hệ hỗ trợ</a>
+            </div>
         </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

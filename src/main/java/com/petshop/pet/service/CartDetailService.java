@@ -7,6 +7,7 @@ import com.petshop.pet.repository.CartRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,8 +23,10 @@ public class CartDetailService {
         this.cartRepository = cartRepository;
     }
 
-    public List<CartDetail> getAllProductsInCart(Cart cart){
-        return cartDetailRepository.findAllByCart(cart);
+    public List<CartDetail> getAllProductsInCartByUser(String username){
+        Cart cart = cartRepository.findByUserUsername(username);
+        return cart == null ?
+                new ArrayList<>() : cartDetailRepository.findAllByCart(cart);
     }
 
     public void updateQuantity(Long id, Integer quantity) {
@@ -47,4 +50,9 @@ public class CartDetailService {
         CartDetail cartDetail = cartDetailRepository.
                 findByCartUserUsernameAndProductId(username, productId);
     }
+
+    public void deleteAllProductInCartByCartId(Cart cart){
+        cartDetailRepository.deleteAllByCart(cart);
+    }
+
 }
