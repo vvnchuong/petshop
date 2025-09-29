@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,15 @@ public class Order {
     long id;
 
     double totalAmount;
+
+    String receiverName;
+
+    String receiverPhone;
+
+    String receiverAddress;
+
+    Instant createdAt;
+    Instant updatedAt;
 
     @Enumerated(EnumType.STRING)
     Status status;
