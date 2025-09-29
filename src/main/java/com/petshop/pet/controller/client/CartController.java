@@ -97,4 +97,38 @@ public class CartController {
         cartDetailService.deleteProductInCartDetail(slug, currentUser.getUsername());
     }
 
+    // update quantity of product in product detail
+//    @PostMapping("/cart/add")
+//    @ResponseBody
+//    public void addToCart(@AuthenticationPrincipal CustomUserDetails currentUser,
+//                          @RequestParam("productId") Long productId,
+//                          @RequestParam("quantity") Integer quantity) {
+//        cartDetailService.addToCart(currentUser.getUsername(), productId, quantity);
+//    }
+
+    @GetMapping("/checkout")
+    public String getCheckoutPage(Model model,
+                                  @AuthenticationPrincipal CustomUserDetails currentUser){
+
+        Cart cart = cartService.getCartByUsername(currentUser.getUsername());
+        List<CartDetail> cartDetails;
+        if(cart == null) {
+            cartDetails = new ArrayList<>();
+        }else{
+            cartDetails = cartDetailService.getAllProductsInCart(cart);
+        }
+
+        double totalPrice = 0;
+        for(CartDetail cartDetail : cartDetails){
+            totalPrice += cartDetail.getQuantity() * cartDetail.getPrice();
+        }
+
+        User user = userService.getUserByUserName(currentUser.getUsername());
+
+        model.addAttribute("cartDetails", cartDetails);
+        model.addAttribute("totalPrice", totalPrice);
+        model.addAttribute("currentUser", user);
+        return "client/cart/checkout";
+    }
+
 }

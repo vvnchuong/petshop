@@ -154,8 +154,8 @@
     // Hàm gọi API cập nhật server
     function saveQuantity(id, quantity) {
         $.post("/cart/update", { id: id, quantity: quantity })
-            .done(() => console.log("Saved " + id + " = " + quantity))
-            .fail(() => alert("Error to save quantity!"));
+            .done(() => console.log("Đã lưu " + id + " = " + quantity))
+            .fail(() => alert("Lỗi lưu số lượng!"));
     }
 
     $(document).ready(function () {
@@ -167,15 +167,10 @@
             } else if (currentVal > 1) {
                 input.val(currentVal - 1);
             }
+            updateTotals();
 
-            if ($(this).closest('tr').length) {
-                updateTotals();
-
-                const cartId = $(this).closest('tr').find('input[type=hidden]').val();
-                if (cartId) {
-                    saveQuantity(cartId, input.val());
-                }
-            }
+            const cartId = $(this).closest('tr').find('input[type=hidden]').val();
+            saveQuantity(cartId, input.val());
         });
 
         $('.quantity-input').on('change', function () {
@@ -272,26 +267,3 @@ $(document).ready(function () {
 
 
 // count number of product in product detail
-$(document).ready(function () {
-    $('.btn-plus, .btn-minus').on('click', function () {
-        let input = $(this).closest('.quantity').find('input[type="text"]');
-        let currentVal = parseInt(input.val()) || 1;
-
-        if ($(this).hasClass('btn-plus')) {
-            input.val(currentVal + 1);
-        } else if (currentVal > 1) {
-            input.val(currentVal - 1);
-        }
-    });
-
-    $('#addToCartBtn').on('click', function () {
-        const slug = $(this).data('slug');
-        const qty = parseInt($('#productQuantity').val()) || 1;
-
-        $.post('/cart/update', { slug: slug, quantity: qty })
-            .done(() => {
-                alert(`Đã thêm ${qty} sản phẩm vào giỏ hàng!`);
-            })
-            .fail(() => alert('Lỗi cập nhật giỏ hàng!'));
-    });
-});

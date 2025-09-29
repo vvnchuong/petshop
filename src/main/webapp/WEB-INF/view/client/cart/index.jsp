@@ -58,7 +58,7 @@
                             <div id="cartTableContainer" class="table-responsive"
                                 style="${empty cartDetails ? 'display:none;' : ''}">
 
-                                <form:form method="post" action="/confirm-checkout">
+                                <form:form method="get" action="/checkout">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
                                     <div class="table-responsive">

@@ -46,113 +46,119 @@
                                 </nav>
                             </div>
 
-                            <!-- Giỏ hàng -->
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Sản phẩm</th>
-                                            <th>Tên</th>
-                                            <th>Giá</th>
-                                            <th>Số lượng</th>
-                                            <th>Thành tiền</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="cart" items="${carts}">
-                                            <tr>
-                                                <td>
-                                                    <img src="/images/product/${cart.product.image}"
-                                                        class="img-fluid rounded-circle"
-                                                        style="width: 80px; height: 80px;" alt="">
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0 mt-4">${cart.product.name}</p>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0 mt-4 product-price" data-price="${cart.price}">
-                                                        <fmt:formatNumber value="${cart.price}" type="number"
-                                                            groupingUsed="true" /> đ
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <div class="mb-0 mt-4 mx-4" style="width: 100px;">
-                                                        ${cart.quantity}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <p class="mb-0 mt-4 line-total">
-                                                        <fmt:formatNumber value="${cart.price * cart.quantity}"
-                                                            type="number" groupingUsed="true" /> đ
-                                                    </p>
-                                                </td>
-
-                                            </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Thông tin đơn hàng -->
                             <form action="/place-order" method="post">
                                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
                                 <div class="row g-4">
-                                    <!-- Cột trái: Thông tin người nhận -->
                                     <div class="col-sm-12 col-md-6">
                                         <div class="bg-light rounded p-4">
                                             <h3 class="mb-4">Thông tin người nhận</h3>
                                             <div class="mb-3">
                                                 <label for="fullName" class="form-label">Họ và tên</label>
-                                                <input type="text" class="form-control" id="fullName" name="receiverName"
+                                                <input type="text" class="form-control" id="fullName"
+                                                    name="receiverName" value="${currentUser.fullName}"
                                                     placeholder="Nhập họ tên" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="phone" class="form-label">Số điện thoại</label>
-                                                <input type="text" class="form-control" id="phone" name="receiverPhone"
+                                                <input type="text" class="form-control" id="phone"
+                                                    value="${currentUser.phone}" name="receiverPhone"
                                                     placeholder="Nhập số điện thoại" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="address" class="form-label">Địa chỉ giao hàng</label>
-                                                <textarea class="form-control" id="address" name="receiverAddress" rows="3"
-                                                    placeholder="Nhập địa chỉ" required></textarea>
+                                                <textarea class="form-control" id="address" name="receiverAddress"
+                                                    rows="3" placeholder="Nhập địa chỉ"
+                                                    required>${currentUser.address}</textarea>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Cột phải: Thông tin thanh toán -->
                                     <div class="col-sm-12 col-md-6">
                                         <div class="bg-light rounded p-4">
-                                            <h3 class="mb-4">Thông tin thanh toán</h3>
-                                            <div class="d-flex justify-content-between mb-3">
-                                                <span>Tạm tính:</span>
+                                            <h3>Đơn hàng</h3>
+
+                                            <c:forEach var="cartDetail" items="${cartDetails}">
+                                                <div class="d-flex align-items-center border-bottom py-2">
+                                                    <img src="/admin/images/product/${cartDetail.product.imageUrl}"
+                                                        alt="Sản phẩm" class="rounded" width="80" height="80">
+
+                                                    <div class="ms-3 flex-grow-1">
+                                                        <h5 class="mb-1">${cartDetail.product.name}</h5>
+                                                        <p class="mb-1">Số lượng: ${cartDetail.quantity}</p>
+                                                        <p class="mb-0 text-primary fw-bold">
+                                                            <fmt:formatNumber
+                                                                value="${cartDetail.price * cartDetail.quantity}"
+                                                                type="number" groupingUsed="true" /> đ
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+
+                                            <p class="my-3">
+
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
+                                                <button class="btn btn-outline-primary" type="button">Áp
+                                                    dụng</button>
+                                            </div>
+
+                                            <hr class="my-3">
+
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Tạm tính</span>
+                                                <p class="mb-0 text-primary fw-bold">
+                                                    <fmt:formatNumber value="${totalPrice}" type="number"
+                                                        groupingUsed="true" /> đ
+                                                </p>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Phí vận chuyển</span>
                                                 <span>
+                                                    <fmt:formatNumber value="0" type="number" groupingUsed="true" />
+                                                    đ
+                                                </span>
+                                            </div>
+
+                                            <hr class="my-3">
+
+                                            <div class="d-flex justify-content-between mb-3 fw-bold">
+                                                <span>Tổng cộng</span>
+                                                <span class="text-danger">
                                                     <fmt:formatNumber value="${totalPrice}" type="number"
                                                         groupingUsed="true" /> đ
                                                 </span>
                                             </div>
-                                            <div class="d-flex justify-content-between mb-3">
-                                                <span>Phí vận chuyển:</span>
-                                                <span>0 đ</span>
-                                            </div>
-                                            <hr>
-                                            <div class="d-flex justify-content-between mb-4">
-                                                <strong>Tổng cộng:</strong>
-                                                <strong>
-                                                    <fmt:formatNumber value="${totalPrice}" type="number"
-                                                        groupingUsed="true" /> đ
-                                                </strong>
+
+                                            <hr class="my-3">
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Phương thức thanh toán</label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                                        id="cod" value="COD" checked>
+                                                    <label class="form-check-label" for="cod">
+                                                        Thanh toán khi nhận hàng (COD)
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="paymentMethod"
+                                                        id="wallet" value="MOBILE_WALLET">
+                                                    <label class="form-check-label" for="wallet">
+                                                        Ví điện tử (Mobile Wallet)
+                                                    </label>
+                                                </div>
                                             </div>
 
-                                            <button type="submit" class="btn btn-primary w-100 text-uppercase">Xác nhận
-                                                đặt hàng</button>
+                                            <button class="btn btn-primary w-100 fw-bold">Đặt hàng</button>
                                         </div>
                                     </div>
+
                                 </div>
                             </form>
-
                         </div>
+
                     </div>
 
                     <jsp:include page="../layout/footer.jsp" />

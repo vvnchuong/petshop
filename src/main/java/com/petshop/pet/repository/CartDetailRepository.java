@@ -15,4 +15,6 @@ public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
 
     void deleteByProductSlug(String slug);
 
+    CartDetail findByCartUserUsernameAndProductId(String username, Long productId);
+
 }
