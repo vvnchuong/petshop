@@ -1,14 +1,10 @@
 package com.petshop.pet.service;
 
 import com.petshop.pet.config.CustomUserDetails;
-import com.petshop.pet.domain.Cart;
-import com.petshop.pet.domain.CartDetail;
-import com.petshop.pet.domain.Order;
-import com.petshop.pet.domain.User;
+import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.CheckoutRequestDTO;
-import com.petshop.pet.enums.PaymentMethod;
-import com.petshop.pet.enums.Status;
 import com.petshop.pet.repository.CartRepository;
+import com.petshop.pet.repository.OrderDetailRepository;
 import com.petshop.pet.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +17,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final OrderDetailRepository orderDetailRepository;
+
     private final CartRepository cartRepository;
 
     private final CartDetailService cartDetailService;
@@ -28,10 +26,12 @@ public class OrderService {
     private final UserService userService;
 
     public OrderService(OrderRepository orderRepository,
+                        OrderDetailRepository orderDetailRepository,
                         CartRepository cartRepository,
                         CartDetailService cartDetailService,
                         UserService userService){
         this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
         this.cartRepository = cartRepository;
         this.cartDetailService = cartDetailService;
         this.userService = userService;
@@ -61,7 +61,16 @@ public class OrderService {
         User user = userService.getUserByUserName(currentUser.getUsername());
         order.setUser(user);
 
-        createOrderByUser(order);
+        orderRepository.save(order);
+
+        for(CartDetail cartDetail : cartDetails){
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setProduct(cartDetail.getProduct());
+            orderDetail.setQuantity(cartDetail.getQuantity());
+            orderDetail.setPrice(cartDetail.getPrice());
+            orderDetailRepository.save(orderDetail);
+        }
 
         Cart cart = cartRepository.findByUser(user);
         cart.setQuantity(0);
@@ -70,7 +79,8 @@ public class OrderService {
         cartDetailService.deleteAllProductInCartByCartId(user.getCart());
     }
 
-    public void createOrderByUser(Order order) {
-        orderRepository.save(order);
+    public List<Order> getAllOrderByUser(String username) {
+        return orderRepository.findByUserUsername(username);
     }
+
 }

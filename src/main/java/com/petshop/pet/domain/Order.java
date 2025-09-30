@@ -45,6 +45,6 @@ public class Order {
     User user;
 
     @OneToMany(mappedBy = "order")
-    List<OrderDetail> orderDetail = new ArrayList<>();
+    List<OrderDetail> orderDetails = new ArrayList<>();
 
 }

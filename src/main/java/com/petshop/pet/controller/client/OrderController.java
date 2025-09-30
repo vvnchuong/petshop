@@ -14,6 +14,8 @@ import com.petshop.pet.service.OrderService;
 import com.petshop.pet.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,6 +51,16 @@ public class OrderController {
         orderService.placeOrder(checkoutRequestDTO, currentUser);
 
         return "client/cart/thanks";
+    }
+
+    @GetMapping("/order/history")
+    public String getOrderHistoryPage(Model model,
+                                      @AuthenticationPrincipal CustomUserDetails currentUser){
+
+        List<Order> orders = orderService.getAllOrderByUser(currentUser.getUsername());
+        model.addAttribute("orders", orders);
+
+        return "client/order/index";
     }
 
 }
