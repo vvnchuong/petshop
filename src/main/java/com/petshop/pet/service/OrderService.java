@@ -83,4 +83,8 @@ public class OrderService {
         return orderRepository.findByUserUsername(username);
     }
 
+    public Order getOrderByIdAndUser(long orderId, String username){
+        return orderRepository.findByIdAndUserUsername(orderId, username);
+    }
+
 }
