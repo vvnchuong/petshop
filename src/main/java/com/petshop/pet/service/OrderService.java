@@ -87,4 +87,21 @@ public class OrderService {
         return orderRepository.findByIdAndUserUsername(orderId, username);
     }
 
+    public List<Order> getAllOrdersByAdmin(){
+        return orderRepository.findAll();
+    }
+
+    public Order getOrderById(long orderId){
+        return orderRepository.findById(orderId).
+                orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+
+    public void updateOrder(long orderId, Order orderUpdate){
+        Order order = getOrderById(orderId);
+        order.setStatus(orderUpdate.getStatus());
+        order.setUpdatedAt(Instant.now());
+
+        orderRepository.save(order);
+    }
+
 }

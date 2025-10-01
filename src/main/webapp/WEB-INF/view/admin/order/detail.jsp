@@ -27,60 +27,79 @@
                         <jsp:include page="../layout/sidebar.jsp" />
 
                         <div id="layoutSidenav_content">
-                            <div class="container mt-5">
-                                <div class="row">
-                                    <div class="col-12 mx-auto">
-                                        <div class="d-flex justify-content-between">
-                                            <h3>Chi tiết đơn đặt hàng</h3>
+                            <div class="container">
+                                <div class="container py-4 mt-4">
+                                    <h2 class="mb-4">Chi tiết đơn hàng #${order.id}</h2>
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <p><strong>Ngày đặt:</strong> ${order.createdAt}</p>
+                                            <p>
+                                                <strong>Trạng thái: </strong>
+                                                <c:choose>
+                                                    <c:when test="${order.status.toString() eq 'PENDING'}">
+                                                        <span
+                                                            class="badge bg-warning text-dark">${order.status.name}</span>
+                                                    </c:when>
+                                                    <c:when test="${order.status.toString() eq 'SHIPPING'}">
+                                                        <span class="badge bg-info">${order.status.name}</span>
+                                                    </c:when>
+                                                    <c:when test="${order.status.toString() eq 'DELIVERED'}">
+                                                        <span class="badge bg-success">${order.status.name}</span>
+                                                    </c:when>
+                                                    <c:when test="${order.status.toString() eq 'CANCELLED'}">
+                                                        <span class="badge bg-danger">${order.status.name}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">${order.status.name}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </p>
+                                            <p>Debug getName: ${order.status.name}</p>
 
-                                        </div>
-
-                                        <hr />
-                                        <table class="table table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Sản phẩm</th>
-                                                    <th>Tên</th>
-                                                    <th>Giá cả</th>
-                                                    <th>Số lượng</th>
-                                                    <th>Thành tiền</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <c:forEach var="orderDetail" items="${orderDetails}">
-                                                    <tr>
-                                                        <td>
-                                                            <img src="/images/product/${orderDetail.product.image}"
-                                                                alt="laptop" class="rounded-circle"
-                                                                style="width: 50px; height: 50px; object-fit: cover;" />
-                                                        </td>
-                                                        <td>${orderDetail.product.name}</td>
-                                                        <td>
-                                                            <fmt:formatNumber value="${orderDetail.price}" type="number"
-                                                                groupingUsed="true" /> đ
-                                                        </td>
-                                                        <td>${orderDetail.quantity}</td>
-                                                        <td>
-                                                            <fmt:formatNumber value="${orderDetail.order.totalPrice}"
-                                                                type="number" groupingUsed="true" /> đ
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
-                                        <div class="mt-3">
-                                            <a href="/admin/order" class="btn btn-success">Back</a>
+                                            <p><strong>Người nhận:</strong> ${order.receiverName}</p>
+                                            <p><strong>Điện thoại:</strong> ${order.receiverPhone}</p>
+                                            <p><strong>Địa chỉ:</strong> ${order.shippingAddress}</p>
+                                            <p><strong>Phương thức thanh toán:</strong> ${order.paymentMethod}</p>
+                                            <p><strong>Tổng tiền:</strong>
+                                                <fmt:formatNumber value="${order.totalAmount}" type="number"
+                                                    groupingUsed="true" /> đ
+                                            </p>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="mb-3">Sản phẩm trong đơn hàng</h5>
 
-                            <jsp:include page="../layout/footer.jsp" />
+                                            <c:forEach var="item" items="${order.orderDetails}">
+                                                <div class="d-flex align-items-center border-top pt-3 mt-3">
+                                                    <img src="${pageContext.request.contextPath}/admin/images/product/${item.product.imageUrl}"
+                                                        alt="${item.product.name}" class="rounded border" width="80"
+                                                        height="80">
+
+                                                    <div class="ms-3 flex-grow-1">
+                                                        <h6 class="mb-1">${item.product.name}</h6>
+                                                        <p class="mb-1">Số lượng: ${item.quantity}</p>
+                                                        <p class="mb-0 text-primary fw-bold">
+                                                            <fmt:formatNumber value="${item.price * item.quantity}"
+                                                                type="number" groupingUsed="true" /> đ
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="/admin/order" class="btn btn-success">Quay lại</a>
+                                    </div>
+                                </div>
+
+                                <jsp:include page="../layout/footer.jsp" />
+                            </div>
                         </div>
-                    </div>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-                        crossorigin="anonymous"></script>
-                    <script src="js/scripts.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+                            crossorigin="anonymous"></script>
+                        <script src="js/scripts.js"></script>
                 </body>
 
                 </html>

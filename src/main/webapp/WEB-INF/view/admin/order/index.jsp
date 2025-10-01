@@ -12,7 +12,7 @@
                     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                     <meta name="description" content=" - Dự án Petshop" />
                     <meta name="author" content="" />
-                    <title>Dashboard - meomeo</title>
+                    <title>Dashboard</title>
                     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css"
                         rel="stylesheet" />
                     <link href="/admin/css/styles.css" rel="stylesheet" />
@@ -31,7 +31,7 @@
                                 <div class="row">
                                     <div class="col-12 mx-auto">
                                         <div class="d-flex justify-content-between">
-                                            <h3>Table orders</h3>
+                                            <h3>Danh sách đơn đặt hàng</h3>
 
                                         </div>
 
@@ -40,10 +40,11 @@
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
-                                                    <th>Total Price</th>
-                                                    <th>User</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
+                                                    <th>Họ tên khách hàng</th>
+                                                    <th>Địa chỉ giao hàng</th>
+                                                    <th>Tổng tiền</th>
+                                                    <th>Trạng thái</th>
+                                                    <th>Thực hiện</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -51,42 +52,22 @@
                                                     <tr>
                                                         <td>${order.id}</td>
                                                         <td>${order.receiverName}</td>
+                                                        <td>${order.shippingAddress}</td>
                                                         <td>
-                                                            <fmt:formatNumber value="${order.totalPrice}" type="number"
+                                                            <fmt:formatNumber value="${order.totalAmount}" type="number"
                                                                 groupingUsed="true" /> đ
                                                         </td>
                                                         <td>${order.status}</td>
                                                         <td>
                                                             <a href="/admin/order/${order.id}"
-                                                                class="btn btn-success">View</a>
+                                                                class="btn btn-success">Chi tiết</a>
                                                             <a href="/admin/order/update/${order.id}"
-                                                                class="btn btn-warning">Update</a>
-                                                            <a href="/admin/order/delete/${order.id}"
-                                                                class="btn btn-danger">Delete</a>
+                                                                class="btn btn-warning">Cập nhật</a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
                                             </tbody>
                                         </table>
-                                        <!-- <nav aria-label="Page navigation example">
-                                            <ul class="pagination">
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Previous">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                        <span class="sr-only">Previous</span>
-                                                    </a>
-                                                </li>
-                                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#" aria-label="Next">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                        <span class="sr-only">Next</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </nav> -->
                                     </div>
                                 </div>
                             </div>

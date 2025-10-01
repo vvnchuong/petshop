@@ -1,82 +1,68 @@
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-            <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
 
             <!DOCTYPE html>
             <html lang="en">
 
             <head>
-                <meta charset="utf-8" />
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-                <meta name="description" content=" - Dự án Petshop" />
-                <meta name="author" content="" />
-                <title>Dashboard - meomeo</title>
-                <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+                <meta charset="UTF-8">
+                <title>Cập nhật đơn hàng #${order.id}</title>
                 <link href="/admin/css/styles.css" rel="stylesheet" />
-                <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
             </head>
 
             <body class="sb-nav-fixed">
-
                 <jsp:include page="../layout/header.jsp" />
-
                 <div id="layoutSidenav">
-
                     <jsp:include page="../layout/sidebar.jsp" />
 
                     <div id="layoutSidenav_content">
+                        <main class="container py-4">
+                            <h2 class="mb-4">Cập nhật đơn hàng #${order.id}</h2>
 
-                        <div class="container mt-5">
-                            <div class="row">
-                                <div class="col-12 mx-auto">
-                                    <h3>Update user with id = ${id}</h3>
-                                    <hr />
-                                    <form:form method="post" action="/admin/order/update/${id}"
-                                        modelAttribute="newOrder">
-                                        <!-- newProduct ứng với currentProduct trong trong ProductController spring sẽ tự map -->
+                            <c:if test="${param.success ne null}">
+                                <div class="alert alert-success">Cập nhật trạng thái thành công!</div>
+                            </c:if>
 
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                Order id: ${newOrder.id}
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <fmt:formatNumber value="${newOrder.totalPrice}" type="number"
-                                                                groupingUsed="true" /> đ
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">User</label>
-                                                <form:input type="text" class="form-control bg-light" path="user.role.name" readonly="true" />
-                                            </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Status</label>
-                                                <form:select class="form-select" path="status">
-                                                    <form:option value="PENDING">PENDING</form:option>
-                                                    <form:option value="SHIPING">SHIPING</form:option>
-                                                    <form:option value="COMPLETE">COMPLETE</form:option>
-                                                    <form:option value="CANCEL">CANCEL</form:option>
-                                                </form:select>
-                                            </div>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-warning">Update</button>
-                                    </form:form>
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <p><strong>Ngày đặt:</strong> ${order.createdAt}</p>
+                                    <p><strong>Người nhận:</strong> ${order.receiverName}</p>
+                                    <p><strong>Điện thoại:</strong> ${order.receiverPhone}</p>
+                                    <p><strong>Địa chỉ giao hàng:</strong> ${order.shippingAddress}</p>
+                                    <p><strong>Phương thức thanh toán:</strong> ${order.paymentMethod}</p>
+                                    <p><strong>Tổng tiền:</strong>
+                                        <fmt:formatNumber value="${order.totalAmount}" type="number"
+                                            groupingUsed="true" /> đ
+                                    </p>
                                 </div>
                             </div>
-                        </div>
 
+                            <form action="/admin/order/update/${orderId}" method="post" class="card p-4">
+                                <input type="hidden" name="orderId" value="${order.id}" />
+
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Trạng thái đơn hàng</label>
+                                    <select id="status" name="status" class="form-select">
+                                        <option value="PENDING" ${order.status.toString() eq 'PENDING' ? 'selected' : ''
+                                            }>Chờ xử lý</option>
+                                        <option value="SHIPPING" ${order.status.toString() eq 'SHIPPING' ? 'selected'
+                                            : '' }>Đang giao</option>
+                                        <option value="DELIVERED" ${order.status.toString() eq 'DELIVERED' ? 'selected'
+                                            : '' }>Đã giao</option>
+                                        <option value="CANCELLED" ${order.status.toString() eq 'CANCELLED' ? 'selected'
+                                            : '' }>Đã hủy</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-warning">Cập nhật</button>
+                            </form>
+                        </main>
                         <jsp:include page="../layout/footer.jsp" />
-
                     </div>
                 </div>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-                    crossorigin="anonymous"></script>
-                <script src="js/scripts.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
             </body>
 
             </html>

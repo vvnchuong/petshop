@@ -12,20 +12,18 @@
 
                         <a class="nav-link" href="/admin/user">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            User
+                            Quản lý người dùng
                         </a>
 
                         <a class="nav-link" href="/admin/product">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Product
+                            Quản lý sản phẩm
                         </a>
 
                         <a class="nav-link" href="/admin/order">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Order
+                            Quản lý đơn hàng
                         </a>
-
-
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">

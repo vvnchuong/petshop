@@ -4,10 +4,7 @@
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
  
-                        <div>
-                            <a href="#" target="_blank">=</a>
-                            &middot;
-                        </div>
+                        
                     </div>
                 </div>
             </footer>
