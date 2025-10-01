@@ -1,8 +1,12 @@
 package com.petshop.pet.controller.client;
 
+import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.Product;
+import com.petshop.pet.domain.User;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,11 +54,6 @@ public class HomePageController {
         List<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub);
         model.addAttribute("products", subProducts);
         return "client/product/index";
-    }
-
-    @GetMapping("/account/login")
-    public String getLoginPage(){
-        return "client/auth/login";
     }
 
 }

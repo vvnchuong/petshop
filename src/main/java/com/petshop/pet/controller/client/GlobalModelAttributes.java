@@ -1,8 +1,10 @@
 package com.petshop.pet.controller.client;
 
+import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.service.CartService;
 import com.petshop.pet.service.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -28,6 +30,15 @@ public class GlobalModelAttributes {
             return cartService.getCartQuantity(user);
         }
         return 0;
+    }
+
+    @ModelAttribute("user")
+    public User addUserToModel(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails currentUser = (CustomUserDetails) authentication.getPrincipal();
+            return userService.getUserByUserName(currentUser.getUsername());
+        }
+        return null;
     }
 
 }

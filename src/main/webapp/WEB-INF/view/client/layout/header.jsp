@@ -1,6 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
             <!-- Navbar start -->
             <div class="container-fluid fixed-top">
 
@@ -119,13 +118,13 @@
                                             aria-labelledby="dropdownMenuLink">
                                             <li class="d-flex align-items-center flex-column" style="min-width: 300px;">
                                                 <img style="width: 150px; height: 150px; border-radius: 50%; overflow: hidden;"
-                                                    src="/admin/images/avatar/<sec:authentication property='principal.avatarUrl'/>" />
+                                                    src="/admin/images/avatar/${user.avatarUrl}" />
                                                 <div class="text-center my-3">
-                                                    <sec:authentication property="principal.fullName" />
+                                                    ${user.fullName}
                                                 </div>
                                             </li>
 
-                                            <li><a class="dropdown-item" href="#">Quản lý tài khoản</a></li>
+                                            <li><a class="dropdown-item" href="/account">Quản lý tài khoản</a></li>
 
                                             <li><a class="dropdown-item" href="/order/history">Lịch sử mua hàng</a></li>
                                             <li>

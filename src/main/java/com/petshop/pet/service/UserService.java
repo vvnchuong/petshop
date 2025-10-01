@@ -66,4 +66,33 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    public void updateUserByUser(String username, User userUpdate){
+        User user = getUserByUserName(username);
+        user.setFullName(userUpdate.getFullName());
+        user.setPhone(userUpdate.getPhone());
+        user.setAddress(userUpdate.getAddress());
+        user.setAvatarUrl(userUpdate.getAvatarUrl());
+        user.setUpdatedAt(Instant.now());
+
+        userRepository.save(user);
+    }
+
+    public boolean changePasswordByUser(String oldPassword, String newPassword,
+                                        String confirmPassword, String username) {
+
+        User user = getUserByUserName(username);
+        if(passwordEncoder.matches(oldPassword, user.getPassword())){
+           if(newPassword.equals(confirmPassword)){
+               user.setPassword(passwordEncoder.encode(newPassword));
+           }else{
+               return false;
+           }
+        }else{
+            return false;
+        }
+
+        userRepository.save(user);
+
+        return true;
+    }
 }
