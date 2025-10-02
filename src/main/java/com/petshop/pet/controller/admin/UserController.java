@@ -3,6 +3,12 @@ package com.petshop.pet.controller.admin;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +30,22 @@ public class UserController {
     }
 
     @GetMapping("/admin/user")
-    public String getUserPage(Model model){
-        List<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
+    public String getUserPage(Model model,
+                              @Filter Specification<User> spec,
+                              @RequestParam(name = "page", defaultValue = "1") int page,
+                              @PageableDefault(size = 5) Pageable pageableDefault){
+
+        Pageable pageable = PageRequest.of(page - 1,
+                pageableDefault.getPageSize(),
+                pageableDefault.getSort());
+
+        Page<User> users = userService.getAllUsers(spec, pageable);;
+
+        model.addAttribute("users", users.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", users.getTotalPages());
+        model.addAttribute("totalElements", users.getTotalElements());
+
         return "admin/user/index";
     }
 

@@ -33,6 +33,7 @@
                                     </div>
 
                                     <hr />
+                                    
                                     <table class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
@@ -62,6 +63,30 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            <!-- previous -->
+                                            <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                    href="?page=${currentPage - 1}">&laquo;</a>
+                                            </li>
+
+                                            <!-- page -->
+                                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                                <li class="page-item ${i == currentPage ? 'active' : ''}">
+                                                    <a class="page-link"
+                                                        href="?page=${i}">${i}</a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <!-- next -->
+                                            <li class="page-item ${currentPage == totalPages ? 'disabled' : ''}">
+                                                <a class="page-link"
+                                                    href="?page=${currentPage + 1}">&raquo;</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+
                                 </div>
                             </div>
                         </div>

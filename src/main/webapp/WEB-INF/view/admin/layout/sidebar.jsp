@@ -1,34 +1,49 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div id="layoutSidenav_nav">
-            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Features</div>
-                        <a class="nav-link" href="/admin">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
-                        </a>
+  <nav class="sb-sidenav accordion sb-sidenav-dark bg-dark shadow-sm" id="sidenavAccordion">
 
-                        <a class="nav-link" href="/admin/user">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Quản lý người dùng
-                        </a>
+    <!-- MENU -->
+    <div class="sb-sidenav-menu">
+      <div class="nav py-3">
 
-                        <a class="nav-link" href="/admin/product">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Quản lý sản phẩm
-                        </a>
-
-                        <a class="nav-link" href="/admin/order">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Quản lý đơn hàng
-                        </a>
-                    </div>
-                </div>
-                <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Pet Shop
-                </div>
-            </nav>
+        <div class="sb-sidenav-menu-heading text-uppercase text-secondary small">
+          Main
         </div>
+        <a class="nav-link" href="/admin">
+          <div class="sb-nav-link-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          Dashboard
+        </a>
+
+        <div class="sb-sidenav-menu-heading text-uppercase text-secondary small mt-3">
+          Management
+        </div>
+
+        <a class="nav-link" href="/admin/user">
+          <div class="sb-nav-link-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          Người dùng
+        </a>
+
+        <a class="nav-link" href="/admin/product">
+          <div class="sb-nav-link-icon">
+            <i class="fas fa-boxes"></i>
+          </div>
+          Sản phẩm
+        </a>
+
+        <a class="nav-link" href="/admin/order">
+          <div class="sb-nav-link-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          Đơn hàng
+        </a>
+
+      </div>
+    </div>
+  </nav>
+</div>

@@ -57,7 +57,27 @@
                                                             <fmt:formatNumber value="${order.totalAmount}" type="number"
                                                                 groupingUsed="true" /> đ
                                                         </td>
-                                                        <td>${order.status}</td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${order.status.toString() eq 'PENDING'}">
+                                                                    ${order.status.name}
+                                                                </c:when>
+                                                                <c:when test="${order.status.toString() eq 'SHIPPING'}">
+                                                                    ${order.status.name}
+                                                                </c:when>
+                                                                <c:when
+                                                                    test="${order.status.toString() eq 'DELIVERED'}">
+                                                                    ${order.status.name}
+                                                                </c:when>
+                                                                <c:when
+                                                                    test="${order.status.toString() eq 'CANCELLED'}">
+                                                                    ${order.status.name}
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    ${order.status.name}
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </td>
                                                         <td>
                                                             <a href="/admin/order/${order.id}"
                                                                 class="btn btn-success">Chi tiết</a>

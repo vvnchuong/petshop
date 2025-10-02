@@ -4,6 +4,9 @@ import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +30,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
+    public Page<User> getAllUsers(Specification<User> spec,
+                                  Pageable page){
+        return userRepository.findAll(spec, page);
     }
 
     public User getUserById(long id){
@@ -95,4 +99,5 @@ public class UserService {
 
         return true;
     }
+
 }
