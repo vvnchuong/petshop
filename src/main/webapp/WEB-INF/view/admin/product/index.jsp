@@ -65,6 +65,7 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
+                                    
                                     <nav aria-label="Page navigation example">
                                         <ul class="pagination">
                                             <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">

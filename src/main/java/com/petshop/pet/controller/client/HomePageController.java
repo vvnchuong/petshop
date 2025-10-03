@@ -31,7 +31,7 @@ public class HomePageController {
 
     @GetMapping("/")
     public String getHomePage(Model model){
-        Map<Long, List<Product>> products = productService.getAllProducts()
+        Map<Long, List<Product>> products = productService.getAllProductsHomePage()
                 .stream().collect(Collectors.groupingBy(
                         p -> p.getSubcategory().getCategory().getId()));
 

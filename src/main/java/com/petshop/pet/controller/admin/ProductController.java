@@ -3,6 +3,12 @@ package com.petshop.pet.controller.admin;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UploadService;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +30,22 @@ public class ProductController {
     }
 
     @GetMapping("/admin/product")
-    public String getProductPage(Model model){
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    public String getProductPage(Model model,
+                                 @Filter Specification<Product> spec,
+                                 @RequestParam(name = "page", defaultValue = "1") int page,
+                                 @PageableDefault(size = 5) Pageable pageableDefault){
+
+        Pageable pageable = PageRequest.of(page - 1,
+                pageableDefault.getPageSize(),
+                pageableDefault.getSort());
+
+        Page<Product> products = productService.getAllProducts(spec, pageable);
+
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("totalElements", products.getTotalElements());
+
         return "admin/product/index";
     }
 

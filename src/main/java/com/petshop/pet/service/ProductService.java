@@ -3,6 +3,9 @@ package com.petshop.pet.service;
 import com.petshop.pet.domain.*;
 import com.petshop.pet.repository.*;
 import com.petshop.pet.utils.SlugUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -33,8 +36,13 @@ public class ProductService {
         this.petTypeRepository = petTypeRepository;
     }
 
-    public List<Product> getAllProducts(){
+    public List<Product> getAllProductsHomePage(){
         return productRepository.findAll();
+    }
+
+    public Page<Product> getAllProducts(Specification<Product> spec,
+                                        Pageable page){
+        return productRepository.findAll(spec, page);
     }
 
     public Product getProductById(long id){
