@@ -112,13 +112,28 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<Product> getAllPetProducts(String pet){
-        return productRepository.findBySubcategoryPetTypeSlug(pet);
+    public Page<Product> getAllPetProducts(String pet,
+                                           Specification<Product> spec,
+                                           Pageable page){
+        Specification<Product> petSpec = (root, query, cb) ->
+                cb.equal(root.get("subcategory").get("petType").get("slug"), pet);
+
+        if(spec != null) {
+            petSpec = petSpec.and(spec);
+        }
+
+        return productRepository.findAll(petSpec, page);
     }
 
-    public List<Product> getAllProductsByPetAndSubcategory(String pet, String sub){
-        return productRepository.findBySubcategoryPetTypeSlugAndSubcategorySlug(pet, sub);
+    public Page<Product> getAllProductsByPetAndSubcategory(String pet, String sub, Pageable page) {
+        Specification<Product> spec = (root, query, cb) -> cb.and(
+                cb.equal(root.get("subcategory").get("petType").get("slug"), pet),
+                cb.equal(root.get("subcategory").get("slug"), sub)
+        );
+
+        return productRepository.findAll(spec, page);
     }
+
 
     public Product getProductNameBySlug(String slug){
         return productRepository.findBySlug(slug);

@@ -6,6 +6,9 @@ import com.petshop.pet.domain.dto.CheckoutRequestDTO;
 import com.petshop.pet.repository.CartRepository;
 import com.petshop.pet.repository.OrderDetailRepository;
 import com.petshop.pet.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,8 +90,9 @@ public class OrderService {
         return orderRepository.findByIdAndUserUsername(orderId, username);
     }
 
-    public List<Order> getAllOrdersByAdmin(){
-        return orderRepository.findAll();
+    public Page<Order> getAllOrdersByAdmin(Specification<Order> spec,
+                                           Pageable page){
+        return orderRepository.findAll(spec, page);
     }
 
     public Order getOrderById(long orderId){

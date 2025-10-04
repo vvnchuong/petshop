@@ -2,12 +2,15 @@ package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.Order;
 import com.petshop.pet.service.OrderService;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,10 +24,21 @@ public class OrderAdminController {
     }
 
     @GetMapping("/admin/order")
-    public String getOrderAdminPage(Model model){
+    public String getOrderAdminPage(Model model,
+                                    @Filter Specification<Order> spec,
+                                    @RequestParam(name = "page", defaultValue = "1") int page,
+                                    @PageableDefault(size = 5) Pageable pageableDefault){
 
-        List<Order> orders = orderService.getAllOrdersByAdmin();
-        model.addAttribute("orders", orders);
+        Pageable pageable = PageRequest.of(page - 1,
+                pageableDefault.getPageSize(),
+                pageableDefault.getSort());
+
+        Page<Order> orders = orderService.getAllOrdersByAdmin(spec, pageable);
+
+        model.addAttribute("orders", orders.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orders.getTotalPages());
+        model.addAttribute("totalElements", orders.getTotalElements());
 
         return "admin/order/index";
     }

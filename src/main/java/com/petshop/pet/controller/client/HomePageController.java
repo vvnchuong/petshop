@@ -5,12 +5,20 @@ import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UserService;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -41,18 +49,40 @@ public class HomePageController {
 
     @GetMapping("/{pet}")
     public String getShopPetPage(Model model,
-                                 @PathVariable("pet") String pet){
-        List<Product> petProducts = productService.getAllPetProducts(pet);
-        model.addAttribute("products", petProducts);
+                                 @PathVariable("pet") String pet,
+                                 @Filter Specification<Product> spec,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "4") int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> petProducts = productService.getAllPetProducts(pet, spec, pageable);
+
+        model.addAttribute("products", petProducts.getContent());
+        model.addAttribute("currentPage", petProducts.getNumber());
+        model.addAttribute("totalPages", petProducts.getTotalPages());
+        model.addAttribute("totalElements", petProducts.getTotalElements());
+        model.addAttribute("petSlug", pet);
+
         return "client/product/index";
     }
 
     @GetMapping("/{pet}/{subcategory}")
     public String getSubPetPage(Model model,
                                 @PathVariable("pet") String pet,
-                                @PathVariable("subcategory") String sub){
-        List<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub);
-        model.addAttribute("products", subProducts);
+                                @PathVariable("subcategory") String sub,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "4") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable);
+
+        model.addAttribute("products", subProducts.getContent());
+        model.addAttribute("currentPage", subProducts.getNumber());
+        model.addAttribute("totalPages", subProducts.getTotalPages());
+        model.addAttribute("totalElements", subProducts.getTotalElements());
+        model.addAttribute("petSlug", pet);
+        model.addAttribute("subcategorySlug", sub);
+
         return "client/product/index";
     }
 

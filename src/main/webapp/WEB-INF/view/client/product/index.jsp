@@ -125,7 +125,7 @@
                                         </div>
 
                                         <div class="col-lg-9">
-                                            <div class="row g-4 justify-content-center">
+                                            <div class="row g-4 justify-content-center" id="product-container">
                                                 <c:forEach var="product" items="${products}">
                                                     <div class="col-md-6 col-lg-4 col-xl-3">
                                                         <div class="rounded position-relative fruite-item">
@@ -165,37 +165,16 @@
                                                     </div>
                                                 </c:forEach>
 
-                                                <div class="col-12">
-                                                    <div class="pagination d-flex justify-content-center mt-5">
-                                                        <!-- Nút Previous -->
-                                                        <c:if test="${currentPage > 1}">
-                                                            <a href="?page=${currentPage - 1}"
-                                                                class="rounded">&laquo;</a>
-                                                        </c:if>
-                                                        <c:if test="${currentPage == 1}">
-                                                            <a href="#" class="rounded disabled"
-                                                                style="pointer-events: none;">&laquo;</a>
-                                                        </c:if>
-
-                                                        <!-- Các số trang -->
-                                                        <c:forEach var="i" begin="1" end="${totalPages}">
-                                                            <a href="?page=${i}"
-                                                                class="rounded ${i == currentPage ? 'active' : ''}">${i}</a>
-                                                        </c:forEach>
-
-                                                        <!-- Nút Next -->
-                                                        <c:if test="${currentPage < totalPages}">
-                                                            <a href="?page=${currentPage + 1}"
-                                                                class="rounded">&raquo;</a>
-                                                        </c:if>
-                                                        <c:if test="${currentPage == totalPages}">
-                                                            <a href="#" class="rounded disabled"
-                                                                style="pointer-events: none;">&raquo;</a>
-                                                        </c:if>
-                                                    </div>
-                                                </div>
-
                                             </div>
+                                            <div class="text-center my-4">
+                                                <button id="loadMoreBtn" class="btn btn-primary">Hiện thêm sản
+                                                    phẩm</button>
+                                            </div>
+
+                                            <div id="loading" class="text-center my-3" style="display:none;">
+                                                <div class="spinner-border text-primary" role="status"></div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -219,8 +198,60 @@
                     <script src="/client/lib/lightbox/js/lightbox.min.js"></script>
                     <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
 
-                    <!-- Template Javascript -->
                     <script src="/client/js/main.js"></script>
+                    <script>
+                        $(function () {
+                            let currentPage = Number("${currentPage}");
+                            const totalPages = Number("${totalPages}");
+                            const petSlug = "${petSlug}";
+                            const subSlug = "${subcategorySlug}";   // thêm dòng này
+                            const size = 4;
+
+                            if (totalPages <= 1) {
+                                $('#loadMoreBtn').hide();
+                            }
+
+                            $('#loadMoreBtn').on('click', function () {
+                                currentPage++;
+
+                                $('#loadMoreBtn').hide();
+                                $('#loading').show();
+
+                                // Nếu có subcategorySlug thì thêm vào URL
+                                let url = "/" + petSlug;
+                                if (subSlug) {
+                                    url += "/" + subSlug;
+                                }
+                                url += "?page=" + currentPage + "&size=" + size;
+
+                                console.log("URL gọi AJAX:", url, "currentPage:", currentPage, "totalPages:", totalPages);
+
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    cache: false,
+                                    success: function (response) {
+                                        const newProducts = $(response).find('#product-container > div');
+                                        $('#product-container').append(newProducts);
+                                        $('#loading').hide();
+
+                                        if (currentPage < totalPages - 1) {
+                                            $('#loadMoreBtn').show();
+                                        } else {
+                                            $('#loadMoreBtn').hide();
+                                            console.log("Đã tải hết sản phẩm, ẩn nút load more.");
+                                        }
+                                    },
+                                    error: function () {
+                                        $('#loading').hide();
+                                        $('#loadMoreBtn').show();
+                                        currentPage--;
+                                    }
+                                });
+                            });
+                        });
+                    </script>
+
                 </body>
 
                 </html>

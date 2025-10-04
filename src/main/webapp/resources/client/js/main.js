@@ -265,5 +265,3 @@ $(document).ready(function () {
     }
 });
 
-
-// count number of product in product detail
