@@ -1,9 +1,11 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
+import com.petshop.pet.domain.Category;
 import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.service.CategoryService;
 import com.petshop.pet.service.PetTypeService;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UserService;
@@ -34,10 +36,18 @@ public class HomePageController {
 
     private final ProductService productService;
 
+    private final PetTypeService petTypeService;
+
+    private final CategoryService categoryService;
+
     public HomePageController(UserService userService,
-                              ProductService productService){
+                              ProductService productService,
+                              PetTypeService petTypeService,
+                              CategoryService categoryService){
         this.userService = userService;
         this.productService = productService;
+        this.petTypeService = petTypeService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/")
@@ -60,6 +70,10 @@ public class HomePageController {
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
+        PetType petType = petTypeService.getPetTypeBySlug(pet);
+
+        List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
+
         Page<Product> petProducts = productService.getAllPetProducts(pet, spec, pageable);
 
         model.addAttribute("products", petProducts.getContent());
@@ -68,7 +82,8 @@ public class HomePageController {
         model.addAttribute("totalElements", petProducts.getTotalElements());
         model.addAttribute("petSlug", pet);
         model.addAttribute("currentSort", sort);
-
+        model.addAttribute("petType", petType);
+        model.addAttribute("categories", categories);
 
         return "client/product/index";
     }
@@ -82,6 +97,11 @@ public class HomePageController {
                                 @RequestParam(defaultValue = "default") String sort) {
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
+
+        PetType petType = petTypeService.getPetTypeBySlug(pet);
+
+        List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
+
         Page<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable);
 
         model.addAttribute("products", subProducts.getContent());
@@ -91,6 +111,8 @@ public class HomePageController {
         model.addAttribute("petSlug", pet);
         model.addAttribute("subcategorySlug", sub);
         model.addAttribute("currentSort", sort);
+        model.addAttribute("petType", petType);
+        model.addAttribute("categories", categories);
 
         return "client/product/index";
     }

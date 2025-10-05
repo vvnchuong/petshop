@@ -62,7 +62,8 @@ public class ProductService {
         product.getSubcategory().setCategory(category);
 
         PetType petType = petTypeRepository.findById(
-                product.getSubcategory().getPetType().getId());
+                product.getSubcategory().getPetType().getId())
+                .orElseThrow(() -> new RuntimeException("Pet type not found"));
         product.getSubcategory().setPetType(petType);
 
         product.setCreatedAt(Instant.now());
@@ -95,7 +96,8 @@ public class ProductService {
         product.getSubcategory().setCategory(category);
 
         PetType petType = petTypeRepository.findById(
-                productUpdate.getSubcategory().getPetType().getId());
+                productUpdate.getSubcategory().getPetType().getId())
+                .orElseThrow(() -> new RuntimeException("Pet type not found"));
         product.getSubcategory().setPetType(petType);
 
         product.setUpdatedAt(Instant.now());

@@ -85,18 +85,49 @@
                                             <div class="row g-4">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
-    <h4>Danh mục sản phẩm</h4>
-    <ul class="list-unstyled fruite-categorie">
-        <c:forEach var="category" items="${categories}">
-            <li>
-                <a href="/${petType.slug}/${category.slug}">
-                    ${category.name}
-                </a>
-            </li>
-        </c:forEach>
-    </ul>
-</div>
+                                                        <h4>Danh mục sản phẩm</h4>
+                                                        <ul class="list-unstyled fruite-categorie">
+                                                            <c:forEach var="category" items="${categories}"
+                                                                varStatus="loop">
+                                                                <li class="mb-2">
+                                                                    <button
+                                                                        class="btn btn-toggle d-flex justify-content-between w-100"
+                                                                        data-bs-toggle="collapse"
+                                                                        data-bs-target="#collapse${loop.index}"
+                                                                        aria-expanded="false">
+                                                                        ${category.name}
+                                                                        <i class="bi bi-chevron-down"></i>
+                                                                    </button>
 
+                                                                    <div class="collapse mt-1"
+                                                                        id="collapse${loop.index}">
+                                                                        <ul class="list-unstyled ms-3">
+                                                                            <c:forEach var="sub"
+                                                                                items="${category.subcategories}">
+                                                                                <c:if
+                                                                                    test="${sub.petType.id == petType.id}">
+                                                                                    <li>
+                                                                                        <a href="/${petType.slug}/${sub.slug}"
+                                                                                            class="d-block py-1">
+                                                                                            ${sub.name}
+                                                                                        </a>
+                                                                                    </li>
+                                                                                </c:if>
+                                                                            </c:forEach>
+                                                                        </ul>
+                                                                    </div>
+                                                                </li>
+                                                            </c:forEach>
+
+                                                            <li class="mt-3">
+                                                                <div class="d-flex justify-content-between fruite-name">
+                                                                    <a href="#">Khuyến mãi</a>
+                                                                    <span>(8)</span>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
                                                 </div>
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
@@ -154,10 +185,12 @@
                                                 </c:forEach>
 
                                             </div>
-                                            <div class="text-center my-4">
-                                                <button id="loadMoreBtn" class="btn btn-primary">Hiện thêm sản
-                                                    phẩm</button>
-                                            </div>
+                                            <c:if test="${totalPages > 1}">
+                                                <div class="text-center my-4">
+                                                    <button id="loadMoreBtn" class="btn btn-primary">Hiện thêm sản
+                                                        phẩm</button>
+                                                </div>
+                                            </c:if>
 
                                             <div id="loading" class="text-center my-3" style="display:none;">
                                                 <div class="spinner-border text-primary" role="status"></div>
@@ -242,4 +275,5 @@
                         });
                     </script>
                 </body>
+
                 </html>
