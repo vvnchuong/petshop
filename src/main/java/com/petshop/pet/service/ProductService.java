@@ -116,7 +116,8 @@ public class ProductService {
 
     public Page<Product> getAllPetProducts(String pet,
                                            Specification<Product> spec,
-                                           Pageable page){
+                                           Pageable page,
+                                           Double maxPrice){
         Specification<Product> petSpec = (root, query, cb) ->
                 cb.equal(root.get("subcategory").get("petType").get("slug"), pet);
 
@@ -124,16 +125,31 @@ public class ProductService {
             petSpec = petSpec.and(spec);
         }
 
+        if (maxPrice != null && maxPrice > 0) {
+            Specification<Product> priceSpec = (root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("price"), maxPrice);
+            petSpec = petSpec.and(priceSpec);
+        }
+
         return productRepository.findAll(petSpec, page);
     }
 
-    public Page<Product> getAllProductsByPetAndSubcategory(String pet, String sub, Pageable page) {
-        Specification<Product> spec = (root, query, cb) -> cb.and(
+    public Page<Product> getAllProductsByPetAndSubcategory(String pet,
+                                                           String sub,
+                                                           Pageable page,
+                                                           Double maxPrice) {
+        Specification<Product> petSpec = (root, query, cb) -> cb.and(
                 cb.equal(root.get("subcategory").get("petType").get("slug"), pet),
                 cb.equal(root.get("subcategory").get("slug"), sub)
         );
 
-        return productRepository.findAll(spec, page);
+        if (maxPrice != null && maxPrice > 0) {
+            Specification<Product> priceSpec = (root, query, cb) ->
+                    cb.lessThanOrEqualTo(root.get("price"), maxPrice);
+            petSpec = petSpec.and(priceSpec);
+        }
+
+        return productRepository.findAll(petSpec, page);
     }
 
 

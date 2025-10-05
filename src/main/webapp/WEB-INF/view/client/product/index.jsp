@@ -133,12 +133,14 @@
                                                     <div class="mb-3">
                                                         <h4 class="mb-2">Khoảng giá</h4>
                                                         <input type="range" class="form-range w-100" id="rangeInput"
-                                                            name="rangeInput" min="0" max="500" value="0"
-                                                            oninput="amount.value=rangeInput.value">
-                                                        <output id="amount" name="amount" min-velue="0" max-value="500"
-                                                            for="rangeInput">0</output>
+                                                            name="rangeInput" min="0" max="500"
+                                                            value="${maxPrice != null ? maxPrice : 0}">
+                                                        <output id="amount" name="amount">
+                                                            ${maxPrice != null ? maxPrice : 0}
+                                                        </output>
                                                     </div>
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -220,6 +222,7 @@
                     <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
 
                     <script src="/client/js/main.js"></script>
+                    <!-- /load more products -->
                     <script>
                         $(function () {
                             let currentPage = Number("${currentPage}");
@@ -274,6 +277,68 @@
                             });
                         });
                     </script>
+
+                    <!-- filter price -->
+                    <script>
+                        $(function () {
+                            let currentPage = Number("${currentPage}");
+                            const petSlug = "${petSlug}";
+                            const subSlug = "${subcategorySlug}";
+                            const sort = "${currentSort}";
+                            const size = 4;
+
+                            $('#rangeInput').on('input', function () {
+                                $('#amount').text($(this).val());
+                            });
+
+                            $('#rangeInput').on('change', function () {
+                                const maxPrice = $(this).val() * 1000;
+
+                                let url = "/" + petSlug;
+                                if (subSlug) {
+                                    url += "/" + subSlug;
+                                }
+
+                                if (maxPrice > 0) {
+                                    url += "?maxPrice=" + maxPrice + "&sort=" + sort + "&size=" + size;
+                                } else {
+                                    url += "?sort=" + sort + "&size=" + size;
+                                }
+
+                                $('#loading').show();
+
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    success: function (response) {
+                                        const newProducts = $(response).find('#product-container > div');
+                                        const totalPages = Number($(response).find('#totalPages').val() || 0);
+
+                                        $('#product-container').html(newProducts);
+                                        $('#loading').hide();
+
+                                        if (newProducts.length === 0) {
+                                            $('#product-container').html('<div class="text-center py-5">Không có sản phẩm nào phù hợp.</div>');
+                                            $('#loadMoreBtn').hide();
+                                        }
+                                        else {
+                                            if (totalPages > 1) {
+                                                $('#loadMoreBtn').show();
+                                            } else {
+                                                $('#loadMoreBtn').hide();
+                                            }
+                                        }
+                                    },
+                                    error: function () {
+                                        $('#loading').hide();
+                                    }
+                                });
+
+                            });
+
+                        });
+                    </script>
+
                 </body>
 
                 </html>

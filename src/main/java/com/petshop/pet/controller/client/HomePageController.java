@@ -66,7 +66,8 @@ public class HomePageController {
                                  @Filter Specification<Product> spec,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int size,
-                                 @RequestParam(defaultValue = "default") String sort){
+                                 @RequestParam(defaultValue = "default") String sort,
+                                 @RequestParam(required = false) Double maxPrice){
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
@@ -74,7 +75,7 @@ public class HomePageController {
 
         List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
 
-        Page<Product> petProducts = productService.getAllPetProducts(pet, spec, pageable);
+        Page<Product> petProducts = productService.getAllPetProducts(pet, spec, pageable, maxPrice);
 
         model.addAttribute("products", petProducts.getContent());
         model.addAttribute("currentPage", petProducts.getNumber());
@@ -84,6 +85,7 @@ public class HomePageController {
         model.addAttribute("currentSort", sort);
         model.addAttribute("petType", petType);
         model.addAttribute("categories", categories);
+        model.addAttribute("maxPrice", maxPrice);
 
         return "client/product/index";
     }
@@ -94,7 +96,8 @@ public class HomePageController {
                                 @PathVariable("subcategory") String sub,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "4") int size,
-                                @RequestParam(defaultValue = "default") String sort) {
+                                @RequestParam(defaultValue = "default") String sort,
+                                @RequestParam(required = false) Double maxPrice) {
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
@@ -102,7 +105,7 @@ public class HomePageController {
 
         List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
 
-        Page<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable);
+        Page<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable, maxPrice);
 
         model.addAttribute("products", subProducts.getContent());
         model.addAttribute("currentPage", subProducts.getNumber());
@@ -113,6 +116,7 @@ public class HomePageController {
         model.addAttribute("currentSort", sort);
         model.addAttribute("petType", petType);
         model.addAttribute("categories", categories);
+        model.addAttribute("maxPrice", maxPrice);
 
         return "client/product/index";
     }
