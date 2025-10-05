@@ -1,10 +1,13 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
+import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.service.PetTypeService;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UserService;
+import com.petshop.pet.utils.PageableUtil;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,9 +55,11 @@ public class HomePageController {
                                  @PathVariable("pet") String pet,
                                  @Filter Specification<Product> spec,
                                  @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "4") int size){
+                                 @RequestParam(defaultValue = "4") int size,
+                                 @RequestParam(defaultValue = "default") String sort){
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageableUtil.createPageable(page, size, sort);
+
         Page<Product> petProducts = productService.getAllPetProducts(pet, spec, pageable);
 
         model.addAttribute("products", petProducts.getContent());
@@ -62,6 +67,8 @@ public class HomePageController {
         model.addAttribute("totalPages", petProducts.getTotalPages());
         model.addAttribute("totalElements", petProducts.getTotalElements());
         model.addAttribute("petSlug", pet);
+        model.addAttribute("currentSort", sort);
+
 
         return "client/product/index";
     }
@@ -71,9 +78,10 @@ public class HomePageController {
                                 @PathVariable("pet") String pet,
                                 @PathVariable("subcategory") String sub,
                                 @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "4") int size) {
+                                @RequestParam(defaultValue = "4") int size,
+                                @RequestParam(defaultValue = "default") String sort) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageableUtil.createPageable(page, size, sort);
         Page<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable);
 
         model.addAttribute("products", subProducts.getContent());
@@ -82,6 +90,7 @@ public class HomePageController {
         model.addAttribute("totalElements", subProducts.getTotalElements());
         model.addAttribute("petSlug", pet);
         model.addAttribute("subcategorySlug", sub);
+        model.addAttribute("currentSort", sort);
 
         return "client/product/index";
     }

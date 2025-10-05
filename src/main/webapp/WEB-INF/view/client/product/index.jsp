@@ -68,11 +68,15 @@
                                             <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
                                                 <label for="fruits">Sắp xếp:</label>
                                                 <select id="fruits" name="fruitlist"
-                                                    class="border-0 form-select-sm bg-light me-3" form="fruitform">
-                                                    <option value="volvo">Mặc định</option>
-                                                    <option value="saab">Giá từ cao đến thấp</option>
-                                                    <option value="opel">Giá từ thấp tới cao</option>
+                                                    class="border-0 form-select-sm bg-light me-3">
+                                                    <option value="default" ${currentSort=='default' ? 'selected' : ''
+                                                        }>Mặc định</option>
+                                                    <option value="priceDesc" ${currentSort=='priceDesc' ? 'selected'
+                                                        : '' }>Giá từ cao đến thấp</option>
+                                                    <option value="priceAsc" ${currentSort=='priceAsc' ? 'selected' : ''
+                                                        }>Giá từ thấp tới cao</option>
                                                 </select>
+
                                             </div>
                                         </div>
                                     </div>
@@ -81,34 +85,18 @@
                                             <div class="row g-4">
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
-                                                        <h4>Danh mục sản phẩm</h4>
-                                                        <ul class="list-unstyled fruite-categorie">
-                                                            <li>
-                                                                <div class="d-flex justify-content-between fruite-name">
-                                                                    <a href="#">Shop cho chó</a>
-                                                                    <span>(3)</span>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="d-flex justify-content-between fruite-name">
-                                                                    <a href="#">Shop cho mèo</a>
-                                                                    <span>(5)</span>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="d-flex justify-content-between fruite-name">
-                                                                    <a href="#">Sản phẩm bán chạy</a>
-                                                                    <span>(2)</span>
-                                                                </div>
-                                                            </li>
-                                                            <li>
-                                                                <div class="d-flex justify-content-between fruite-name">
-                                                                    <a href="#">Khuyến mãi</a>
-                                                                    <span>(8)</span>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+    <h4>Danh mục sản phẩm</h4>
+    <ul class="list-unstyled fruite-categorie">
+        <c:forEach var="category" items="${categories}">
+            <li>
+                <a href="/${petType.slug}/${category.slug}">
+                    ${category.name}
+                </a>
+            </li>
+        </c:forEach>
+    </ul>
+</div>
+
                                                 </div>
                                                 <div class="col-lg-12">
                                                     <div class="mb-3">
@@ -204,12 +192,9 @@
                             let currentPage = Number("${currentPage}");
                             const totalPages = Number("${totalPages}");
                             const petSlug = "${petSlug}";
-                            const subSlug = "${subcategorySlug}";   // thêm dòng này
+                            const subSlug = "${subcategorySlug}";
                             const size = 4;
-
-                            if (totalPages <= 1) {
-                                $('#loadMoreBtn').hide();
-                            }
+                            const sort = "${currentSort}";
 
                             $('#loadMoreBtn').on('click', function () {
                                 currentPage++;
@@ -217,19 +202,15 @@
                                 $('#loadMoreBtn').hide();
                                 $('#loading').show();
 
-                                // Nếu có subcategorySlug thì thêm vào URL
                                 let url = "/" + petSlug;
                                 if (subSlug) {
                                     url += "/" + subSlug;
                                 }
-                                url += "?page=" + currentPage + "&size=" + size;
-
-                                console.log("URL gọi AJAX:", url, "currentPage:", currentPage, "totalPages:", totalPages);
+                                url += "?page=" + currentPage + "&size=" + size + "&sort=" + sort;
 
                                 $.ajax({
                                     url: url,
                                     type: 'GET',
-                                    cache: false,
                                     success: function (response) {
                                         const newProducts = $(response).find('#product-container > div');
                                         $('#product-container').append(newProducts);
@@ -239,7 +220,6 @@
                                             $('#loadMoreBtn').show();
                                         } else {
                                             $('#loadMoreBtn').hide();
-                                            console.log("Đã tải hết sản phẩm, ẩn nút load more.");
                                         }
                                     },
                                     error: function () {
@@ -249,9 +229,17 @@
                                     }
                                 });
                             });
+
+                            $('#fruits').on('change', function () {
+                                const sort = $(this).val();
+                                let url = "/" + petSlug;
+                                if (subSlug) {
+                                    url += "/" + subSlug;
+                                }
+                                url += "?sort=" + sort;
+                                window.location.href = url;
+                            });
                         });
                     </script>
-
                 </body>
-
                 </html>
