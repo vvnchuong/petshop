@@ -157,4 +157,8 @@ public class ProductService {
         return productRepository.findBySlug(slug);
     }
 
+    public long countTotalProducts(){
+        return productRepository.count();
+    }
+
 }

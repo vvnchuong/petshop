@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -98,6 +100,17 @@ public class UserService {
         userRepository.save(user);
 
         return true;
+    }
+
+    public long countTotalUsers(){
+        return userRepository.count();
+    }
+
+    public long countNewUsersToday(){
+        Instant startOfToday = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .atStartOfDay(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .toInstant();
+        return userRepository.countByCreatedAtAfter(startOfToday);
     }
 
 }

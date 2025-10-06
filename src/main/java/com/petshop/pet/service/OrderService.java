@@ -13,7 +13,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -106,6 +112,39 @@ public class OrderService {
         order.setUpdatedAt(Instant.now());
 
         orderRepository.save(order);
+    }
+
+    private Instant getStartOfToday() {
+        return LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .atStartOfDay(ZoneId.of("Asia/Ho_Chi_Minh"))
+                .toInstant();
+    }
+
+    public long countTotalOrders() { return orderRepository.count(); }
+    public long countOrdersToday() { return orderRepository.countByCreatedAtAfter(getStartOfToday()); }
+    public List<Order> findTop10RecentOrders() { return orderRepository.findTop10ByOrderByCreatedAtDesc(); }
+
+    public double getRevenueToday() {
+        List<Order> ordersToday = orderRepository.findByCreatedAtAfter(getStartOfToday());
+        return ordersToday.stream().mapToDouble(Order::getTotalAmount).sum();
+    }
+
+    public Map<LocalDate, Double> getRevenueDataForLast7Days() {
+        Instant sevenDaysAgo = Instant.now().minus(7, ChronoUnit.DAYS);
+        List<Order> recentOrders = orderRepository.findByCreatedAtAfter(sevenDaysAgo);
+
+        Map<LocalDate, Double> revenueByDate = recentOrders.stream()
+                .collect(Collectors.groupingBy(
+                        order -> order.getCreatedAt().atZone(ZoneId.of("Asia/Ho_Chi_Minh")).toLocalDate(),
+                        Collectors.summingDouble(Order::getTotalAmount)
+                ));
+
+        return revenueByDate.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new
+                ));
     }
 
 }
