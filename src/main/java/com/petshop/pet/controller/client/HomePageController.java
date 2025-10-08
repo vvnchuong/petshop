@@ -32,19 +32,15 @@ import java.util.stream.Collectors;
 @Controller
 public class HomePageController {
 
-    private final UserService userService;
-
     private final ProductService productService;
 
     private final PetTypeService petTypeService;
 
     private final CategoryService categoryService;
 
-    public HomePageController(UserService userService,
-                              ProductService productService,
+    public HomePageController(ProductService productService,
                               PetTypeService petTypeService,
                               CategoryService categoryService){
-        this.userService = userService;
         this.productService = productService;
         this.petTypeService = petTypeService;
         this.categoryService = categoryService;
@@ -52,7 +48,7 @@ public class HomePageController {
 
     @GetMapping("/")
     public String getHomePage(Model model){
-        Map<Long, List<Product>> products = productService.getAllProductsHomePage()
+        Map<Long, List<Product>> products = productService.getBestSellingProduct()
                 .stream().collect(Collectors.groupingBy(
                         p -> p.getSubcategory().getCategory().getId()));
 

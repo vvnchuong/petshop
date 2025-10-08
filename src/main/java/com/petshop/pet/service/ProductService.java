@@ -24,16 +24,20 @@ public class ProductService {
 
     private final PetTypeRepository petTypeRepository;
 
+    private final OrderDetailRepository orderDetailRepository;
+
     public ProductService(ProductRepository productRepository,
                           BrandRepository brandRepository,
                           SubcategoryRepository subcategoryRepository,
                           CategoryRepository categoryRepository,
-                          PetTypeRepository petTypeRepository){
+                          PetTypeRepository petTypeRepository,
+                          OrderDetailRepository orderDetailRepository){
         this.productRepository = productRepository;
         this.brandRepository = brandRepository;
         this.subcategoryRepository = subcategoryRepository;
         this.categoryRepository = categoryRepository;
         this.petTypeRepository = petTypeRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public List<Product> getAllProductsHomePage(){
@@ -159,6 +163,10 @@ public class ProductService {
 
     public long countTotalProducts(){
         return productRepository.count();
+    }
+
+    public List<Product> getBestSellingProduct(){
+        return orderDetailRepository.findBestSellingProducts();
     }
 
 }
