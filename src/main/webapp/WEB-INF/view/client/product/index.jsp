@@ -152,8 +152,17 @@
                                                         <div class="rounded position-relative fruite-item">
                                                             <div class="fruitep-img">
                                                                 <img src="/admin/images/product/${product.imageUrl}"
-                                                                    class="img-fluid w-100 rounded-top" alt="">
+                                                                    class="img-fluid w-100 rounded-top
+                                                                    ${product.stock == 0 ? 'opacity-50' : ''}" alt="">
+
+                                                                <c:if test="${product.stock == 0}">
+                                                                    <span
+                                                                        class="badge bg-danger position-absolute top-50 start-50 translate-middle px-3 py-2 fs-6 fw-bold">
+                                                                        Hết hàng
+                                                                    </span>
+                                                                </c:if>
                                                             </div>
+                                                            
                                                             <div
                                                                 class="p-4 border border-secondary border-top-0 rounded-bottom">
                                                                 <h4 class="multiline-ellipsis">

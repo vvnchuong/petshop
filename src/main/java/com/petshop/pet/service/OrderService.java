@@ -6,6 +6,7 @@ import com.petshop.pet.domain.dto.CheckoutRequestDTO;
 import com.petshop.pet.repository.CartRepository;
 import com.petshop.pet.repository.OrderDetailRepository;
 import com.petshop.pet.repository.OrderRepository;
+import com.petshop.pet.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -34,16 +35,20 @@ public class OrderService {
 
     private final UserService userService;
 
+    private final ProductRepository productRepository;
+
     public OrderService(OrderRepository orderRepository,
                         OrderDetailRepository orderDetailRepository,
                         CartRepository cartRepository,
                         CartDetailService cartDetailService,
-                        UserService userService){
+                        UserService userService,
+                        ProductRepository productRepository){
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.cartRepository = cartRepository;
         this.cartDetailService = cartDetailService;
         this.userService = userService;
+        this.productRepository = productRepository;
     }
 
     @Transactional
@@ -60,6 +65,15 @@ public class OrderService {
 
         List<CartDetail> cartDetails = cartDetailService.
                 getAllProductsInCartByUser(currentUser.getUsername());
+
+        List<Product> products = productRepository.findByCartDetails(cartDetails);
+        for(Product product : products){
+            product.setStock(product.getStock() - 1);
+            if(product.getStock() < 0)
+                throw new RuntimeException("Stock must be greater than 0");
+
+            productRepository.save(product);
+        }
 
         double totalPrice = 0;
         for(CartDetail cartDetail : cartDetails){

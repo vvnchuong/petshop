@@ -121,11 +121,23 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <a href="javascript:void(0);" id="addToCartBtn" data-slug="${product.slug}"
-                                            class="btn border border-secondary rounded-pill px-4 py-2 mb-4
-                                            text-primary">
-                                            <i class="fa fa-shopping-bag me-2 text-primary"></i>Thêm vào giỏ hàng
-                                        </a>
+                                        <c:choose>
+                                            <c:when test="${product.stock > 0}">
+                                                <a href="javascript:void(0);" id="addToCartBtn"
+                                                    data-slug="${product.slug}"
+                                                    class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i>Thêm vào giỏ
+                                                    hàng
+                                                </a>
+                                            </c:when>
+
+                                            <c:otherwise>
+                                                <button class="btn btn-danger rounded-pill px-4 py-2 mb-4" disabled>
+                                                    HẾT HÀNG
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
+
 
                                     </div>
                                     <div class="col-lg-12">

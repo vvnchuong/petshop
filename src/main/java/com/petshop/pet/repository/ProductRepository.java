@@ -1,5 +1,6 @@
 package com.petshop.pet.repository;
 
+import com.petshop.pet.domain.CartDetail;
 import com.petshop.pet.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,12 +13,14 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
 
-    Page<Product> findBySubcategoryPetTypeSlug(String pet,
-                                               Specification<Product> spec,
-                                               Pageable page);
-
-    List<Product> findBySubcategoryPetTypeSlugAndSubcategorySlug(String pet, String subcategory);
+//    Page<Product> findBySubcategoryPetTypeSlug(String pet,
+//                                               Specification<Product> spec,
+//                                               Pageable page);
+//
+//    List<Product> findBySubcategoryPetTypeSlugAndSubcategorySlug(String pet, String subcategory);
 
     Product findBySlug(String slug);
+
+    List<Product> findByCartDetails(List<CartDetail> cartDetails);
 
 }
