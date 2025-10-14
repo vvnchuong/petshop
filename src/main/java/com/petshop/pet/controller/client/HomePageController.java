@@ -63,7 +63,8 @@ public class HomePageController {
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "4") int size,
                                  @RequestParam(defaultValue = "default") String sort,
-                                 @RequestParam(required = false) Double maxPrice){
+                                 @RequestParam(required = false) Double maxPrice,
+                                 @RequestParam(required = false) String keyword){
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
@@ -71,7 +72,12 @@ public class HomePageController {
 
         List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
 
-        Page<Product> petProducts = productService.getAllPetProducts(pet, spec, pageable, maxPrice);
+        Page<Product> petProducts;
+        if(keyword != null && !keyword.isBlank()){
+            petProducts = productService.searchPetProductsByPet(pet, keyword, maxPrice, pageable);
+        }else {
+            petProducts = productService.getAllPetProducts(pet, spec, pageable, maxPrice);
+        }
 
         model.addAttribute("products", petProducts.getContent());
         model.addAttribute("currentPage", petProducts.getNumber());
@@ -93,7 +99,8 @@ public class HomePageController {
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "4") int size,
                                 @RequestParam(defaultValue = "default") String sort,
-                                @RequestParam(required = false) Double maxPrice) {
+                                @RequestParam(required = false) Double maxPrice,
+                                @RequestParam(required = false) String keyword) {
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
@@ -101,7 +108,13 @@ public class HomePageController {
 
         List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
 
-        Page<Product> subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable, maxPrice);
+        Page<Product> subProducts;
+        if(keyword != null && !keyword.isBlank()){
+            subProducts = productService.searchPetProductsBySubcategory(pet, sub, keyword, maxPrice, pageable);
+        }else{
+            subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable, maxPrice);
+        }
+
 
         model.addAttribute("products", subProducts.getContent());
         model.addAttribute("currentPage", subProducts.getNumber());

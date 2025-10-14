@@ -169,4 +169,17 @@ public class ProductService {
         return orderDetailRepository.findBestSellingProducts();
     }
 
+    public Page<Product> searchPetProductsByPet(String pet, String keyword,
+                                                Double maxPrice,
+                                                Pageable pageable) {
+        return productRepository.searchPetProductsByPet(pet, keyword, maxPrice, pageable);
+    }
+
+    public Page<Product> searchPetProductsBySubcategory(String pet, String sub,
+                                                        String keyword,
+                                                        Double maxPrice,
+                                                        Pageable pageable) {
+        return productRepository.searchPetProductsBySubcategory(pet, sub, keyword, maxPrice, pageable);
+    }
+
 }

@@ -56,13 +56,16 @@
                                 <div class="col-lg-12">
                                     <div class="row g-4">
                                         <div class="col-xl-3">
-                                            <div class="input-group w-100 mx-auto d-flex">
-                                                <input type="search" class="form-control p-3" placeholder="Tìm kiếm"
-                                                    aria-describedby="search-icon-1">
-                                                <span id="search-icon-1" class="input-group-text p-3"><i
-                                                        class="fa fa-search"></i></span>
-                                            </div>
+                                            <form id="searchForm" class="input-group w-100 mx-auto d-flex">
+                                                <input type="search" id="searchInput" name="keyword"
+                                                    class="form-control p-3" placeholder="Tìm kiếm sản phẩm..."
+                                                    aria-describedby="search-icon-1" />
+                                                <span id="search-icon-1" class="input-group-text p-3">
+                                                    <i class="fa fa-search"></i>
+                                                </span>
+                                            </form>
                                         </div>
+
                                         <div class="col-6"></div>
                                         <div class="col-xl-3">
                                             <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
@@ -162,7 +165,7 @@
                                                                     </span>
                                                                 </c:if>
                                                             </div>
-                                                            
+
                                                             <div
                                                                 class="p-4 border border-secondary border-top-0 rounded-bottom">
                                                                 <h4 class="multiline-ellipsis">
@@ -194,8 +197,8 @@
                                                         </div>
                                                     </div>
                                                 </c:forEach>
-
                                             </div>
+                                            <input type="hidden" id="totalPages" value="${totalPages}" />
                                             <c:if test="${totalPages > 1}">
                                                 <div class="text-center my-4">
                                                     <button id="loadMoreBtn" class="btn btn-primary">Hiện thêm sản
@@ -246,6 +249,8 @@
 
                                 $('#loadMoreBtn').hide();
                                 $('#loading').show();
+
+                                let keyword = $("#searchInput").val() || "";
 
                                 let url = "/" + petSlug;
                                 if (subSlug) {
@@ -345,6 +350,61 @@
 
                             });
 
+                        });
+                    </script>
+
+                    <script>
+                        const petSlug = "${petSlug}";
+                        const subSlug = "${subcategorySlug}";
+                        const sort = "${currentSort}";
+                        const size = 4;
+                        let typingTimer;
+
+                        $("#searchInput").on("input", function () {
+                            clearTimeout(typingTimer);
+                            const keyword = $(this).val();
+
+                            typingTimer = setTimeout(() => {
+                                let url = "/" + petSlug;
+                                if (subSlug) {
+                                    url += "/" + subSlug;
+                                }
+
+                                if (keyword.trim() !== "") {
+                                    url += "?keyword=" + encodeURIComponent(keyword)
+                                        + "&sort=" + sort + "&size=" + size;
+                                } else {
+                                    url += "?sort=" + sort + "&size=" + size;
+                                }
+
+                                $.ajax({
+                                    url: url,
+                                    type: "GET",
+                                    success: function (response) {
+                                        const newProducts = $(response).find("#product-container > div");
+                                        const totalPages = Number($(response).find("#totalPages").val() || 0);
+
+                                        if (newProducts.length === 0) {
+                                            $("#product-container").html(
+                                                `<div class="text-center py-5 text-muted fs-5">
+                                                Không tìm thấy sản phẩm phù hợp.
+                                                </div>`
+                                            );
+                                            $("#loadMoreBtn").hide();
+                                        } else {
+                                            $("#product-container").html(newProducts);
+                                            if (totalPages > 1) {
+                                                $("#loadMoreBtn").show();
+                                            } else {
+                                                $("#loadMoreBtn").hide();
+                                            }
+                                        }
+                                    },
+                                    error: function () {
+                                        console.log("Error searching!");
+                                    }
+                                });
+                            }, 400);
                         });
                     </script>
 
