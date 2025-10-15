@@ -3,6 +3,7 @@ package com.petshop.pet.controller.client;
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.RegisterDTO;
+import com.petshop.pet.domain.dto.UserUpdateDTO;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
 import jakarta.validation.Valid;
@@ -33,16 +34,23 @@ public class AccountController {
     public String getAccountPage(Model model,
                                  @AuthenticationPrincipal CustomUserDetails currentUser){
 
-        User user = userService.getUserByUserName(currentUser.getUsername());
-        model.addAttribute("user", user);
+        UserUpdateDTO userDTO = userService.getUserUpdateDTO(currentUser.getUsername());
+        model.addAttribute("userDTO", userDTO);
 
         return "client/auth/index";
     }
 
     @PostMapping("/account/update")
-    public String updateProfile(@ModelAttribute("user") User userUpdate,
+    public String updateProfile(@Valid @ModelAttribute("userDTO") UserUpdateDTO userUpdate,
+                                BindingResult bindingResult,
                                 @RequestParam("inputFile") MultipartFile file,
-                                @AuthenticationPrincipal CustomUserDetails currentUser){
+                                @AuthenticationPrincipal CustomUserDetails currentUser,
+                                Model model){
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("userDTO", userUpdate);
+            return "client/auth/index";
+        }
 
         String avatar = uploadService.handleUploadFile(file, "avatar", false);
         userUpdate.setAvatarUrl(avatar);
@@ -89,8 +97,8 @@ public class AccountController {
         try {
             userService.registerAccount(registerDTO);
             model.addAttribute("success", "Account created successfully!");
-        } catch (RuntimeException ex) {
-            model.addAttribute("error", ex.getMessage());
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("register", true);
         }
 

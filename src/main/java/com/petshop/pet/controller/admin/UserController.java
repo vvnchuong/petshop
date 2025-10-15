@@ -1,9 +1,12 @@
 package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.User;
+import com.petshop.pet.domain.dto.AdminCreateUserDTO;
+import com.petshop.pet.domain.dto.UserUpdateDTO;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +14,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -64,13 +66,24 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/create")
-    public String createUser(Model model,
-                             @ModelAttribute("newUser") User user,
-                             @RequestParam("inputFile") MultipartFile file){
-        String avatar = uploadService.handleUploadFile(file, "avatar", true);
-        user.setAvatarUrl(avatar);
+    public String createUser(@Valid @ModelAttribute("newUser") AdminCreateUserDTO userDTO,
+                             BindingResult bindingResult,
+                             @RequestParam("inputFile") MultipartFile file,
+                             Model model){
 
-        userService.createUser(user);
+        if(bindingResult.hasErrors()){
+            return "admin/user/create";
+        }
+
+        try {
+            String avatar = uploadService.handleUploadFile(file, "avatar", true);
+            userDTO.setAvatarUrl(avatar);
+
+            userService.createUser(userDTO);
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "admin/user/create";
+        }
 
         return "redirect:/admin/user";
     }
@@ -85,12 +98,12 @@ public class UserController {
 
     @PostMapping("/admin/user/update/{id}")
     public String updateUser(@PathVariable("id") long id,
-                             @ModelAttribute("newUser") User newUser,
+                             @ModelAttribute("newUser") UserUpdateDTO userDTO,
                              @RequestParam("inputFile") MultipartFile file){
         String avatarUpdate = uploadService.handleUploadFile(file, "avatar", false);
-        newUser.setAvatarUrl(avatarUpdate);
+        userDTO.setAvatarUrl(avatarUpdate);
 
-        userService.updateUser(id, newUser);
+        userService.updateUser(id, userDTO);
 
         return "redirect:/admin/user";
     }

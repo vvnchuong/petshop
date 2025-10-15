@@ -40,58 +40,77 @@
                                 <div class="col-md-6 col-12 mx-auto">
                                     <h3>Thêm người dùng mới</h3>
                                     <hr />
+
+                                    <c:if test="${not empty error}">
+                                        <div class="alert alert-danger">${error}</div>
+                                    </c:if>
+
                                     <form:form method="post" action="/admin/user/create" modelAttribute="newUser"
-                                     enctype="multipart/form-data">
+                                        enctype="multipart/form-data">
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <c:set var="errorEmail">
-                                                    <form:errors path="email" cssClass="invalid-feedback"/>
+                                                    <form:errors path="email" cssClass="invalid-feedback" />
                                                 </c:set>
                                                 <div class="form-label">Email</div>
-                                                <form:input type="email" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" 
+                                                <form:input type="email"
+                                                    class="form-control ${not empty errorEmail ? 'is-invalid' : ''}"
                                                     path="email" /> ${errorEmail}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <c:set var="errorUsername">
-                                                    <form:errors path="email" cssClass="invalid-feedback"/>
+                                                    <form:errors path="username" cssClass="invalid-feedback" />
                                                 </c:set>
                                                 <div class="form-label">Tên đăng nhập</div>
-                                                <form:input type="text" class="form-control ${not empty errorUsername ? 'is-invalid' : ''}" 
+                                                <form:input type="text"
+                                                    class="form-control ${not empty errorUsername ? 'is-invalid' : ''}"
                                                     path="username" /> ${errorUsername}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <c:set var="errorPassword">
-                                                    <form:errors path="password" cssClass="invalid-feedback"/>
+                                                    <form:errors path="password" cssClass="invalid-feedback" />
                                                 </c:set>
                                                 <div class="form-label">Mật khẩu</div>
-                                                <form:input type="password" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" 
+                                                <form:input type="password"
+                                                    class="form-control ${not empty errorPassword ? 'is-invalid' : ''}"
                                                     path="password" />${errorPassword}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
+                                                <c:set var="errorPhone">
+                                                    <form:errors path="phone" cssClass="invalid-feedback" />
+                                                </c:set>
                                                 <div class="form-label">Số điện thoại</div>
-                                                <form:input type="text" class="form-control" path="phone" />
+                                                <form:input type="phone"
+                                                    class="form-control ${not empty errorPhone ? 'is-invalid' : ''}"
+                                                    path="phone" />${errorPhone}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12 col-md-6">
-                                                 <c:set var="errorFullName">
-                                                    <form:errors path="fullName" cssClass="invalid-feedback"/>
+                                                <c:set var="errorFullName">
+                                                    <form:errors path="fullName" cssClass="invalid-feedback" />
                                                 </c:set>
                                                 <div class="form-label">Họ tên</div>
-                                                <form:input type="text" class="form-control ${not empty errorEmail ? 'is-invalid' : ''}" 
+                                                <form:input type="text"
+                                                    class="form-control ${not empty errorFullName ? 'is-invalid' : ''}"
                                                     path="fullName" />${errorFullName}
                                             </div>
                                         </div>
                                         <div class="mb-3">
                                             <div class="mb-3 col-12">
+                                                <c:set var="errorAddress">
+                                                    <form:errors path="address" cssClass="invalid-feedback" />
+                                                </c:set>
                                                 <div class="form-label">Địa chỉ</div>
-                                                <form:input type="text" class="form-control" path="address" />
+                                                <form:input type="text"
+                                                    class="form-control ${not empty errorAddress ? 'is-invalid' : ''}"
+                                                    path="address" />${errorAddress}
                                             </div>
                                         </div>
 
@@ -104,8 +123,7 @@
                                         </div>
                                         <div class="mb-3 col-12 col-md-6">
                                             <label for="avatarFile" class="form-label">Ảnh đại diện</label>
-                                            <input type="file" class="form-control" id="avatarFile"
-                                                name="inputFile"
+                                            <input type="file" class="form-control" id="avatarFile" name="inputFile"
                                                 accept=".png, .jpg, .jpeg">
                                         </div>
                                         <div class="col-12 mb-3">

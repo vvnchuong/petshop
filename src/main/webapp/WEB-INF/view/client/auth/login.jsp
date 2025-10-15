@@ -91,7 +91,6 @@
                                             </div>
                                         </c:if>
 
-
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
                                         <div class="mb-3">

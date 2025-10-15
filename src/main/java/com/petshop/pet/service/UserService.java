@@ -2,7 +2,10 @@ package com.petshop.pet.service;
 
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.domain.dto.AdminCreateUserDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
+import com.petshop.pet.domain.dto.UserUpdateDTO;
+import com.petshop.pet.mapper.UserMapper;
 import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -25,12 +28,16 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final UserMapper userMapper;
+
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder){
+                       PasswordEncoder passwordEncoder,
+                       UserMapper userMapper){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     public Page<User> getAllUsers(Specification<User> spec,
@@ -42,29 +49,37 @@ public class UserService {
         return userRepository.findById(id).get();
     }
 
-    public void createUser(User user){
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public void createUser(AdminCreateUserDTO userDTO){
 
-        Role role = roleRepository.findByName(user.getRole().getName());
-        user.setRole(role);
-        user.setCreatedAt(Instant.now());
+        if(userRepository.findByUsername(userDTO.getUsername())
+                .isPresent()){
+            throw new RuntimeException("User already exists");
+        }
+
+        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()){
+            throw new RuntimeException("Email already exists");
+        }
+
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        Role role = roleRepository.findByName(userDTO.getRole().getName());
+        userDTO.setRole(role);
 
         String avatar = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
-        if(user.getAvatarUrl().isEmpty()){
-            user.setAvatarUrl(avatar);
+        if(userDTO.getAvatarUrl().isEmpty()){
+            userDTO.setAvatarUrl(avatar);
         }
+
+        User user = userMapper.fromAdminCreateDTO(userDTO);
 
         userRepository.save(user);
     }
 
-    public void updateUser(long id, User userUpdate){
-        User user = userRepository.findById(id).get();
-        user.setFullName(userUpdate.getFullName());
-        user.setPhone(userUpdate.getPhone());
-        user.setAddress(userUpdate.getAddress());
-        user.setUpdatedAt(Instant.now());
-        if(userUpdate.getAvatarUrl() != null)
-            user.setAvatarUrl(userUpdate.getAvatarUrl());
+    public void updateUser(long id, UserUpdateDTO userUpdate){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userMapper.updateUser(user, userUpdate);
 
         userRepository.save(user);
     }
@@ -78,13 +93,16 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public void updateUserByUser(String username, User userUpdate){
+    public UserUpdateDTO getUserUpdateDTO(String username){
         User user = getUserByUserName(username);
-        user.setFullName(userUpdate.getFullName());
-        user.setPhone(userUpdate.getPhone());
-        user.setAddress(userUpdate.getAddress());
-        user.setAvatarUrl(userUpdate.getAvatarUrl());
-        user.setUpdatedAt(Instant.now());
+
+        return userMapper.toUserDTO(user);
+    }
+
+    public void updateUserByUser(String username, UserUpdateDTO userUpdate){
+        User user = getUserByUserName(username);
+
+        userMapper.updateUser(user, userUpdate);
 
         userRepository.save(user);
     }
@@ -121,32 +139,29 @@ public class UserService {
 
     public void registerAccount(RegisterDTO registerDTO) {
 
-        if (userRepository.findByUsername(registerDTO.getUsername())
-                .isPresent()) {
+        if(userRepository.findByUsername(registerDTO.getUsername())
+                .isPresent()){
             throw new RuntimeException("User already exists");
         }
 
-        if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
+        if(userRepository.findByEmail(registerDTO.getEmail()).isPresent()){
             throw new RuntimeException("Email already exists");
         }
 
-        if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
+        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
             throw new RuntimeException("Password and confirm password do not match");
         }
 
-        User newUser = new User();
-        newUser.setFullName(registerDTO.getFullName());
-        newUser.setEmail(registerDTO.getEmail());
-        newUser.setUsername(registerDTO.getUsername());
-        newUser.setPassword(registerDTO.getPassword());
+        User user = userMapper.fromRegisterDTO(registerDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role role = roleRepository.findByName("CUSTOMER");
-        newUser.setRole(role);
+        user.setRole(role);
 
         String avatar = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
-        newUser.setAvatarUrl(avatar);
+        user.setAvatarUrl(avatar);
 
-        createUser(newUser);
+        userRepository.save(user);
     }
 
 }
