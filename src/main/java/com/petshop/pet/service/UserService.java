@@ -2,6 +2,7 @@ package com.petshop.pet.service;
 
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -41,17 +42,22 @@ public class UserService {
         return userRepository.findById(id).get();
     }
 
-    public User createUser(User user){
+    public void createUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role role = roleRepository.findByName(user.getRole().getName());
         user.setRole(role);
         user.setCreatedAt(Instant.now());
 
-        return userRepository.save(user);
+        String avatar = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
+        if(user.getAvatarUrl().isEmpty()){
+            user.setAvatarUrl(avatar);
+        }
+
+        userRepository.save(user);
     }
 
-    public User updateUser(long id, User userUpdate){
+    public void updateUser(long id, User userUpdate){
         User user = userRepository.findById(id).get();
         user.setFullName(userUpdate.getFullName());
         user.setPhone(userUpdate.getPhone());
@@ -60,7 +66,7 @@ public class UserService {
         if(userUpdate.getAvatarUrl() != null)
             user.setAvatarUrl(userUpdate.getAvatarUrl());
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public void deleteUser(long id){
@@ -111,6 +117,36 @@ public class UserService {
                 .atStartOfDay(ZoneId.of("Asia/Ho_Chi_Minh"))
                 .toInstant();
         return userRepository.countByCreatedAtAfter(startOfToday);
+    }
+
+    public void registerAccount(RegisterDTO registerDTO) {
+
+        if (userRepository.findByUsername(registerDTO.getUsername())
+                .isPresent()) {
+            throw new RuntimeException("User already exists");
+        }
+
+        if (userRepository.findByEmail(registerDTO.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
+            throw new RuntimeException("Password and confirm password do not match");
+        }
+
+        User newUser = new User();
+        newUser.setFullName(registerDTO.getFullName());
+        newUser.setEmail(registerDTO.getEmail());
+        newUser.setUsername(registerDTO.getUsername());
+        newUser.setPassword(registerDTO.getPassword());
+
+        Role role = roleRepository.findByName("CUSTOMER");
+        newUser.setRole(role);
+
+        String avatar = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
+        newUser.setAvatarUrl(avatar);
+
+        createUser(newUser);
     }
 
 }

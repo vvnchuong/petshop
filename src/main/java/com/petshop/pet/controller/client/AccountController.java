@@ -2,11 +2,14 @@ package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,8 +68,34 @@ public class AccountController {
     }
 
     @GetMapping("/account/login")
-    public String getLoginPage(){
+    public String getLoginPage(Model model){
+        if(!model.containsAttribute("registerDTO")){
+            model.addAttribute("registerDTO", new RegisterDTO());
+        }
+
         return "client/auth/login";
     }
+
+    @PostMapping("/account/register")
+    public String register(@Valid @ModelAttribute RegisterDTO registerDTO,
+                           BindingResult bindingResult,
+                           Model model) {
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("register", true);
+            return "client/auth/login";
+        }
+
+        try {
+            userService.registerAccount(registerDTO);
+            model.addAttribute("success", "Account created successfully!");
+        } catch (RuntimeException ex) {
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("register", true);
+        }
+
+        return "client/auth/login";
+    }
+
 
 }
