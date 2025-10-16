@@ -3,6 +3,7 @@ package com.petshop.pet.service;
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.AdminCreateUserDTO;
+import com.petshop.pet.domain.dto.ChangePasswordDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.domain.dto.UserUpdateDTO;
 import com.petshop.pet.mapper.UserMapper;
@@ -107,23 +108,21 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean changePasswordByUser(String oldPassword, String newPassword,
-                                        String confirmPassword, String username) {
-
+    public void changePasswordByUser(ChangePasswordDTO passwordDTO, String username) {
         User user = getUserByUserName(username);
-        if(passwordEncoder.matches(oldPassword, user.getPassword())){
-           if(newPassword.equals(confirmPassword)){
-               user.setPassword(passwordEncoder.encode(newPassword));
-           }else{
-               return false;
-           }
-        }else{
-            return false;
-        }
+
+        if(user == null)
+            throw new RuntimeException("User not found");
+
+        if (!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword()))
+            throw new RuntimeException("Old password is incorrect");
+
+        if(!passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword()))
+            throw new RuntimeException("New password and confirmation do not match");
+
+        user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
 
         userRepository.save(user);
-
-        return true;
     }
 
     public long countTotalUsers(){

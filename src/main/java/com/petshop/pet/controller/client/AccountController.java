@@ -1,7 +1,7 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
-import com.petshop.pet.domain.User;
+import com.petshop.pet.domain.dto.ChangePasswordDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.domain.dto.UserUpdateDTO;
 import com.petshop.pet.service.UploadService;
@@ -37,6 +37,8 @@ public class AccountController {
         UserUpdateDTO userDTO = userService.getUserUpdateDTO(currentUser.getUsername());
         model.addAttribute("userDTO", userDTO);
 
+        model.addAttribute("passwordDTO", new ChangePasswordDTO());
+
         return "client/auth/index";
     }
 
@@ -61,16 +63,23 @@ public class AccountController {
     }
 
     @PostMapping("/account/change-password")
-    public String changePassword(@RequestParam("oldPassword") String oldPassword,
-                                 @RequestParam("newPassword") String newPassword,
-                                 @RequestParam("confirmPassword") String confirmPassword,
-                                 @AuthenticationPrincipal CustomUserDetails currentUser){
+    public String changePassword(@Valid @ModelAttribute("passwordDTO")ChangePasswordDTO passwordDTO,
+                                 BindingResult bindingResult,
+                                 @AuthenticationPrincipal CustomUserDetails currentUser,
+                                 Model model){
 
-        boolean changed = userService.changePasswordByUser(oldPassword, newPassword,
-                confirmPassword, currentUser.getUsername());
-
-        if(!changed)
+        if(bindingResult.hasErrors()){
+            model.addAttribute("userDTO", userService.getUserUpdateDTO(currentUser.getUsername()));
             return "client/auth/index";
+        }
+
+        try {
+            userService.changePasswordByUser(passwordDTO, currentUser.getUsername());
+        } catch (RuntimeException e){
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("userDTO", userService.getUserUpdateDTO(currentUser.getUsername()));
+            return "client/auth/index";
+        }
 
         return "redirect:/account?passwordChanged";
     }
