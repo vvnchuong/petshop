@@ -4,7 +4,6 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,12 +24,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain httpFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain httpFilterChain(HttpSecurity httpSecurity)
+            throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request
                 .dispatcherTypeMatchers(DispatcherType.FORWARD,
                         DispatcherType.INCLUDE) .permitAll()
                 .requestMatchers("/", "/account/login", "/product/**",
-                        "/shop-*", "/shop-*/**", "/client/**", "/account/register", "/admin/js/**",
+                        "/shop-*", "/shop-*/**", "/client/**", "/account/register",
+                        "/account/forgot-password", "/account/reset-password","/admin/js/**",
                         "/admin/images/**", "/admin/css/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
@@ -46,7 +47,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()).csrf().disable();
-
 
         return httpSecurity.build();
     }

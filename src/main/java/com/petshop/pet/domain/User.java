@@ -48,4 +48,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    List<PasswordResetToken> passwordResetTokens = new ArrayList<>();
+
 }

@@ -1,5 +1,6 @@
 package com.petshop.pet.service;
 
+import com.petshop.pet.domain.PasswordResetToken;
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.AdminCreateUserDTO;
@@ -7,18 +8,23 @@ import com.petshop.pet.domain.dto.ChangePasswordDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.domain.dto.UserUpdateDTO;
 import com.petshop.pet.mapper.UserMapper;
+import com.petshop.pet.repository.PasswordResetTokenRepository;
 import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -31,14 +37,27 @@ public class UserService {
 
     private final UserMapper userMapper;
 
+    private final PasswordResetTokenRepository tokenRepository;
+
+    private final EmailService emailService;
+
+    private final long EXPIRATION_MINUTES = 30;
+
+    @Value("${app.reset-password.base-url}")
+    private String resetPasswordBaseUrl;
+
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
                        PasswordEncoder passwordEncoder,
-                       UserMapper userMapper){
+                       UserMapper userMapper,
+                       PasswordResetTokenRepository tokenRepository,
+                       EmailService emailService){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
     }
 
     public Page<User> getAllUsers(Specification<User> spec,
@@ -161,6 +180,49 @@ public class UserService {
         user.setAvatarUrl(avatar);
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void generateResetToken(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+
+        PasswordResetToken prt = PasswordResetToken.builder()
+                        .token(token)
+                        .user(user)
+                        .expiryDate(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES))
+                        .build();
+
+        tokenRepository.save(prt);
+
+        String resetLink = resetPasswordBaseUrl + token;
+
+        String subject = "Đặt lại mật khẩu";
+        String text = "Yêu cầu đặt lại mật khẩu.\n\n" +
+                "Bấm vào link sau để đặt lại mật khẩu (có hiệu lực " + EXPIRATION_MINUTES + " phút):\n" +
+                resetLink + "\n\n" +
+                "Nếu bạn không yêu cầu, hãy bỏ qua email này.";
+
+        emailService.sendSimpleMessage(user.getEmail(), subject, text);
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword){
+        PasswordResetToken prt = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new RuntimeException("Token Invalid"));
+
+        if(prt.isExpired()){
+            tokenRepository.delete(prt);
+            throw new RuntimeException("Token has expired");
+        }
+
+        User user = prt.getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        tokenRepository.delete(prt);
     }
 
 }

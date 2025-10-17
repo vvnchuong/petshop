@@ -114,5 +114,52 @@ public class AccountController {
         return "client/auth/login";
     }
 
+    @GetMapping("/account/forgot-password")
+    public String forgotPasswordPage(Model model){
+        if(!model.containsAttribute("email"))
+            model.addAttribute("email", "");
+        return "client/auth/forgot-password";
+    }
+
+    @PostMapping("/account/forgot-password")
+    public String handleForgotPassword(@RequestParam("email") String email, Model model){
+        try {
+            userService.generateResetToken(email);
+            model.addAttribute("message", "Vui lòng kiểm tra email của bạn.");
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("email", email);
+        return "client/auth/forgot-password";
+    }
+
+    @GetMapping("/account/reset-password")
+    public String resetPasswordPage(@RequestParam("token") String token, Model model){
+        model.addAttribute("token", token);
+        return "client/auth/reset-password";
+    }
+
+    @PostMapping("/account/reset-password")
+    public String handleResetPassword(@RequestParam("token") String token,
+                                      @RequestParam("password") String password,
+                                      @RequestParam("confirmPassword") String confirmPassword,
+                                      Model model){
+        if(password == null || !password.equals(confirmPassword)){
+            model.addAttribute("error", "Mật khẩu và xác nhận mật khẩu không khớp");
+            model.addAttribute("token", token);
+            return "client/auth/reset-password";
+        }
+
+        try {
+            userService.resetPassword(token, password);
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("token", token);
+            return "client/auth/reset-password";
+        }
+
+        return "redirect:/account/login?resetSuccess";
+    }
+
 
 }

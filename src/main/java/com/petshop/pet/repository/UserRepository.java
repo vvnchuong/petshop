@@ -14,6 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long>,
 
     long countByCreatedAtAfter(Instant createdAt);
 
-    Optional<Object> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
 }

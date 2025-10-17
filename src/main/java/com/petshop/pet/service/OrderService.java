@@ -134,16 +134,24 @@ public class OrderService {
                 .toInstant();
     }
 
-    public long countTotalOrders() { return orderRepository.count(); }
-    public long countOrdersToday() { return orderRepository.countByCreatedAtAfter(getStartOfToday()); }
-    public List<Order> findTop10RecentOrders() { return orderRepository.findTop10ByOrderByCreatedAtDesc(); }
+    public long countTotalOrders(){
+        return orderRepository.count();
+    }
 
-    public double getRevenueToday() {
+    public long countOrdersToday(){
+        return orderRepository.countByCreatedAtAfter(getStartOfToday());
+    }
+
+    public List<Order> findTop10RecentOrders(){
+        return orderRepository.findTop10ByOrderByCreatedAtDesc();
+    }
+
+    public double getRevenueToday(){
         List<Order> ordersToday = orderRepository.findByCreatedAtAfter(getStartOfToday());
         return ordersToday.stream().mapToDouble(Order::getTotalAmount).sum();
     }
 
-    public Map<LocalDate, Double> getRevenueDataForLast7Days() {
+    public Map<LocalDate, Double> getRevenueDataForLast7Days(){
         Instant sevenDaysAgo = Instant.now().minus(7, ChronoUnit.DAYS);
         List<Order> recentOrders = orderRepository.findByCreatedAtAfter(sevenDaysAgo);
 

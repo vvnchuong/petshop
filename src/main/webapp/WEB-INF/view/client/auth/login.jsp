@@ -106,7 +106,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <a href="#" class="small text-muted">Quên mật khẩu?</a>
+                                            <a href="/account/forgot-password" class="small text-muted">Quên mật khẩu?</a>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>

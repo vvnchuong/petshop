@@ -3,8 +3,10 @@ package com.petshop.pet.config;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -33,4 +35,13 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
         response.sendRedirect(redirectUrl);
     }
+
+    protected void clearAuthenticationAttribute(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session == null)
+            return;
+
+        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+    }
+
 }
