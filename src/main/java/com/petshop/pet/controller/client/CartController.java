@@ -43,9 +43,10 @@ public class CartController {
     @PostMapping("/cart/{productSlug}")
     @ResponseBody
     public Map<String, Object> addProductToCart(@PathVariable("productSlug") String slug,
-                                                @AuthenticationPrincipal CustomUserDetails currentUser){
+                                                @AuthenticationPrincipal CustomUserDetails currentUser,
+                                                @RequestParam("quantity") Integer quantity){
 
-        cartService.addProductToCart(currentUser.getUsername(), slug);
+        cartService.addProductToCart(currentUser.getUsername(), slug, quantity);
 
         User user = userService.getUserByUserName(currentUser.getUsername());
         int cartQuantity = cartService.getCartQuantity(user);
@@ -79,9 +80,9 @@ public class CartController {
 
     @PostMapping("/cart/update")
     @ResponseBody
-    public void updateCart(@RequestParam("id") Long id,
+    public void updateCart(@RequestParam("id") Long cardDetailId,
                            @RequestParam("quantity") Integer quantity){
-        cartDetailService.updateQuantity(id, quantity);
+        cartDetailService.updateQuantity(cardDetailId, quantity);
     }
 
     @PostMapping("/cart/delete/{productSlug}")
@@ -91,15 +92,6 @@ public class CartController {
 
         cartDetailService.deleteProductInCartDetail(slug, currentUser.getUsername());
     }
-
-    // update quantity of product in product detail
-//    @PostMapping("/cart/add")
-//    @ResponseBody
-//    public void addToCart(@AuthenticationPrincipal CustomUserDetails currentUser,
-//                          @RequestParam("productId") Long productId,
-//                          @RequestParam("quantity") Integer quantity) {
-//        cartDetailService.addToCart(currentUser.getUsername(), productId, quantity);
-//    }
 
     @GetMapping("/checkout")
     public String getCheckoutPage(Model model,

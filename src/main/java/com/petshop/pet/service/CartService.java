@@ -31,7 +31,7 @@ public class CartService {
         this.userRepository = userRepository;
     }
 
-    public void addProductToCart(String username, String productSlug) {
+    public void addProductToCart(String username, String productSlug, Integer quantity) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -53,7 +53,7 @@ public class CartService {
             cartDetail = new CartDetail();
             cartDetail.setCart(cart);
             cartDetail.setProduct(product);
-            cartDetail.setQuantity(1);
+            cartDetail.setQuantity(quantity);
             cartDetail.setPrice(product.getPrice());
 
             cart.setQuantity(cart.getQuantity() + 1);

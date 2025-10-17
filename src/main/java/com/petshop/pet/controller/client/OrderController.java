@@ -43,9 +43,12 @@ public class OrderController {
 
     @PostMapping("/checkout")
     public String placeOrder(@ModelAttribute CheckoutRequestDTO checkoutRequestDTO,
-                             @AuthenticationPrincipal CustomUserDetails currentUser) {
+                             @AuthenticationPrincipal CustomUserDetails currentUser,
+                             Model model) {
 
-        orderService.placeOrder(checkoutRequestDTO, currentUser);
+        Order order = orderService.placeOrder(checkoutRequestDTO, currentUser);
+
+        model.addAttribute("orderId", order.getId());
 
         return "client/cart/thanks";
     }

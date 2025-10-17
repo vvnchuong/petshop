@@ -191,34 +191,45 @@
 // count number product types
 document.addEventListener("DOMContentLoaded", function () {
     const addToCartBtn = document.getElementById("addToCartBtn");
-    if (!addToCartBtn) return;
+    const quantityInput = document.querySelector(".product-detail-quantity input");
+
+    if (!addToCartBtn || !quantityInput) return;
 
     addToCartBtn.addEventListener("click", function () {
         const slug = this.dataset.slug;
+        const quantity = parseInt(quantityInput.value) || 1;
+
         const url = "/cart/" + encodeURIComponent(slug);
-        console.log("URL fetch:", url);
 
         fetch(url, {
             method: "POST",
             headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
                 "X-Requested-With": "XMLHttpRequest"
-            }
+            },
+            body: "quantity=" + quantity
         })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data.message);
+        .then(res => {
+            if (!res.ok) throw new Error("HTTP status " + res.status);
+            return res.json();
+        })
+        .then(data => {
+            console.log(data.message);
 
-                let badge = document.getElementById("cartBadge");
-                if (!badge) {
-                    badge = document.createElement("span");
-                    badge.id = "cartBadge";
-                    badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
-                    badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
-                    document.querySelector("a[href='/cart']").appendChild(badge);
-                }
-                badge.innerText = data.cartQuantity;
-            })
-            .catch(err => console.error("Error adding product to cart:", err));
+            let badge = document.getElementById("cartBadge");
+            if (!badge) {
+                badge = document.createElement("span");
+                badge.id = "cartBadge";
+                badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
+                badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
+                document.querySelector("a[href='/cart']").appendChild(badge);
+            }
+            badge.innerText = data.cartQuantity;
+        })
+        .catch(err => {
+            console.error("Error adding product to cart:", err);
+            alert("Thêm sản phẩm vào giỏ hàng thất bại!");
+        });
     });
 });
 

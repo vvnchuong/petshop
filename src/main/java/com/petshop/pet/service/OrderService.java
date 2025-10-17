@@ -52,7 +52,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void placeOrder(CheckoutRequestDTO checkoutRequestDTO,
+    public Order placeOrder(CheckoutRequestDTO checkoutRequestDTO,
                            CustomUserDetails currentUser){
 
         Order order = new Order();
@@ -66,7 +66,12 @@ public class OrderService {
         List<CartDetail> cartDetails = cartDetailService.
                 getAllProductsInCartByUser(currentUser.getUsername());
 
-        List<Product> products = productRepository.findByCartDetails(cartDetails);
+        List<Long> productIds = cartDetails.stream()
+                .map(cd -> cd.getProduct().getId())
+                .collect(Collectors.toList());
+
+        List<Product> products = productRepository.findByIdIn(productIds);
+
         for(Product product : products){
             product.setStock(product.getStock() - 1);
             if(product.getStock() < 0)
@@ -100,6 +105,8 @@ public class OrderService {
         cartRepository.save(cart);
 
         cartDetailService.deleteAllProductInCartByCartId(user.getCart());
+
+        return order;
     }
 
     public List<Order> getAllOrderByUser(String username) {

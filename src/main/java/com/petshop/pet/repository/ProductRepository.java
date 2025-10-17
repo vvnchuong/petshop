@@ -15,15 +15,13 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
 
-//    Page<Product> findBySubcategoryPetTypeSlug(String pet,
-//                                               Specification<Product> spec,
-//                                               Pageable page);
-//
-//    List<Product> findBySubcategoryPetTypeSlugAndSubcategorySlug(String pet, String subcategory);
-
     Product findBySlug(String slug);
 
-    List<Product> findByCartDetails(List<CartDetail> cartDetails);
+//    List<Product> findByCartDetails(List<CartDetail> cartDetails);
+
+    List<Product> findByCartDetails_IdIn(List<Long> cartDetailIds);
+
+    List<Product> findByIdIn(List<Long> productIds);
 
     @Query(value = "SELECT p.id, p.name, p.description, p.short_desc, " +
             "p.price, p.stock, p.image_url, p.created_at, " +

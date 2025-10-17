@@ -107,20 +107,23 @@
                                             <fmt:formatNumber type="number" value="${product.price}" /> đ</p>
                                         </h5>
                                         <p class="mb-4">${product.shortDesc}</p>
-                                        <div class="input-group quantity mb-5" style="width: 100px;">
+                                        <div class="input-group product-detail-quantity mb-5" style="width: 100px;">
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                <button
+                                                    class="btn btn-sm btn-minus-detail rounded-circle bg-light border">
                                                     <i class="fa fa-minus"></i>
                                                 </button>
                                             </div>
                                             <input type="text" class="form-control form-control-sm text-center border-0"
                                                 value="1">
                                             <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                <button
+                                                    class="btn btn-sm btn-plus-detail rounded-circle bg-light border">
                                                     <i class="fa fa-plus"></i>
                                                 </button>
                                             </div>
                                         </div>
+
                                         <c:choose>
                                             <c:when test="${product.stock > 0}">
                                                 <a href="javascript:void(0);" id="addToCartBtn"
@@ -187,6 +190,24 @@
 
                     <!-- Template Javascript -->
                     <script src="/client/js/main.js"></script>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+    const quantityInput = document.querySelector('.product-detail-quantity input');
+
+    document.querySelector('.btn-plus-detail').addEventListener('click', function () {
+        let val = parseInt(quantityInput.value) || 1;
+        quantityInput.value = val + 1;
+    });
+
+    document.querySelector('.btn-minus-detail').addEventListener('click', function () {
+        let val = parseInt(quantityInput.value) || 1;
+        if (val > 1) quantityInput.value = val - 1;
+    });
+});
+
+                    </script>
+
 
                 </body>
 
