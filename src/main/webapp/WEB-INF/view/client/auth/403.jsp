@@ -19,6 +19,7 @@
         }
         .error-text {
             font-size: 24px;
+            color: #bd2130;
         }
     </style>
 </head>

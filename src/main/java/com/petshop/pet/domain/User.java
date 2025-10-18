@@ -51,4 +51,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<PasswordResetToken> passwordResetTokens = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    List<VoucherUsage> voucherUsages = new ArrayList<>();
+
 }
