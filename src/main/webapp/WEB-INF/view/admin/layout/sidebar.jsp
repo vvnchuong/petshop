@@ -36,6 +36,13 @@
           Sản phẩm
         </a>
 
+        <a class="nav-link" href="/admin/voucher">
+          <div class="sb-nav-link-icon">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+          Voucher
+        </a>
+
         <a class="nav-link" href="/admin/order">
           <div class="sb-nav-link-icon">
             <i class="fas fa-shopping-cart"></i>

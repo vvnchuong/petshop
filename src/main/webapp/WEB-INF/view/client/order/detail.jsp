@@ -70,10 +70,13 @@
                     alt="${orderDetail.product.name}" class="rounded border" width="80" height="80">
 
                   <div class="ms-3 flex-grow-1">
-                    <a href="/product/${orderDetail.product.slug}"><h6 class="mb-1">${orderDetail.product.name}</h6></a>
+                    <a href="/product/${orderDetail.product.slug}">
+                      <h6 class="mb-1">${orderDetail.product.name}</h6>
+                    </a>
                     <p class="mb-1">Số lượng: ${orderDetail.quantity}</p>
                     <p class="mb-0 text-primary fw-bold">
-                      <fmt:formatNumber value="${orderDetail.price * orderDetail.quantity}" type="number" groupingUsed="true" /> đ
+                      <fmt:formatNumber value="${orderDetail.price * orderDetail.quantity}" type="number"
+                        groupingUsed="true" /> đ
                     </p>
                   </div>
                 </div>
@@ -86,6 +89,9 @@
             <a href="/order/history" class="btn btn-secondary">Quay lại lịch sử mua hàng</a>
           </div>
         </div>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="/client/js/main.js"></script>
       </body>
 

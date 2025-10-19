@@ -45,71 +45,55 @@
 
 
     // Testimonial carousel
-    $(".testimonial-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 2000,
-        center: false,
-        dots: true,
-        loop: true,
-        margin: 25,
-        nav: true,
-        navText: [
-            '<i class="bi bi-arrow-left"></i>',
-            '<i class="bi bi-arrow-right"></i>'
-        ],
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1
-            },
-            576: {
-                items: 1
-            },
-            768: {
-                items: 1
-            },
-            992: {
-                items: 2
-            },
-            1200: {
-                items: 2
+    if ($(".testimonial-carousel").length && $.fn.owlCarousel) {
+        $(".testimonial-carousel").owlCarousel({
+            autoplay: true,
+            smartSpeed: 2000,
+            center: false,
+            dots: true,
+            loop: true,
+            margin: 25,
+            nav: true,
+            navText: [
+                '<i class="bi bi-arrow-left"></i>',
+                '<i class="bi bi-arrow-right"></i>'
+            ],
+            responsiveClass: true,
+            responsive: {
+                0: { items: 1 },
+                576: { items: 1 },
+                768: { items: 1 },
+                992: { items: 2 },
+                1200: { items: 2 }
             }
-        }
-    });
-
+        });
+    }
 
     // vegetable carousel
-    $(".vegetable-carousel").owlCarousel({
-        autoplay: true,
-        smartSpeed: 1500,
-        center: false,
-        dots: true,
-        loop: true,
-        margin: 25,
-        nav: true,
-        navText: [
-            '<i class="bi bi-arrow-left"></i>',
-            '<i class="bi bi-arrow-right"></i>'
-        ],
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1
-            },
-            576: {
-                items: 1
-            },
-            768: {
-                items: 2
-            },
-            992: {
-                items: 3
-            },
-            1200: {
-                items: 4
+    if ($(".vegetable-carousel").length && $.fn.owlCarousel) {
+        $(".vegetable-carousel").owlCarousel({
+            autoplay: true,
+            smartSpeed: 1500,
+            center: false,
+            dots: true,
+            loop: true,
+            margin: 25,
+            nav: true,
+            navText: [
+                '<i class="bi bi-arrow-left"></i>',
+                '<i class="bi bi-arrow-right"></i>'
+            ],
+            responsiveClass: true,
+            responsive: {
+                0: { items: 1 },
+                576: { items: 1 },
+                768: { items: 2 },
+                992: { items: 3 },
+                1200: { items: 4 }
             }
-        }
-    });
+        });
+    }
+
 
 
     // Modal Video
@@ -209,27 +193,27 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: "quantity=" + quantity
         })
-        .then(res => {
-            if (!res.ok) throw new Error("HTTP status " + res.status);
-            return res.json();
-        })
-        .then(data => {
-            console.log(data.message);
+            .then(res => {
+                if (!res.ok) throw new Error("HTTP status " + res.status);
+                return res.json();
+            })
+            .then(data => {
+                console.log(data.message);
 
-            let badge = document.getElementById("cartBadge");
-            if (!badge) {
-                badge = document.createElement("span");
-                badge.id = "cartBadge";
-                badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
-                badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
-                document.querySelector("a[href='/cart']").appendChild(badge);
-            }
-            badge.innerText = data.cartQuantity;
-        })
-        .catch(err => {
-            console.error("Error adding product to cart:", err);
-            alert("Thêm sản phẩm vào giỏ hàng thất bại!");
-        });
+                let badge = document.getElementById("cartBadge");
+                if (!badge) {
+                    badge = document.createElement("span");
+                    badge.id = "cartBadge";
+                    badge.className = "position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1";
+                    badge.style.cssText = "top:-5px;left:15px;height:20px;min-width:20px;";
+                    document.querySelector("a[href='/cart']").appendChild(badge);
+                }
+                badge.innerText = data.cartQuantity;
+            })
+            .catch(err => {
+                console.error("Error adding product to cart:", err);
+                alert("Thêm sản phẩm vào giỏ hàng thất bại!");
+            });
     });
 });
 
@@ -276,3 +260,113 @@ $(document).ready(function () {
     }
 });
 
+// voucher create form
+(function ($) {
+            $(document).ready(function () {
+                
+                function formatDateTimeLocal(dt) {
+                    return dt.toISOString().slice(0, 16); 
+                }
+
+                function todayString() {
+                    const t = new Date();
+                    t.setSeconds(0, 0);
+                    return formatDateTimeLocal(t);
+                }
+
+                const $start = $('#startDate');
+                const $end = $('#endDate');
+                const today = todayString();
+
+                $start.attr('min', today);
+
+                const currentStartVal = $start.val();
+                if (currentStartVal) {
+                    $end.attr('min', currentStartVal);
+                } else {
+                    $end.attr('min', today);
+                }
+                
+                $start.on('change input', function () {
+                    const s = $(this).val();
+                    if (s) {
+                        $end.attr('min', s);
+                        if ($end.val() && $end.val() < s) {
+                            $end.val('');
+                        }
+                    } else {
+                        $end.attr('min', today);
+                    }
+                });
+
+                $end.on('change', function () {
+                    const s = $start.val();
+                    const e = $(this).val();
+                    if (s && e && e < s) {
+                        alert('Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.');
+                        $(this).val('');
+                    }
+                });
+
+                var $pct = $('#discountPercent');
+                var $amt = $('#discountAmount');
+
+                function initDiscountState() {
+                    var pctVal = $pct.val().toString().trim();
+                    var amtVal = $amt.val().toString().trim();
+
+                    if (pctVal !== '') {
+                        $amt.prop('disabled', true);
+                        $pct.prop('disabled', false);
+                    } else if (amtVal !== '') {
+                        $pct.prop('disabled', true);
+                        $amt.prop('disabled', false);
+                    } else {
+                        $pct.prop('disabled', false);
+                        $amt.prop('disabled', false);
+                    }
+                }
+                initDiscountState();
+
+                $pct.on('input change', function () {
+                    var v = $(this).val().toString().trim();
+                    if (v !== '') {
+                        $amt.val('');
+                        $amt.prop('disabled', true);
+                    } else {
+                        $amt.prop('disabled', false);
+                    }
+                });
+
+                $amt.on('input change', function () {
+                    var v = $(this).val().toString().trim();
+                    if (v !== '') {
+                        $pct.val('');
+                        $pct.prop('disabled', true);
+                    } else {
+                        $pct.prop('disabled', false);
+                    }
+                });
+
+                $('#voucherForm').on('submit', function (e) {
+                    var pctVal = $pct.val().toString().trim();
+                    var amtVal = $amt.val().toString().trim();
+
+                    if (pctVal !== '' && amtVal !== '') {
+                        alert('Chỉ được nhập 1 trong 2: Mức giảm phần trăm hoặc Mức giảm cố định.');
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    var s = $start.val();
+                    var eDate = $end.val();
+                    if (s) {
+                        if (eDate && eDate < s) {
+                            alert('Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.');
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                });
+            });
+        })(jQuery);
