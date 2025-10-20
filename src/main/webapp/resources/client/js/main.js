@@ -260,113 +260,154 @@ $(document).ready(function () {
     }
 });
 
+// valid voucher
+$('#applyVoucherBtn').click(function () {
+    const code = $('#voucherInput').val().trim();
+    if (code === '') return;
+
+    $.ajax({
+        url: '/apply',
+        method: 'POST',
+        data: {
+            code: code,
+            _csrf: '${_csrf.token}'
+        },
+        success: function (res) {
+            $('#voucherError').text('');
+
+            const discountText = new Intl.NumberFormat().format(res.discount) + ' đ';
+            const finalText = new Intl.NumberFormat().format(res.finalPrice) + ' đ';
+
+            $('#discountAmount').text(discountText);
+            $('#finalPrice').text(finalText);
+            $('#voucherCodeField').val(code);
+        },
+        error: function (xhr) {
+
+            let msg = "Voucher không tồn tại";
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                msg = xhr.responseJSON.error;
+            }
+            $('#voucherError').text(msg);
+
+            const total = Number($('#totalPriceRaw').val());
+            const formattedTotal = new Intl.NumberFormat().format(total) + ' đ';
+
+            $('#discountAmount').text('0 đ');
+            $('#finalPrice').text(formattedTotal);
+            $('#voucherCodeField').val('');
+        }
+    });
+});
+
+
 // voucher create form
 (function ($) {
-            $(document).ready(function () {
-                
-                function formatDateTimeLocal(dt) {
-                    return dt.toISOString().slice(0, 16); 
+    $(document).ready(function () {
+
+        function formatDateTimeLocal(dt) {
+            return dt.toISOString().slice(0, 16);
+        }
+
+        function todayString() {
+            const t = new Date();
+            t.setSeconds(0, 0);
+            return formatDateTimeLocal(t);
+        }
+
+        const $start = $('#startDate');
+        const $end = $('#endDate');
+        const today = todayString();
+
+        $start.attr('min', today);
+
+        const currentStartVal = $start.val();
+        if (currentStartVal) {
+            $end.attr('min', currentStartVal);
+        } else {
+            $end.attr('min', today);
+        }
+
+        $start.on('change input', function () {
+            const s = $(this).val();
+            if (s) {
+                $end.attr('min', s);
+                if ($end.val() && $end.val() < s) {
+                    $end.val('');
                 }
+            } else {
+                $end.attr('min', today);
+            }
+        });
 
-                function todayString() {
-                    const t = new Date();
-                    t.setSeconds(0, 0);
-                    return formatDateTimeLocal(t);
+        $end.on('change', function () {
+            const s = $start.val();
+            const e = $(this).val();
+            if (s && e && e < s) {
+                alert('Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.');
+                $(this).val('');
+            }
+        });
+
+        var $pct = $('#discountPercent');
+        var $amt = $('#discountAmount');
+
+        function initDiscountState() {
+            var pctVal = $pct.val().toString().trim();
+            var amtVal = $amt.val().toString().trim();
+
+            if (pctVal !== '') {
+                $amt.prop('disabled', true);
+                $pct.prop('disabled', false);
+            } else if (amtVal !== '') {
+                $pct.prop('disabled', true);
+                $amt.prop('disabled', false);
+            } else {
+                $pct.prop('disabled', false);
+                $amt.prop('disabled', false);
+            }
+        }
+        initDiscountState();
+
+        $pct.on('input change', function () {
+            var v = $(this).val().toString().trim();
+            if (v !== '') {
+                $amt.val('');
+                $amt.prop('disabled', true);
+            } else {
+                $amt.prop('disabled', false);
+            }
+        });
+
+        $amt.on('input change', function () {
+            var v = $(this).val().toString().trim();
+            if (v !== '') {
+                $pct.val('');
+                $pct.prop('disabled', true);
+            } else {
+                $pct.prop('disabled', false);
+            }
+        });
+
+        $('#voucherForm').on('submit', function (e) {
+            var pctVal = $pct.val().toString().trim();
+            var amtVal = $amt.val().toString().trim();
+
+            if (pctVal !== '' && amtVal !== '') {
+                alert('Chỉ được nhập 1 trong 2: Mức giảm phần trăm hoặc Mức giảm cố định.');
+                e.preventDefault();
+                return false;
+            }
+
+            var s = $start.val();
+            var eDate = $end.val();
+            if (s) {
+                if (eDate && eDate < s) {
+                    alert('Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.');
+                    e.preventDefault();
+                    return false;
                 }
-
-                const $start = $('#startDate');
-                const $end = $('#endDate');
-                const today = todayString();
-
-                $start.attr('min', today);
-
-                const currentStartVal = $start.val();
-                if (currentStartVal) {
-                    $end.attr('min', currentStartVal);
-                } else {
-                    $end.attr('min', today);
-                }
-                
-                $start.on('change input', function () {
-                    const s = $(this).val();
-                    if (s) {
-                        $end.attr('min', s);
-                        if ($end.val() && $end.val() < s) {
-                            $end.val('');
-                        }
-                    } else {
-                        $end.attr('min', today);
-                    }
-                });
-
-                $end.on('change', function () {
-                    const s = $start.val();
-                    const e = $(this).val();
-                    if (s && e && e < s) {
-                        alert('Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.');
-                        $(this).val('');
-                    }
-                });
-
-                var $pct = $('#discountPercent');
-                var $amt = $('#discountAmount');
-
-                function initDiscountState() {
-                    var pctVal = $pct.val().toString().trim();
-                    var amtVal = $amt.val().toString().trim();
-
-                    if (pctVal !== '') {
-                        $amt.prop('disabled', true);
-                        $pct.prop('disabled', false);
-                    } else if (amtVal !== '') {
-                        $pct.prop('disabled', true);
-                        $amt.prop('disabled', false);
-                    } else {
-                        $pct.prop('disabled', false);
-                        $amt.prop('disabled', false);
-                    }
-                }
-                initDiscountState();
-
-                $pct.on('input change', function () {
-                    var v = $(this).val().toString().trim();
-                    if (v !== '') {
-                        $amt.val('');
-                        $amt.prop('disabled', true);
-                    } else {
-                        $amt.prop('disabled', false);
-                    }
-                });
-
-                $amt.on('input change', function () {
-                    var v = $(this).val().toString().trim();
-                    if (v !== '') {
-                        $pct.val('');
-                        $pct.prop('disabled', true);
-                    } else {
-                        $pct.prop('disabled', false);
-                    }
-                });
-
-                $('#voucherForm').on('submit', function (e) {
-                    var pctVal = $pct.val().toString().trim();
-                    var amtVal = $amt.val().toString().trim();
-
-                    if (pctVal !== '' && amtVal !== '') {
-                        alert('Chỉ được nhập 1 trong 2: Mức giảm phần trăm hoặc Mức giảm cố định.');
-                        e.preventDefault();
-                        return false;
-                    }
-
-                    var s = $start.val();
-                    var eDate = $end.val();
-                    if (s) {
-                        if (eDate && eDate < s) {
-                            alert('Ngày kết thúc phải bằng hoặc sau ngày bắt đầu.');
-                            e.preventDefault();
-                            return false;
-                        }
-                    }
-                });
-            });
-        })(jQuery);
+            }
+        });
+    });
+})(jQuery);

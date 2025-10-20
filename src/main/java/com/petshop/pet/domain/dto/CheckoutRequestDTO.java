@@ -17,5 +17,6 @@ public class CheckoutRequestDTO {
     String receiverAddress;
     Status status = Status.PENDING;
     PaymentMethod paymentMethod;
+    String voucherCode;
 
 }

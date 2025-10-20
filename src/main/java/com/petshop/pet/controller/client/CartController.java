@@ -93,24 +93,4 @@ public class CartController {
         cartDetailService.deleteProductInCartDetail(slug, currentUser.getUsername());
     }
 
-    @GetMapping("/checkout")
-    public String getCheckoutPage(Model model,
-                                  @AuthenticationPrincipal CustomUserDetails currentUser){
-
-        List<CartDetail> cartDetails = cartDetailService.
-                getAllProductsInCartByUser(currentUser.getUsername());
-
-        double totalPrice = 0;
-        for(CartDetail cartDetail : cartDetails){
-            totalPrice += cartDetail.getQuantity() * cartDetail.getPrice();
-        }
-
-        User user = userService.getUserByUserName(currentUser.getUsername());
-
-        model.addAttribute("cartDetails", cartDetails);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("currentUser", user);
-        return "client/cart/checkout";
-    }
-
 }

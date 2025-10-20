@@ -98,10 +98,16 @@
                                             <p class="my-3">
 
                                             <div class="input-group mb-3">
-                                                <input type="text" class="form-control" placeholder="Nhập mã giảm giá">
-                                                <button class="btn btn-outline-primary" type="button">Áp
-                                                    dụng</button>
+                                                <input id="voucherInput" type="text" class="form-control"
+                                                    placeholder="Nhập mã giảm giá">
+                                                <button id="applyVoucherBtn" class="btn btn-outline-primary"
+                                                    type="button">Áp dụng</button>
                                             </div>
+
+                                            <div id="voucherError" class="text-danger small mt-1"></div>
+
+                                            <input type="hidden" name="voucherCode" id="voucherCodeField">
+
 
                                             <hr class="my-3">
 
@@ -120,15 +126,21 @@
                                                 </span>
                                             </div>
 
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Giảm giá</span>
+                                                <span id="discountAmount">0 đ</span>
+                                            </div>
+
                                             <hr class="my-3">
 
                                             <div class="d-flex justify-content-between mb-3 fw-bold">
                                                 <span>Tổng cộng</span>
-                                                <span class="text-danger">
+                                                <span class="text-danger" id="finalPrice">
                                                     <fmt:formatNumber value="${totalPrice}" type="number"
                                                         groupingUsed="true" /> đ
                                                 </span>
                                             </div>
+                                            <input type="hidden" id="totalPriceRaw" value="${totalPrice}">
 
                                             <hr class="my-3">
 
@@ -151,7 +163,8 @@
                                                 </div>
                                             </div>
 
-                                            <button type="submit" class="btn btn-primary w-100 fw-bold">Đặt hàng</button>
+                                            <button type="submit" class="btn btn-primary w-100 fw-bold">Đặt
+                                                hàng</button>
                                         </div>
                                     </div>
 
@@ -169,6 +182,10 @@
                     <script src="/client/lib/lightbox/js/lightbox.min.js"></script>
                     <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
                     <script src="/client/js/main.js"></script>
+                    <script>
+                        
+                    </script>
+
 
                 </body>
 

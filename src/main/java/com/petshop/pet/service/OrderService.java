@@ -37,18 +37,22 @@ public class OrderService {
 
     private final ProductRepository productRepository;
 
+    private final VoucherService voucherService;
+
     public OrderService(OrderRepository orderRepository,
                         OrderDetailRepository orderDetailRepository,
                         CartRepository cartRepository,
                         CartDetailService cartDetailService,
                         UserService userService,
-                        ProductRepository productRepository){
+                        ProductRepository productRepository,
+                        VoucherService voucherService){
         this.orderRepository = orderRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.cartRepository = cartRepository;
         this.cartDetailService = cartDetailService;
         this.userService = userService;
         this.productRepository = productRepository;
+        this.voucherService = voucherService;
     }
 
     @Transactional
@@ -72,19 +76,41 @@ public class OrderService {
 
         List<Product> products = productRepository.findByIdIn(productIds);
 
-        for(Product product : products){
-            product.setStock(product.getStock() - 1);
-            if(product.getStock() < 0)
+        for(CartDetail cd : cartDetails){
+            Product p = cd.getProduct();
+            int newStock = p.getStock() - cd.getQuantity();
+            if (newStock < 0)
                 throw new RuntimeException("Stock must be greater than 0");
-
-            productRepository.save(product);
+            p.setStock(newStock);
+            productRepository.save(p);
         }
 
         double totalPrice = 0;
         for(CartDetail cartDetail : cartDetails){
             totalPrice += cartDetail.getQuantity() * cartDetail.getPrice();
         }
-        order.setTotalAmount(totalPrice);
+
+        double finalPrice = totalPrice;
+
+        if(checkoutRequestDTO.getVoucherCode() != null &&
+                !checkoutRequestDTO.getVoucherCode().isEmpty()){
+            Voucher voucher = voucherService.getVoucherByCode(
+                    checkoutRequestDTO.getVoucherCode());
+
+            Double discount;
+            if(voucher.getDiscountAmount() == null){
+                discount = totalPrice * voucher.getDiscountPercent() * 0.01;
+            }else{
+                discount = voucher.getDiscountAmount();
+            }
+
+            finalPrice = totalPrice - discount;
+            if (finalPrice < 0) finalPrice = 0;
+
+            voucherService.increaseUsedCount(voucher);
+        }
+
+        order.setTotalAmount(finalPrice);
 
         User user = userService.getUserByUserName(currentUser.getUsername());
         order.setUser(user);

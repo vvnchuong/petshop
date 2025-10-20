@@ -55,7 +55,7 @@
               <p><strong>Điện thoại:</strong> ${order.receiverPhone}</p>
               <p><strong>Địa chỉ:</strong> ${order.shippingAddress}</p>
               <p><strong>Phương thức thanh toán:</strong> ${order.paymentMethod}</p>
-              <p><strong>Tổng tiền:</strong>
+              <p class="text-warning" style="font-weight: bold;"><strong>Tổng tiền:</strong>
                 <fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true" /> đ
               </p>
             </div>

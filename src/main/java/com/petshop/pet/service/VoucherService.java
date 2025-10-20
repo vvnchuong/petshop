@@ -52,15 +52,21 @@ public class VoucherService {
         voucherRepository.save(voucher);
     }
 
-    public void disableVoucher(){
-
-    }
-
     public void deleteVoucher(long voucherId){
         voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new RuntimeException("Voucher not found"));
 
         voucherRepository.deleteById(voucherId);
+    }
+
+    public Voucher getVoucherByCode(String code){
+        return voucherRepository.findByCode(code)
+                .orElseThrow(() -> new RuntimeException("Voucher not found"));
+    }
+
+    public void increaseUsedCount(Voucher voucher){
+        voucher.setUsedCount(voucher.getUsedCount() + 1);
+        voucherRepository.save(voucher);
     }
 
 }
