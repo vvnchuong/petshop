@@ -300,7 +300,6 @@ $('#applyVoucherBtn').click(function () {
     });
 });
 
-
 // voucher create form
 (function ($) {
     $(document).ready(function () {
@@ -411,3 +410,37 @@ $('#applyVoucherBtn').click(function () {
         });
     });
 })(jQuery);
+
+// dropdown create product (admin)
+const petSelect = document.querySelector('#petSelect');
+const categorySelect = document.querySelector('#categorySelect');
+const subcategorySelect = document.querySelector('#subcategorySelect');
+
+function filterSubcategories() {
+    const pet = petSelect.value.toString();
+    const category = categorySelect.value.toString();
+    let firstVisible = null;
+
+    Array.from(subcategorySelect.options).forEach(option => {
+        const optionPet = option.getAttribute('data-pet');
+        const optionCategory = option.getAttribute('data-category');
+
+        if (optionPet === pet && optionCategory === category) {
+            option.style.display = "block";
+            if (!firstVisible) firstVisible = option;
+        } else {
+            option.style.display = "none";
+        }
+    });
+
+    if (firstVisible) {
+        subcategorySelect.value = firstVisible.value;
+    } else {
+        subcategorySelect.value = "";
+    }
+}
+
+petSelect.addEventListener('change', filterSubcategories);
+categorySelect.addEventListener('change', filterSubcategories);
+
+filterSubcategories();

@@ -29,9 +29,9 @@ public class Product {
     @Column(columnDefinition = "MEDIUMTEXT")
     String shortDesc;
 
-    double price;
+    Double price;
 
-    int stock;
+    Integer stock;
 
     String imageUrl;
 

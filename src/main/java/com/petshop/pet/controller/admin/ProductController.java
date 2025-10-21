@@ -1,9 +1,12 @@
 package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.Product;
+import com.petshop.pet.domain.dto.ProductCreateDTO;
+import com.petshop.pet.domain.dto.ProductUpdateDTO;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UploadService;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,12 +14,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Controller
+@RequestMapping("/admin/product")
 public class ProductController {
 
     private final ProductService productService;
@@ -29,7 +32,7 @@ public class ProductController {
         this.uploadService = uploadService;
     }
 
-    @GetMapping("/admin/product")
+    @GetMapping("")
     public String getProductPage(Model model,
                                  @Filter Specification<Product> spec,
                                  @RequestParam(name = "page", defaultValue = "1") int page,
@@ -49,7 +52,7 @@ public class ProductController {
         return "admin/product/index";
     }
 
-    @GetMapping("/admin/product/{id}")
+    @GetMapping("/{id}")
     public String getProductDetailPage(Model model,
                                        @PathVariable("id") long id){
         Product product = productService.getProductById(id);
@@ -57,24 +60,30 @@ public class ProductController {
         return "admin/product/detail";
     }
 
-    @GetMapping("/admin/product/create")
+    @GetMapping("/create")
     public String getCreateProductPage(Model model){
-        model.addAttribute("newProduct", new Product());
+        model.addAttribute("newProduct", new ProductCreateDTO());
         return "admin/product/create";
     }
 
-    @PostMapping("/admin/product/create")
-    public String createProduct(@ModelAttribute("newProduct") Product product,
+    @PostMapping("/create")
+    public String createProduct(@Valid @ModelAttribute("newProduct")
+                                    ProductCreateDTO productCreateDTO,
+                                BindingResult bindingResult,
                                 @RequestParam("productFile") MultipartFile file){
-        String image = uploadService.handleUploadFile(file, "product", true);
-        product.setImageUrl(image);
 
-        productService.createProduct(product);
+        if(bindingResult.hasErrors())
+            return "admin/product/create";
+
+        String image = uploadService.handleUploadFile(file, "product", true);
+        productCreateDTO.setImageUrl(image);
+
+        productService.createProduct(productCreateDTO);
 
         return "redirect:/admin/product";
     }
 
-    @GetMapping("/admin/product/update/{id}")
+    @GetMapping("/update/{id}")
     public String getUpdateProductPage(Model model,
                                        @PathVariable("id") long id){
         Product product = productService.getProductById(id);
@@ -82,24 +91,29 @@ public class ProductController {
         return "admin/product/update";
     }
 
-    @PostMapping("/admin/product/update/{id}")
+    @PostMapping("/update/{id}")
     public String updateProduct(@PathVariable("id") long id,
-                                @ModelAttribute("newProduct") Product product,
+                                @Valid @ModelAttribute("newProduct") ProductUpdateDTO productUpdateDTO,
+                                BindingResult bindingResult,
                                 @RequestParam("productFile") MultipartFile file){
-        String imageUpdate = uploadService.handleUploadFile(file, "product", false);
-        product.setImageUrl(imageUpdate);
 
-        productService.updateProduct(id, product);
+        if(bindingResult.hasErrors())
+            return "admin/product/update";
+
+        String imageUpdate = uploadService.handleUploadFile(file, "product", false);
+        productUpdateDTO.setImageUrl(imageUpdate);
+
+        productService.updateProduct(id, productUpdateDTO);
 
         return "redirect:/admin/product";
     }
 
-    @GetMapping("/admin/product/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String getDeleteProductPage(@PathVariable("id") long id){
         return "admin/product/delete";
     }
 
-    @PostMapping("/admin/product/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") long id){
         productService.deleteProduct(id);
         return "redirect:/admin/product";

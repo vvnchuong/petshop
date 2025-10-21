@@ -46,15 +46,13 @@
                     $(document).ready(() => {
                         const productFile = $("#productFile");
                         productFile.change(function (e) {
-                            // Kiểm tra file có tồn tại không
                             if (e.target.files && e.target.files[0]) {
                                 const imgURL = URL.createObjectURL(e.target.files[0]);
                                 $("#productPreview").attr("src", imgURL);
                                 $("#productPreview").css({ "display": "block" });
                             } else {
-                                // Nếu hủy chọn file
                                 $("#productPreview").css({ "display": "none" });
-                                $("#productPreview").attr("src", ""); // Xóa src
+                                $("#productPreview").attr("src", "");
                             }
                         });
                     });
@@ -75,14 +73,23 @@
                                             <h3 class="mb-3">Thêm sản phẩm mới</h3>
                                             <hr />
 
+                                            <c:if test="${not empty error}">
+                                                <div class="alert alert-danger">${error}</div>
+                                            </c:if>
+
                                             <form:form method="post" action="/admin/product/create"
                                                 modelAttribute="newProduct" enctype="multipart/form-data">
 
                                                 <div class="row g-3">
 
                                                     <div class="col-md-6">
+                                                        <c:set var="errorName">
+                                                            <form:errors path="name" cssClass="invalid-feedback" />
+                                                        </c:set>
                                                         <label class="form-label required">Tên sản phẩm</label>
-                                                        <form:input type="text" class="form-control" path="name" />
+                                                        <form:input type="text"
+                                                            class="form-control ${not empty errorName ? 'is-invalid' : ''}"
+                                                            path="name" />${errorName}
                                                     </div>
 
                                                     <div class="col-md-6">
@@ -99,15 +106,23 @@
                                                     </div>
 
                                                     <div class="col-md-6">
+                                                        <c:set var="errorPrice">
+                                                            <form:errors path="price" cssClass="invalid-feedback" />
+                                                        </c:set>
                                                         <label class="form-label required">Giá (VND)</label>
                                                         <form:input type="number" min="0" step="1000"
-                                                            class="form-control" path="price" />
+                                                            class="form-control ${not empty errorPrice ? 'is-invalid' : ''}"
+                                                            path="price" />${errorPrice}
                                                     </div>
 
                                                     <div class="col-md-6">
+                                                        <c:set var="errorStock">
+                                                            <form:errors path="stock" cssClass="invalid-feedback" />
+                                                        </c:set>
                                                         <label class="form-label required">Số lượng</label>
-                                                        <form:input type="number" min="0" step="1" class="form-control"
-                                                            path="stock" />
+                                                        <form:input type="number" min="0" step="1"
+                                                            class="form-control ${not empty errorStock ? 'is-invalid' : ''}"
+                                                            path="stock" />${errorStock}
                                                     </div>
 
                                                     <div class="col-md-4">
@@ -173,21 +188,36 @@
                                                     </div>
 
                                                     <div class="col-12">
+                                                        <c:set var="errorShortDesc">
+                                                            <form:errors path="shortDesc" cssClass="invalid-feedback" />
+                                                        </c:set>
                                                         <label class="form-label">Mô tả ngắn</label>
-                                                        <form:textarea class="form-control" path="shortDesc" rows="2" />
+                                                        <form:textarea
+                                                            class="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}"
+                                                            path="shortDesc" rows="2" />${errorShortDesc}
                                                     </div>
 
                                                     <div class="col-12">
+                                                        <c:set var="errorDescription">
+                                                            <form:errors path="description"
+                                                                cssClass="invalid-feedback" />
+                                                        </c:set>
                                                         <label class="form-label">Mô tả chi tiết</label>
-                                                        <form:textarea class="form-control" path="description"
-                                                            rows="4" />
+                                                        <form:textarea
+                                                            class="form-control ${not empty errorDescription ? 'is-invalid' : ''}"
+                                                            path="description" rows="4" />${errorDescription}
                                                     </div>
 
                                                     <div class="col-md-6">
+                                                        <c:set var="errorImageUrl">
+                                                            <form:errors path="imageUrl" cssClass="invalid-feedback" />
+                                                        </c:set>
                                                         <label for="productFile" class="form-label required">Ảnh sản
                                                             phẩm</label>
-                                                        <input type="file" class="form-control" id="productFile"
-                                                            name="productFile" accept=".png, .jpg, .jpeg">
+                                                        <input type="file"
+                                                            class="form-control ${not empty errorImageUrl ? 'is-invalid' : ''}"
+                                                            id="productFile" name="productFile"
+                                                            accept=".png, .jpg, .jpeg">${errorImageUrl}
                                                         <div class="helper">Hỗ trợ .png, .jpg, .jpeg</div>
                                                     </div>
 
@@ -216,40 +246,7 @@
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
                     crossorigin="anonymous"></script>
 
-                <script>
-                    const petSelect = document.querySelector('#petSelect');
-                    const categorySelect = document.querySelector('#categorySelect');
-                    const subcategorySelect = document.querySelector('#subcategorySelect');
-
-                    function filterSubcategories() {
-                        const pet = petSelect.value.toString();
-                        const category = categorySelect.value.toString();
-                        let firstVisible = null;
-
-                        Array.from(subcategorySelect.options).forEach(option => {
-                            const optionPet = option.getAttribute('data-pet');
-                            const optionCategory = option.getAttribute('data-category');
-
-                            if (optionPet === pet && optionCategory === category) {
-                                option.style.display = "block";
-                                if (!firstVisible) firstVisible = option;
-                            } else {
-                                option.style.display = "none";
-                            }
-                        });
-
-                        if (firstVisible) {
-                            subcategorySelect.value = firstVisible.value;
-                        } else {
-                            subcategorySelect.value = "";
-                        }
-                    }
-
-                    petSelect.addEventListener('change', filterSubcategories);
-                    categorySelect.addEventListener('change', filterSubcategories);
-                    
-                    filterSubcategories();
-                </script>
+                <script src="/client/js/main.js"></script>
             </body>
 
             </html>
