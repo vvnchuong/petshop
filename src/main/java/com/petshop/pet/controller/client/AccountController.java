@@ -4,6 +4,7 @@ import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.dto.ChangePasswordDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.domain.dto.UserUpdateDTO;
+import com.petshop.pet.service.PasswordRecoveryService;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
 import jakarta.validation.Valid;
@@ -24,10 +25,14 @@ public class AccountController {
 
     private final UploadService uploadService;
 
+    private final PasswordRecoveryService recoveryService;
+
     public AccountController(UserService userService,
-                             UploadService uploadService){
+                             UploadService uploadService,
+                             PasswordRecoveryService recoveryService){
         this.userService = userService;
         this.uploadService = uploadService;
+        this.recoveryService = recoveryService;
     }
 
     @GetMapping("/account")
@@ -124,7 +129,7 @@ public class AccountController {
     @PostMapping("/account/forgot-password")
     public String handleForgotPassword(@RequestParam("email") String email, Model model){
         try {
-            userService.generateResetToken(email);
+            recoveryService.generateResetToken(email);
             model.addAttribute("message", "Vui lòng kiểm tra email của bạn.");
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
@@ -151,7 +156,7 @@ public class AccountController {
         }
 
         try {
-            userService.resetPassword(token, password);
+            recoveryService.resetPassword(token, password);
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("token", token);
