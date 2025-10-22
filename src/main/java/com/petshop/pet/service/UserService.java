@@ -4,6 +4,8 @@ import com.petshop.pet.domain.PasswordResetToken;
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.*;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.UserMapper;
 import com.petshop.pet.repository.PasswordResetTokenRepository;
 import com.petshop.pet.repository.RoleRepository;
@@ -20,7 +22,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -38,9 +39,8 @@ public class UserService {
 
     private final EmailService emailService;
 
-    private final long EXPIRATION_MINUTES = 30;
-
-    private static final String DEFAULT_AVATAR = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
+    @Value("${expiration-time-minutes}")
+    private long EXPIRATION_MINUTES;
 
     @Value("${app.reset-password.base-url}")
     private String resetPasswordBaseUrl;
@@ -66,24 +66,14 @@ public class UserService {
 
     public User getUserById(long id){
         return userRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("User not found"));
+                orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     public void createUser(AdminCreateUserDTO userDTO){
 
-        if(userRepository.findByUsername(userDTO.getUsername())
-                .isPresent()){
-            throw new RuntimeException("User already exists");
-        }
-
-        if(userRepository.findByEmail(userDTO.getEmail()).isPresent()){
-            throw new RuntimeException("Email already exists");
-        }
+        validateUniqueUsernameAndEmail(userDTO.getUsername(), userDTO.getEmail());
 
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
-        if(userDTO.getAvatarUrl().isEmpty())
-            userDTO.setAvatarUrl(DEFAULT_AVATAR);
 
         User user = userMapper.fromAdminCreateDTO(userDTO);
 
@@ -92,7 +82,7 @@ public class UserService {
 
     public void updateUserByAdmin(long id, AdminUpdateDTO adminUpdateDTO){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         userMapper.fromAdminUpdateDTO(user, adminUpdateDTO);
 
@@ -105,7 +95,7 @@ public class UserService {
 
     public User getUserByUserName(String username){
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     public UserUpdateDTO getUserUpdateDTO(String username){
@@ -126,10 +116,10 @@ public class UserService {
         User user = getUserByUserName(username);
 
         if (!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword()))
-            throw new RuntimeException("Old password is incorrect");
+            throw new BusinessException(ErrorCode.OLD_PASSWORD_INCORRECT);
 
         if(!passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword()))
-            throw new RuntimeException("New password and confirmation do not match");
+            throw new BusinessException(ErrorCode.NEW_PASSWORD_MISMATCH);
 
         user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
 
@@ -149,17 +139,10 @@ public class UserService {
 
     public void registerAccount(RegisterDTO registerDTO) {
 
-        if(userRepository.findByUsername(registerDTO.getUsername())
-                .isPresent()){
-            throw new RuntimeException("User already exists");
-        }
-
-        if(userRepository.findByEmail(registerDTO.getEmail()).isPresent()){
-            throw new RuntimeException("Email already exists");
-        }
+        validateUniqueUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail());
 
         if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
-            throw new RuntimeException("Password and confirm password do not match");
+            throw new BusinessException(ErrorCode.PASSWORD_MISMATCH);
         }
 
         User user = userMapper.fromRegisterDTO(registerDTO);
@@ -168,15 +151,13 @@ public class UserService {
         Role role = roleRepository.findByName("CUSTOMER");
         user.setRole(role);
 
-        user.setAvatarUrl(DEFAULT_AVATAR);
-
         userRepository.save(user);
     }
 
     @Transactional
     public void generateResetToken(String email){
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         String token = UUID.randomUUID().toString();
 
@@ -202,11 +183,11 @@ public class UserService {
     @Transactional
     public void resetPassword(String token, String newPassword){
         PasswordResetToken prt = tokenRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Token Invalid"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TOKEN_INVALID));
 
         if(prt.isExpired()){
             tokenRepository.delete(prt);
-            throw new RuntimeException("Token has expired");
+            throw new BusinessException(ErrorCode.TOKEN_EXPIRED);
         }
 
         User user = prt.getUser();
@@ -214,6 +195,13 @@ public class UserService {
         userRepository.save(user);
 
         tokenRepository.delete(prt);
+    }
+
+    private void validateUniqueUsernameAndEmail(String username, String email){
+        if (userRepository.existsByUsername(username))
+            throw new BusinessException(ErrorCode.USER_ALREADY_EXISTS);
+        if (userRepository.existsByEmail(email))
+            throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
     }
 
 }

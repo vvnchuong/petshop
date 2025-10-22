@@ -39,20 +39,29 @@ public interface UserMapper {
     void fromAdminUpdateDTO(@MappingTarget User user, AdminUpdateDTO adminUpdateDTO);
 
     @AfterMapping
-    default void setAvatarUrl(@MappingTarget User user, UserUpdateDTO userUpdateDTO){
-        if(userUpdateDTO.getAvatarUrl() != null &&
-                !userUpdateDTO.getAvatarUrl().isEmpty()){
-            user.setAvatarUrl(userUpdateDTO.getAvatarUrl());
+    default void setAvatarIfPresent(@MappingTarget User user, Object source) {
+        String avatar = null;
+
+        if(source instanceof UserUpdateDTO dto
+                && dto.getAvatarUrl() != null &&
+                !dto.getAvatarUrl().isEmpty()){
+            avatar = dto.getAvatarUrl();
+        }else if (source instanceof AdminUpdateDTO dto
+                && dto.getAvatarUrl() != null
+                && !dto.getAvatarUrl().isEmpty()){
+            avatar = dto.getAvatarUrl();
+        }
+
+        if(avatar != null)
+            user.setAvatarUrl(avatar);
+
+        if(source instanceof RegisterDTO || source instanceof AdminCreateUserDTO){
+            if(user.getAvatarUrl() == null || user.getAvatarUrl().isEmpty()){
+                user.setAvatarUrl("7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg");
+            }
         }
     }
 
-    @AfterMapping
-    default void setAvatarAdminUrl(@MappingTarget User user, AdminUpdateDTO adminUpdateDTO){
-        if(adminUpdateDTO.getAvatarUrl() != null &&
-                !adminUpdateDTO.getAvatarUrl().isEmpty()){
-            user.setAvatarUrl(adminUpdateDTO.getAvatarUrl());
-        }
-    }
 
     @AfterMapping
     default void setUpdatedAt(@MappingTarget User user){
