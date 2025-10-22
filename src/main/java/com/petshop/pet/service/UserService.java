@@ -3,10 +3,7 @@ package com.petshop.pet.service;
 import com.petshop.pet.domain.PasswordResetToken;
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
-import com.petshop.pet.domain.dto.AdminCreateUserDTO;
-import com.petshop.pet.domain.dto.ChangePasswordDTO;
-import com.petshop.pet.domain.dto.RegisterDTO;
-import com.petshop.pet.domain.dto.UserUpdateDTO;
+import com.petshop.pet.domain.dto.*;
 import com.petshop.pet.mapper.UserMapper;
 import com.petshop.pet.repository.PasswordResetTokenRepository;
 import com.petshop.pet.repository.RoleRepository;
@@ -43,6 +40,8 @@ public class UserService {
 
     private final long EXPIRATION_MINUTES = 30;
 
+    private static final String DEFAULT_AVATAR = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
+
     @Value("${app.reset-password.base-url}")
     private String resetPasswordBaseUrl;
 
@@ -66,7 +65,8 @@ public class UserService {
     }
 
     public User getUserById(long id){
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public void createUser(AdminCreateUserDTO userDTO){
@@ -82,24 +82,19 @@ public class UserService {
 
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        Role role = roleRepository.findByName(userDTO.getRole().getName());
-        userDTO.setRole(role);
-
-        String avatar = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
-        if(userDTO.getAvatarUrl().isEmpty()){
-            userDTO.setAvatarUrl(avatar);
-        }
+        if(userDTO.getAvatarUrl().isEmpty())
+            userDTO.setAvatarUrl(DEFAULT_AVATAR);
 
         User user = userMapper.fromAdminCreateDTO(userDTO);
 
         userRepository.save(user);
     }
 
-    public void updateUser(long id, UserUpdateDTO userUpdate){
+    public void updateUserByAdmin(long id, AdminUpdateDTO adminUpdateDTO){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        userMapper.updateUser(user, userUpdate);
+        userMapper.fromAdminUpdateDTO(user, adminUpdateDTO);
 
         userRepository.save(user);
     }
@@ -122,16 +117,13 @@ public class UserService {
     public void updateUserByUser(String username, UserUpdateDTO userUpdate){
         User user = getUserByUserName(username);
 
-        userMapper.updateUser(user, userUpdate);
+        userMapper.fromUpdateUser(user, userUpdate);
 
         userRepository.save(user);
     }
 
     public void changePasswordByUser(ChangePasswordDTO passwordDTO, String username) {
         User user = getUserByUserName(username);
-
-        if(user == null)
-            throw new RuntimeException("User not found");
 
         if (!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword()))
             throw new RuntimeException("Old password is incorrect");
@@ -176,8 +168,7 @@ public class UserService {
         Role role = roleRepository.findByName("CUSTOMER");
         user.setRole(role);
 
-        String avatar = "7f8fd49d-8848-4bef-8ee7-ee2c62c91473-default.jpg";
-        user.setAvatarUrl(avatar);
+        user.setAvatarUrl(DEFAULT_AVATAR);
 
         userRepository.save(user);
     }

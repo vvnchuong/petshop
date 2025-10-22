@@ -2,7 +2,7 @@ package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.AdminCreateUserDTO;
-import com.petshop.pet.domain.dto.UserUpdateDTO;
+import com.petshop.pet.domain.dto.AdminUpdateDTO;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
 import com.turkraft.springfilter.boot.Filter;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequestMapping("/admin/user")
 public class UserController {
 
     private final UserService userService;
@@ -31,7 +32,7 @@ public class UserController {
         this.uploadService = uploadService;
     }
 
-    @GetMapping("/admin/user")
+    @GetMapping("")
     public String getUserPage(Model model,
                               @Filter Specification<User> spec,
                               @RequestParam(name = "page", defaultValue = "1") int page,
@@ -51,7 +52,7 @@ public class UserController {
         return "admin/user/index";
     }
 
-    @GetMapping("/admin/user/{id}")
+    @GetMapping("/{id}")
     public String getUserDetailPage(Model model,
                                     @PathVariable("id") long id){
         User user = userService.getUserById(id);
@@ -59,24 +60,24 @@ public class UserController {
         return "admin/user/detail";
     }
 
-    @GetMapping("/admin/user/create")
+    @GetMapping("/create")
     public String getCreateUserPage(Model model){
         model.addAttribute("newUser", new User());
         return "admin/user/create";
     }
 
-    @PostMapping("/admin/user/create")
+    @PostMapping("/create")
     public String createUser(@Valid @ModelAttribute("newUser") AdminCreateUserDTO userDTO,
                              BindingResult bindingResult,
                              @RequestParam("inputFile") MultipartFile file,
                              Model model){
 
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors())
             return "admin/user/create";
-        }
+
 
         try {
-            String avatar = uploadService.handleUploadFile(file, "avatar", true);
+            String avatar = uploadService.handleUploadFile(file, "avatar", false);
             userDTO.setAvatarUrl(avatar);
 
             userService.createUser(userDTO);
@@ -88,7 +89,7 @@ public class UserController {
         return "redirect:/admin/user";
     }
 
-    @GetMapping("/admin/user/update/{id}")
+    @GetMapping("/update/{id}")
     public String getUpdateUserPage(Model model,
                                     @PathVariable("id") long id){
         User currentUser = userService.getUserById(id);
@@ -96,24 +97,31 @@ public class UserController {
         return "admin/user/update";
     }
 
-    @PostMapping("/admin/user/update/{id}")
+    @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") long id,
-                             @ModelAttribute("newUser") UserUpdateDTO userDTO,
-                             @RequestParam("inputFile") MultipartFile file){
-        String avatarUpdate = uploadService.handleUploadFile(file, "avatar", false);
-        userDTO.setAvatarUrl(avatarUpdate);
+                             @Valid @ModelAttribute("newUser") AdminUpdateDTO adminUpdateDTO,
+                             BindingResult bindingResult,
+                             @RequestParam("inputFile") MultipartFile file,
+                             Model model){
 
-        userService.updateUser(id, userDTO);
+        if(bindingResult.hasErrors())
+            return "admin/user/update";
+
+
+        String avatarUpdate = uploadService.handleUploadFile(file, "avatar", false);
+        adminUpdateDTO.setAvatarUrl(avatarUpdate);
+
+        userService.updateUserByAdmin(id, adminUpdateDTO);
 
         return "redirect:/admin/user";
     }
 
-    @GetMapping("/admin/user/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String getDeletUserPage(@PathVariable("id") Long id){
         return "admin/user/delete";
     }
 
-    @PostMapping("/admin/user/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteUser(Model model, @PathVariable("id") Long id){
         this.userService.deleteUser(id);
         return "redirect:/admin/user";
