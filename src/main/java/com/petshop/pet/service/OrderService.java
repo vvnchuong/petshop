@@ -3,6 +3,8 @@ package com.petshop.pet.service;
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.CheckoutRequestDTO;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.CartRepository;
 import com.petshop.pet.repository.OrderDetailRepository;
 import com.petshop.pet.repository.OrderRepository;
@@ -27,110 +29,75 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    private final OrderDetailRepository orderDetailRepository;
-
-    private final CartRepository cartRepository;
-
     private final CartDetailService cartDetailService;
 
     private final UserService userService;
 
-    private final ProductRepository productRepository;
-
     private final VoucherService voucherService;
 
+    private final CartService cartService;
+
+    private final StockService stockService;
+
+    private final PricingService pricingService;
+
+    private final OrderDetailService orderDetailService;
+
     public OrderService(OrderRepository orderRepository,
-                        OrderDetailRepository orderDetailRepository,
-                        CartRepository cartRepository,
                         CartDetailService cartDetailService,
                         UserService userService,
-                        ProductRepository productRepository,
-                        VoucherService voucherService){
+                        VoucherService voucherService,
+                        CartService cartService,
+                        StockService stockService,
+                        PricingService pricingService,
+                        OrderDetailService orderDetailService){
         this.orderRepository = orderRepository;
-        this.orderDetailRepository = orderDetailRepository;
-        this.cartRepository = cartRepository;
         this.cartDetailService = cartDetailService;
         this.userService = userService;
-        this.productRepository = productRepository;
         this.voucherService = voucherService;
+        this.cartService = cartService;
+        this.stockService = stockService;
+        this.pricingService = pricingService;
+        this.orderDetailService = orderDetailService;
     }
 
     @Transactional
-    public Order placeOrder(CheckoutRequestDTO checkoutRequestDTO,
+    public Order placeOrder(CheckoutRequestDTO dto,
                            CustomUserDetails currentUser){
 
-        Order order = new Order();
-        order.setReceiverName(checkoutRequestDTO.getReceiverName());
-        order.setReceiverPhone(checkoutRequestDTO.getReceiverPhone());
-        order.setShippingAddress(checkoutRequestDTO.getReceiverAddress());
-        order.setStatus(checkoutRequestDTO.getStatus());
-        order.setPaymentMethod(checkoutRequestDTO.getPaymentMethod());
-        order.setCreatedAt(Instant.now());
-
-        List<CartDetail> cartDetails = cartDetailService.
-                getAllProductsInCartByUser(currentUser.getUsername());
-
-        List<Long> productIds = cartDetails.stream()
-                .map(cd -> cd.getProduct().getId())
-                .collect(Collectors.toList());
-
-        List<Product> products = productRepository.findByIdIn(productIds);
-
-        for(CartDetail cd : cartDetails){
-            Product p = cd.getProduct();
-            int newStock = p.getStock() - cd.getQuantity();
-            if (newStock < 0)
-                throw new RuntimeException("Stock must be greater than 0");
-            p.setStock(newStock);
-            productRepository.save(p);
-        }
-
-        double totalPrice = 0;
-        for(CartDetail cartDetail : cartDetails){
-            totalPrice += cartDetail.getQuantity() * cartDetail.getPrice();
-        }
-
-        double finalPrice = totalPrice;
-
-        if(checkoutRequestDTO.getVoucherCode() != null &&
-                !checkoutRequestDTO.getVoucherCode().isEmpty()){
-            Voucher voucher = voucherService.getVoucherByCode(
-                    checkoutRequestDTO.getVoucherCode());
-
-            Double discount;
-            if(voucher.getDiscountAmount() == null){
-                discount = totalPrice * voucher.getDiscountPercent() * 0.01;
-            }else{
-                discount = voucher.getDiscountAmount();
-            }
-
-            finalPrice = totalPrice - discount;
-            if (finalPrice < 0) finalPrice = 0;
-
-            voucherService.increaseUsedCount(voucher);
-        }
-
-        order.setTotalAmount(finalPrice);
-
         User user = userService.getUserByUserName(currentUser.getUsername());
-        order.setUser(user);
 
+        List<CartDetail> cartDetails = cartDetailService.getAllProductsInCartByUser(currentUser.getUsername());
+
+        stockService.reserveStock(cartDetails);
+
+        Voucher voucher = voucherService.checkVoucher(dto.getVoucherCode());
+
+        double finalPrice = pricingService.calculateFinalPrice(cartDetails, voucher);
+
+        Order order = createOrder(dto, user, finalPrice);
         orderRepository.save(order);
 
-        for(CartDetail cartDetail : cartDetails){
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
-            orderDetail.setProduct(cartDetail.getProduct());
-            orderDetail.setQuantity(cartDetail.getQuantity());
-            orderDetail.setPrice(cartDetail.getPrice());
-            orderDetailRepository.save(orderDetail);
-        }
+        orderDetailService.saveOrderDetails(order, cartDetails);
 
-        Cart cart = cartRepository.findByUser(user);
-        cart.setQuantity(0);
-        cartRepository.save(cart);
+        voucherService.increaseUsedCount(voucher);
 
         cartDetailService.deleteAllProductInCartByCartId(user.getCart());
+        cartService.resetCart(user);
+
+        return order;
+    }
+
+    private Order createOrder(CheckoutRequestDTO dto, User user, double finalPrice){
+        Order order = new Order();
+        order.setReceiverName(dto.getReceiverName());
+        order.setReceiverPhone(dto.getReceiverPhone());
+        order.setShippingAddress(dto.getReceiverAddress());
+        order.setPaymentMethod(dto.getPaymentMethod());
+        order.setStatus(dto.getStatus());
+        order.setCreatedAt(Instant.now());
+        order.setTotalAmount(finalPrice);
+        order.setUser(user);
 
         return order;
     }
@@ -150,7 +117,7 @@ public class OrderService {
 
     public Order getOrderById(long orderId){
         return orderRepository.findById(orderId).
-                orElseThrow(() -> new RuntimeException("Order not found"));
+                orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
     }
 
     public void updateOrder(long orderId, Order orderUpdate){

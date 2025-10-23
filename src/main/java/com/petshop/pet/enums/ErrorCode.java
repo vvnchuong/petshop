@@ -22,6 +22,10 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(2002, "Product not found", HttpStatus.NOT_FOUND),
     SLUG_ALREADY_EXISTS(2003, "Slug already exists", HttpStatus.BAD_REQUEST),
 
+    // Order-related errors
+    STOCK_QUANTITY_INVALID(3001, "Stock must be greater than 0", HttpStatus.BAD_REQUEST),
+    ORDER_NOT_FOUND(3002, "Order not found", HttpStatus.NOT_FOUND),
+
     // Token-related errors
     TOKEN_INVALID(9001, "Reset token is invalid", HttpStatus.BAD_REQUEST),
     TOKEN_EXPIRED(9002, "Reset token has expired", HttpStatus.BAD_REQUEST),

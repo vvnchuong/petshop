@@ -70,4 +70,11 @@ public class CartService {
         return cart != null ? cart.getQuantity() : 0;
     }
 
+    public void resetCart(User user){
+        Cart cart = cartRepository.findByUser(user);
+        cart.setQuantity(0);
+
+        cartRepository.save(cart);
+    }
+
 }

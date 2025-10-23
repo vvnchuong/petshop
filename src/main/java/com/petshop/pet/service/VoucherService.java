@@ -64,7 +64,17 @@ public class VoucherService {
                 .orElseThrow(() -> new RuntimeException("Voucher not found"));
     }
 
+    public Voucher checkVoucher(String code){
+        if(code == null || code.isEmpty())
+            return null;
+
+        return getVoucherByCode(code);
+    }
+
     public void increaseUsedCount(Voucher voucher){
+        if(voucher == null)
+            return;
+
         voucher.setUsedCount(voucher.getUsedCount() + 1);
         voucherRepository.save(voucher);
     }
