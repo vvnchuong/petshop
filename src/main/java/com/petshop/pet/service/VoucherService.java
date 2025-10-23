@@ -3,6 +3,8 @@ package com.petshop.pet.service;
 import com.petshop.pet.domain.Voucher;
 import com.petshop.pet.domain.dto.VoucherDTO;
 import com.petshop.pet.domain.dto.VoucherUpdateDTO;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.VoucherMapper;
 import com.petshop.pet.repository.VoucherRepository;
 import org.springframework.data.domain.Page;
@@ -30,12 +32,12 @@ public class VoucherService {
 
     public Voucher getVoucherById(long voucherId){
         return voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new RuntimeException("Voucher not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
     }
 
     public void createVoucher(VoucherDTO voucherDTO){
         if(voucherRepository.findByCode(voucherDTO.getCode()).isPresent()){
-            throw new RuntimeException("Voucher already exists");
+            throw new BusinessException(ErrorCode.VOUCHER_ALREADY_EXISTS);
         }else{
             Voucher voucher = voucherMapper.toVoucher(voucherDTO);
             voucher.setUsedCount(0);
@@ -45,7 +47,7 @@ public class VoucherService {
 
     public void updateVoucher(long voucherId , VoucherUpdateDTO voucherUpdateDTO){
         Voucher voucher = voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new RuntimeException("Voucher not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
 
         voucherMapper.updateVoucher(voucher, voucherUpdateDTO);
 
@@ -54,14 +56,14 @@ public class VoucherService {
 
     public void deleteVoucher(long voucherId){
         voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new RuntimeException("Voucher not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
 
         voucherRepository.deleteById(voucherId);
     }
 
     public Voucher getVoucherByCode(String code){
         return voucherRepository.findByCode(code)
-                .orElseThrow(() -> new RuntimeException("Voucher not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
     }
 
     public Voucher checkVoucher(String code){

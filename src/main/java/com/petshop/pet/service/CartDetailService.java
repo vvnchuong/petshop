@@ -2,6 +2,8 @@ package com.petshop.pet.service;
 
 import com.petshop.pet.domain.Cart;
 import com.petshop.pet.domain.CartDetail;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.CartDetailRepository;
 import com.petshop.pet.repository.CartRepository;
 import org.springframework.stereotype.Service;
@@ -31,7 +33,7 @@ public class CartDetailService {
 
     public void updateQuantity(Long id, Integer quantity) {
         CartDetail cartDetail = cartDetailRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cart not found with id: " + id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CART_NOT_FOUND));
 
         cartDetail.setQuantity(quantity);
         cartDetailRepository.save(cartDetail);
@@ -46,10 +48,10 @@ public class CartDetailService {
         cartDetailRepository.deleteByProductSlug(slug);
     }
 
-    public void addToCart(String username, Long productId, Integer quantity) {
-        CartDetail cartDetail = cartDetailRepository.
-                findByCartUserUsernameAndProductId(username, productId);
-    }
+//    public void addToCart(String username, Long productId, Integer quantity) {
+//        CartDetail cartDetail = cartDetailRepository.
+//                findByCartUserUsernameAndProductId(username, productId);
+//    }
 
     public void deleteAllProductInCartByCartId(Cart cart){
         cartDetailRepository.deleteAllByCart(cart);

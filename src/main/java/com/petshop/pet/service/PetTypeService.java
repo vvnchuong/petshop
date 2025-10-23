@@ -1,6 +1,8 @@
 package com.petshop.pet.service;
 
 import com.petshop.pet.domain.PetType;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.PetTypeRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,7 @@ public class PetTypeService {
 
     public PetType getPetTypeBySlug(String slug){
         return petTypeRepository.findBySlug(slug)
-                .orElseThrow(() -> new RuntimeException("Pet type not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PETTYPE_NOT_FOUND));
     }
 
 }

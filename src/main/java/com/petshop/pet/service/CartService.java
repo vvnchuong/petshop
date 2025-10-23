@@ -35,10 +35,10 @@ public class CartService {
 
     public void addProductToCart(String username, String productSlug, Integer quantity) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         Cart cart = cartRepository.findByUser(user);
-        if (cart == null) {
+        if(cart == null){
             cart = new Cart();
             cart.setUser(user);
             cart.setQuantity(0);
@@ -49,7 +49,7 @@ public class CartService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
         CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
-        if (cartDetail == null) {
+        if(cartDetail == null){
             cartDetail = new CartDetail();
             cartDetail.setCart(cart);
             cartDetail.setProduct(product);
@@ -57,7 +57,7 @@ public class CartService {
             cartDetail.setPrice(product.getPrice());
 
             cart.setQuantity(cart.getQuantity() + 1);
-        } else {
+        }else{
             cartDetail.setQuantity(cartDetail.getQuantity() + 1);
         }
 

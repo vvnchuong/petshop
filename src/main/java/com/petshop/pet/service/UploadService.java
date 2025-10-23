@@ -1,5 +1,7 @@
 package com.petshop.pet.service;
 
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import jakarta.servlet.ServletContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +26,7 @@ public class UploadService {
         // 1. Kiểm tra có file không
         if (file == null || file.isEmpty()) {
             if(required) {
-                throw new RuntimeException("Please choose an image to upload");
+                throw new BusinessException(ErrorCode.IMAGE_NOT_SELECTED);
             }else{
                 return null;
             }
@@ -36,7 +38,7 @@ public class UploadService {
                 !(contentType.equals("image/jpg") ||
                         contentType.equals("image/jpeg") ||
                         contentType.equals("image/png"))) {
-            throw new RuntimeException("Just only jpg, jpeg, png");
+            throw new BusinessException(ErrorCode.INVALID_IMAGE_FORMAT);
         }
 
         // 3. Kiểm tra đuôi file để an toàn hơn
@@ -45,7 +47,7 @@ public class UploadService {
         String lowerCase = originalFilename.toLowerCase();
         if (!(lowerCase.endsWith(".jpg") || lowerCase.endsWith(".jpeg") ||
                 lowerCase.endsWith(".png"))) {
-            throw new RuntimeException("Just only jpg, jpeg, png");
+            throw new BusinessException(ErrorCode.INVALID_IMAGE_FORMAT);
         }
 
         // 4. Xử lý lưu file
@@ -59,7 +61,7 @@ public class UploadService {
         try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
             file.getInputStream().transferTo(stream);
         } catch (IOException e) {
-            throw new RuntimeException("Upload failed", e);
+            throw new BusinessException(ErrorCode.IMAGE_UPLOAD_FAILED);
         }
 
         return finalName;
