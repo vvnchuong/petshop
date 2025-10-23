@@ -4,6 +4,8 @@ import com.petshop.pet.domain.Cart;
 import com.petshop.pet.domain.CartDetail;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.CartDetailRepository;
 import com.petshop.pet.repository.CartRepository;
 import com.petshop.pet.repository.ProductRepository;
@@ -43,10 +45,8 @@ public class CartService {
             cart = cartRepository.save(cart);
         }
 
-        Product product = productRepository.findBySlug(productSlug);
-        if (product == null) {
-            throw new RuntimeException("Product not found");
-        }
+        Product product = productRepository.findBySlug(productSlug)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
         CartDetail cartDetail = cartDetailRepository.findByCartAndProduct(cart, product);
         if (cartDetail == null) {

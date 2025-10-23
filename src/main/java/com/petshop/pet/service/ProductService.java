@@ -3,6 +3,8 @@ package com.petshop.pet.service;
 import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.ProductCreateDTO;
 import com.petshop.pet.domain.dto.ProductUpdateDTO;
+import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.ProductMapper;
 import com.petshop.pet.repository.*;
 import com.petshop.pet.utils.SlugUtil;
@@ -23,17 +25,11 @@ public class ProductService {
     private final ProductMapper productMapper;
 
     public ProductService(ProductRepository productRepository,
-                          BrandRepository brandRepository,
-                          SubcategoryRepository subcategoryRepository,
                           OrderDetailRepository orderDetailRepository,
                           ProductMapper productMapper){
         this.productRepository = productRepository;
         this.orderDetailRepository = orderDetailRepository;
         this.productMapper = productMapper;
-    }
-
-    public List<Product> getAllProductsHomePage(){
-        return productRepository.findAll();
     }
 
     public Page<Product> getAllProducts(Specification<Product> spec,
@@ -42,7 +38,8 @@ public class ProductService {
     }
 
     public Product getProductById(long id){
-        return productRepository.findById(id).get();
+        return productRepository.findById(id).
+                orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public void createProduct(ProductCreateDTO productCreateDTO){
@@ -53,20 +50,33 @@ public class ProductService {
             product.setSlug(SlugUtil.toSlug(product.getName()));
         }
 
+        if(productRepository.existsBySlug(product.getSlug()))
+            throw new BusinessException(ErrorCode.SLUG_ALREADY_EXISTS);
+
         productRepository.save(product);
     }
 
     public void updateProduct(long productId, ProductUpdateDTO productUpdateDTO){
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
         productMapper.updateProduct(product, productUpdateDTO);
+
+        String newSlug = SlugUtil.toSlug(product.getName());
+
+        if(!newSlug.equals(product.getSlug()) && productRepository.existsBySlug(newSlug))
+            throw new BusinessException(ErrorCode.SLUG_ALREADY_EXISTS);
+
+        product.setSlug(newSlug);
 
         productRepository.save(product);
     }
 
-    public void deleteProduct(long id){
-        productRepository.deleteById(id);
+    public void deleteProduct(long productId){
+        boolean existsInOrder = orderDetailRepository.existsByProductId(productId);
+        if(existsInOrder)
+            throw new BusinessException(ErrorCode.PRODUCT_ALREADY_ORDERED);
+        productRepository.deleteById(productId);
     }
 
     public Page<Product> getAllPetProducts(String pet,
@@ -108,8 +118,9 @@ public class ProductService {
     }
 
 
-    public Product getProductNameBySlug(String slug){
-        return productRepository.findBySlug(slug);
+    public Product getProductBySlug(String slug){
+        return productRepository.findBySlug(slug)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public long countTotalProducts(){

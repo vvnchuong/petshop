@@ -35,6 +35,10 @@
                                         <h3>Xóa sản phẩm</h3>
                                     </div>
 
+                                    <c:if test="${not empty error}">
+                                        <div class="alert alert-danger">${error}</div>
+                                    </c:if>
+
                                     <hr />
                                     <div class="md-6" style="width: 60%">
                                         <div class="alert alert-danger" role="alert">

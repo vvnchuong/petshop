@@ -3,6 +3,7 @@ package com.petshop.pet.controller.admin;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.dto.ProductCreateDTO;
 import com.petshop.pet.domain.dto.ProductUpdateDTO;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UploadService;
 import com.turkraft.springfilter.boot.Filter;
@@ -54,8 +55,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String getProductDetailPage(Model model,
-                                       @PathVariable("id") long id){
-        Product product = productService.getProductById(id);
+                                       @PathVariable("id") long productId){
+        Product product = productService.getProductById(productId);
         model.addAttribute("product", product);
         return "admin/product/detail";
     }
@@ -85,17 +86,18 @@ public class ProductController {
 
     @GetMapping("/update/{id}")
     public String getUpdateProductPage(Model model,
-                                       @PathVariable("id") long id){
-        Product product = productService.getProductById(id);
+                                       @PathVariable("id") long productId){
+        Product product = productService.getProductById(productId);
         model.addAttribute("newProduct", product);
         return "admin/product/update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable("id") long id,
+    public String updateProduct(@PathVariable("id") long productId,
                                 @Valid @ModelAttribute("newProduct") ProductUpdateDTO productUpdateDTO,
                                 BindingResult bindingResult,
-                                @RequestParam("productFile") MultipartFile file){
+                                @RequestParam("productFile") MultipartFile file,
+                                Model model){
 
         if(bindingResult.hasErrors())
             return "admin/product/update";
@@ -103,7 +105,12 @@ public class ProductController {
         String imageUpdate = uploadService.handleUploadFile(file, "product", false);
         productUpdateDTO.setImageUrl(imageUpdate);
 
-        productService.updateProduct(id, productUpdateDTO);
+        try {
+            productService.updateProduct(productId, productUpdateDTO);
+        } catch (BusinessException e) {
+            model.addAttribute("error", e.getMessage());
+            return "admin/product/update";
+        }
 
         return "redirect:/admin/product";
     }
@@ -114,8 +121,15 @@ public class ProductController {
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") long id){
-        productService.deleteProduct(id);
+    public String deleteProduct(@PathVariable("id") long productId,
+                                Model model){
+        try {
+            productService.deleteProduct(productId);
+        } catch (BusinessException e) {
+            model.addAttribute("error", e.getMessage());
+            return "admin/product/delete";
+        }
+
         return "redirect:/admin/product";
     }
 

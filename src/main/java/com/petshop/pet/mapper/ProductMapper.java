@@ -22,6 +22,7 @@ public interface ProductMapper {
     }
 
     @Mapping(target = "imageUrl", ignore = true)
+    @Mapping(target = "slug", ignore = true)
     void updateProduct(@MappingTarget Product product,
                        ProductUpdateDTO productUpdateDTO);
 

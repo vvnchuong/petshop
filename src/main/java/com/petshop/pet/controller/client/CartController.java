@@ -51,7 +51,7 @@ public class CartController {
         User user = userService.getUserByUserName(currentUser.getUsername());
         int cartQuantity = cartService.getCartQuantity(user);
 
-        Product product = productService.getProductNameBySlug(slug);
+        Product product = productService.getProductBySlug(slug);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Added to cart");

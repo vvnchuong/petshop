@@ -82,6 +82,10 @@
                                             <h3>Cập nhật thông tin sản phẩm</h3>
                                             <hr />
 
+                                            <c:if test="${not empty error}">
+                                                <div class="alert alert-danger">${error}</div>
+                                            </c:if>
+
                                             <form:form method="post" action="/admin/product/update/${id}"
                                                 modelAttribute="newProduct" enctype="multipart/form-data">
 

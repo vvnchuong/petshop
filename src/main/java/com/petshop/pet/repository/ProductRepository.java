@@ -11,11 +11,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
 
-    Product findBySlug(String slug);
+    Optional<Product> findBySlug(String slug);
 
 //    List<Product> findByCartDetails(List<CartDetail> cartDetails);
 
@@ -65,5 +66,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
                                                  @Param("keyword") String keyword,
                                                  @Param("maxPrice") Double maxPrice,
                                                  Pageable pageable);
+
+    boolean existsBySlug(String slug);
 
 }

@@ -19,4 +19,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     nativeQuery = true)
     List<Product> findBestSellingProducts();
 
+    boolean existsByProductId(long productId);
+
 }

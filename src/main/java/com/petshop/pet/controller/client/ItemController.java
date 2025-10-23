@@ -19,7 +19,7 @@ public class ItemController {
     @GetMapping("/product/{productName}")
     public String getProductDetail(Model model,
                                    @PathVariable("productName") String productName){
-        Product productDetail = productService.getProductNameBySlug(productName);
+        Product productDetail = productService.getProductBySlug(productName);
         model.addAttribute("product", productDetail);
         return "client/product/detail";
     }

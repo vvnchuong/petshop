@@ -4,6 +4,7 @@ import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.dto.ChangePasswordDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.domain.dto.UserUpdateDTO;
+import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.service.PasswordRecoveryService;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
@@ -80,7 +81,7 @@ public class AccountController {
 
         try {
             userService.changePasswordByUser(passwordDTO, currentUser.getUsername());
-        } catch (RuntimeException e){
+        } catch (BusinessException e){
             model.addAttribute("error", e.getMessage());
             model.addAttribute("userDTO", userService.getUserUpdateDTO(currentUser.getUsername()));
             return "client/auth/index";
@@ -91,9 +92,9 @@ public class AccountController {
 
     @GetMapping("/account/login")
     public String getLoginPage(Model model){
-        if(!model.containsAttribute("registerDTO")){
+        if(!model.containsAttribute("registerDTO"))
             model.addAttribute("registerDTO", new RegisterDTO());
-        }
+
 
         return "client/auth/login";
     }
@@ -111,7 +112,7 @@ public class AccountController {
         try {
             userService.registerAccount(registerDTO);
             model.addAttribute("success", "Account created successfully!");
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("register", true);
         }
@@ -123,6 +124,7 @@ public class AccountController {
     public String forgotPasswordPage(Model model){
         if(!model.containsAttribute("email"))
             model.addAttribute("email", "");
+
         return "client/auth/forgot-password";
     }
 
@@ -131,7 +133,7 @@ public class AccountController {
         try {
             recoveryService.generateResetToken(email);
             model.addAttribute("message", "Vui lòng kiểm tra email của bạn.");
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             model.addAttribute("error", e.getMessage());
         }
         model.addAttribute("email", email);
@@ -141,6 +143,7 @@ public class AccountController {
     @GetMapping("/account/reset-password")
     public String resetPasswordPage(@RequestParam("token") String token, Model model){
         model.addAttribute("token", token);
+
         return "client/auth/reset-password";
     }
 
@@ -157,7 +160,7 @@ public class AccountController {
 
         try {
             recoveryService.resetPassword(token, password);
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("token", token);
             return "client/auth/reset-password";
