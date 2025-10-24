@@ -36,3 +36,39 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
 }
+//package com.petshop.pet.filter;
+//
+//import jakarta.servlet.*;
+//        import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.servlet.http.HttpServletRequestWrapper;
+//import org.springframework.stereotype.Component;
+//
+//import java.io.IOException;
+//
+//@Component
+//public class TinTucRewriteFilter implements Filter {
+//
+//    @Override
+//    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+//        HttpServletRequest httpRequest = (HttpServletRequest) request;
+//        String requestURI = httpRequest.getRequestURI();
+//
+//        if (requestURI.startsWith("/tin-tuc")) {
+//            // Tạo wrapper thay đổi URI thành /news
+//            HttpServletRequestWrapper wrapper = new HttpServletRequestWrapper(httpRequest) {
+//                @Override
+//                public String getRequestURI() {
+//                    return requestURI.replaceFirst("/tin-tuc", "/news");
+//                }
+//
+//                @Override
+//                public String getServletPath() {
+//                    return getRequestURI();
+//                }
+//            };
+//            chain.doFilter(wrapper, response);
+//        } else {
+//            chain.doFilter(request, response);
+//        }
+//    }
+//}
