@@ -37,7 +37,7 @@ public enum ErrorCode {
     VOUCHER_NOT_FOUND(6002, "Voucher not found", HttpStatus.NOT_FOUND),
 
     // New-related errors
-    NEW_NOT_FOUND(7001, "New not found", HttpStatus.NOT_FOUND),
+    NEWS_NOT_FOUND(7001, "News not found", HttpStatus.NOT_FOUND),
 
     // File-related errors
     IMAGE_NOT_SELECTED(8001, "Please choose an image to upload", HttpStatus.BAD_REQUEST),
@@ -47,6 +47,10 @@ public enum ErrorCode {
     // Token-related errors
     TOKEN_INVALID(9001, "Reset token is invalid", HttpStatus.BAD_REQUEST),
     TOKEN_EXPIRED(9002, "Reset token has expired", HttpStatus.BAD_REQUEST),
+
+    // Brand-related errors
+    BRAND_ALREADY_EXISTS(10001, "Brand already exists", HttpStatus.BAD_REQUEST),
+    BRAND_NOT_FOUND(10002, "Brand not found", HttpStatus.NOT_FOUND),
 
     // email error code
 //    EMAIL_SEND_FAILED(9003, "Failed to send email", HttpStatus.INTERNAL_SERVER_ERROR)

@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Mapper(componentModel = "spring")
@@ -21,12 +22,12 @@ public interface NewsMapper {
     @AfterMapping
     default void setCreatedAt(@MappingTarget News news){
         if(news.getCreatedAt() == null)
-            news.setCreatedAt(LocalDateTime.now());
+            news.setCreatedAt(Instant.now());
     }
 
     @AfterMapping
     default void setUpdatedAt(@MappingTarget News news){
-        news.setCreatedAt(LocalDateTime.now());
+        news.setCreatedAt(Instant.now());
     }
 
     @AfterMapping

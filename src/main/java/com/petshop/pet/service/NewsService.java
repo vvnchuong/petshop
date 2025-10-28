@@ -51,12 +51,12 @@ public class NewsService {
 
     public News getNewsById(long newsId){
         return newsRepository.findById(newsId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NEW_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NEWS_NOT_FOUND));
     }
 
     public News getNewsBySlug(String slug){
         return newsRepository.findBySlug(slug)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NEW_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NEWS_NOT_FOUND));
     }
 
     public void createNews(NewsCreateDTO newsCreateDTO, String username){
@@ -76,7 +76,7 @@ public class NewsService {
 
     public void updateNews(NewsUpdateDTO newsUpdateDTO, long newsId, String username){
         News news = newsRepository.findById(newsId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NEW_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NEWS_NOT_FOUND));
 
         newMapper.updateNews(news, newsUpdateDTO);
 
@@ -94,7 +94,7 @@ public class NewsService {
 
     public void deleteNews(long newsId){
         if(!newsRepository.existsById(newsId))
-            throw new BusinessException(ErrorCode.NEW_NOT_FOUND);
+            throw new BusinessException(ErrorCode.NEWS_NOT_FOUND);
 
         newsRepository.deleteById(newsId);
     }
