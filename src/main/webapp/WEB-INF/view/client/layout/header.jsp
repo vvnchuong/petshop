@@ -87,7 +87,7 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link text-danger">KHUYẾN MÃI</a>
+                                    <a href="/news" class="nav-link">TIN THÚ CƯNG</a>
                                 </li>
                             </ul>
                             <div class="d-flex m-3 me-0">

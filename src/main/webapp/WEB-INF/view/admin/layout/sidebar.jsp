@@ -36,6 +36,13 @@
           Sản phẩm
         </a>
 
+        <a class="nav-link" href="/admin/news">
+          <div class="sb-nav-link-icon">
+            <i class="fa-solid fa-newspaper"></i>
+          </div>
+          Tin tức
+        </a>
+
         <a class="nav-link" href="/admin/voucher">
           <div class="sb-nav-link-icon">
             <i class="fa-solid fa-ticket"></i>

@@ -90,7 +90,7 @@
                                         </div>
                                     </div>
                                     <div class="mt-3">
-                                        <a href="/admin/order" class="btn btn-success">Quay lại</a>
+                                        <a href="/admin/order" class="btn btn-outline-secondary ms-2">Quay lại danh sách</a>
                                     </div>
                                 </div>
 
