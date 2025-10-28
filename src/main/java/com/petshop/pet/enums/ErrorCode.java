@@ -36,6 +36,9 @@ public enum ErrorCode {
     VOUCHER_ALREADY_EXISTS(6001, "Voucher already exists", HttpStatus.BAD_REQUEST),
     VOUCHER_NOT_FOUND(6002, "Voucher not found", HttpStatus.NOT_FOUND),
 
+    // New-related errors
+    NEW_NOT_FOUND(7001, "New not found", HttpStatus.NOT_FOUND),
+
     // File-related errors
     IMAGE_NOT_SELECTED(8001, "Please choose an image to upload", HttpStatus.BAD_REQUEST),
     INVALID_IMAGE_FORMAT(8002, "Only JPG, JPEG, and PNG image formats are allowed", HttpStatus.BAD_REQUEST),

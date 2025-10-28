@@ -32,7 +32,7 @@ public class UserController {
         this.uploadService = uploadService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String getUserPage(Model model,
                               @Filter Specification<User> spec,
                               @RequestParam(name = "page", defaultValue = "1") int page,
@@ -75,7 +75,6 @@ public class UserController {
         if(bindingResult.hasErrors())
             return "admin/user/create";
 
-
         try {
             String avatar = uploadService.handleUploadFile(file, "avatar", false);
             userDTO.setAvatarUrl(avatar);
@@ -101,12 +100,10 @@ public class UserController {
     public String updateUser(@PathVariable("id") long id,
                              @Valid @ModelAttribute("newUser") AdminUpdateDTO adminUpdateDTO,
                              BindingResult bindingResult,
-                             @RequestParam("inputFile") MultipartFile file,
-                             Model model){
+                             @RequestParam("inputFile") MultipartFile file){
 
         if(bindingResult.hasErrors())
             return "admin/user/update";
-
 
         String avatarUpdate = uploadService.handleUploadFile(file, "avatar", false);
         adminUpdateDTO.setAvatarUrl(avatarUpdate);
@@ -117,7 +114,7 @@ public class UserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String getDeletUserPage(@PathVariable("id") Long id){
+    public String getDeleteUserPage(@PathVariable("id") Long id){
         return "admin/user/delete";
     }
 
