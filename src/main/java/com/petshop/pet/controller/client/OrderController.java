@@ -17,7 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -116,7 +116,7 @@ public class OrderController {
             return ResponseEntity.badRequest().body(Map.of("error", "Số lượng sử dụng đã đạt giới hạn"));
         }else if(voucher.getMinOrder() > total){
             return ResponseEntity.badRequest().body(Map.of("error", "Giá trị đơn hàng phải lơn hơn "+ total));
-        }else if(voucher.getEndDate().isBefore(LocalDateTime.now())){
+        }else if(voucher.getEndDate().isBefore(Instant.now())){
             return ResponseEntity.badRequest().body(Map.of("error", "Voucher đã hết hạn"));
         }
 

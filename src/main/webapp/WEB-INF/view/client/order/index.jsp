@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="com.petshop.pet.utils.DateTimeUtil" %>
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -63,8 +64,7 @@
                                         <div>
                                             <h5 class="card-title mb-1">Mã đơn hàng: #${order.id}</h5>
                                             <p class="mb-1">
-                                                Ngày đặt:
-                                                <p>${order.createdAt}</p>
+                                                Ngày đặt: ${DateTimeUtil.formatInstant(order.createdAt)}
                                             </p>
                                             <p class="mb-1">
                                                 Trạng thái:
