@@ -1,12 +1,11 @@
 package com.petshop.pet.domain.dto;
 
-import com.petshop.pet.domain.Voucher;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,11 +30,11 @@ public class VoucherDTO {
 
     @NotNull(message = "Start date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime startDate;
+    Instant startDate;
 
     @NotNull(message = "End date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime endDate;
+    Instant endDate;
 
     @Min(value = 1, message = "Max usage must be at least 1")
     Integer maxUsage;

@@ -7,23 +7,18 @@
             <title>Danh sách tin tức</title>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
             <style>
-                /* Sửa: Đảm bảo ảnh card không bị méo */
                 .card-img-top {
                     width: 100%;
                     height: 200px;
-                    /* Set một chiều cao cố định cho ảnh */
                     object-fit: cover;
-                    /* Giữ tỷ lệ ảnh */
                 }
 
                 .card-text {
                     -webkit-line-clamp: 2;
-                    /* Giới hạn 2 dòng */
                     display: -webkit-box;
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                     max-height: 3.2em;
-                    /* Chiều cao tối đa 2 dòng */
                 }
 
                 .card-text img {
@@ -63,7 +58,7 @@
                         <c:forEach var="item" items="${news}">
                             <div class="col-12 col-sm-6 col-lg-4">
                                 <div class="card h-100 d-flex flex-column">
-                                    <img class="card-img-top" src="/admin/images/thumbnail/${item.thumbnail}"/>
+                                    <img class="card-img-top" src="/admin/images/thumbnail/${item.thumbnail}" />
                                     <div class="card-body d-flex flex-column flex-grow-1">
                                         <a href="/news/${item.slug}" style="text-decoration: none;">
                                             <h5 class="card-title text-truncate">${item.title}</h5>

@@ -11,9 +11,6 @@ import org.mapstruct.MappingTarget;
 public interface VoucherMapper {
 
     @Mapping(source = "voucherUsages", target = "voucherUsages")
-    VoucherDTO toVoucherDTO(Voucher voucher);
-
-    @Mapping(source = "voucherUsages", target = "voucherUsages")
     Voucher toVoucher(VoucherDTO voucherDTO);
 
     @Mapping(target = "usedCount", ignore = true)

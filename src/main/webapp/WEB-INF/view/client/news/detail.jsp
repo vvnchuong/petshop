@@ -43,7 +43,6 @@
 
                         .post-meta {
                             color: #6c757d;
-                            /* Meta info can stay gray */
                             font-size: 0.9rem;
                             margin-bottom: 2rem;
                             border-bottom: 1px dashed #eee;
@@ -53,9 +52,7 @@
                         .post-content {
                             line-height: 1.8;
                             font-size: 1.05rem;
-                            /* SỬA: Thêm dòng này để đặt màu chữ mặc định (dark) */
                             color: var(--bs-body-color, #212529);
-                            /* Dùng biến Bootstrap hoặc màu đen/xám đậm */
                         }
 
                         .post-content img {
@@ -73,12 +70,10 @@
                             margin-top: 2.5rem;
                             margin-bottom: 1rem;
                             font-weight: 600;
-                            /* Headings will inherit the dark color or have their own default dark color */
                         }
 
                         .post-content p {
                             margin-bottom: 1.25rem;
-                            /* Paragraphs will now inherit the color from .post-content */
                         }
 
                         .post-content figure.image {
