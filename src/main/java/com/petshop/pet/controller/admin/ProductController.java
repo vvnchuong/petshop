@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/admin/product")
+@RequestMapping("/admin/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -80,7 +80,7 @@ public class ProductController {
 
         productService.createProduct(productCreateDTO);
 
-        return "redirect:/admin/product";
+        return "redirect:/admin/products";
     }
 
     @GetMapping("/update/{id}")
@@ -106,7 +106,7 @@ public class ProductController {
 
         productService.updateProduct(productId, productUpdateDTO);
 
-        return "redirect:/admin/product";
+        return "redirect:/admin/products";
     }
 
     @GetMapping("/delete/{id}")
@@ -120,7 +120,7 @@ public class ProductController {
 
         productService.deleteProduct(productId);
 
-        return "redirect:/admin/product";
+        return "redirect:/admin/products";
     }
 
 }

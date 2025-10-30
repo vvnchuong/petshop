@@ -86,7 +86,7 @@
                                                 <div class="alert alert-danger">${error}</div>
                                             </c:if>
 
-                                            <form:form method="post" action="/admin/product/update/${id}"
+                                            <form:form method="post" action="/admin/products/update/${id}"
                                                 modelAttribute="newProduct" enctype="multipart/form-data">
 
                                                 <div class="row g-3">
@@ -234,7 +234,7 @@
 
                                                     <div class="col-12 mt-4">
                                                         <button type="submit" class="btn btn-warning">Cập nhật</button>
-                                                        <a href="/admin/product"
+                                                        <a href="/admin/products"
                                                             class="btn btn-outline-secondary ms-2">Hủy</a>
                                                     </div>
 

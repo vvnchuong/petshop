@@ -30,7 +30,7 @@
                                 <div class="col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
                                         <h3>Danh sách sản phẩm</h3>
-                                        <a href="/admin/product/create" class="btn btn-primary">Thêm sản phẩm</a>
+                                        <a href="/admin/products/create" class="btn btn-primary">Thêm sản phẩm</a>
                                     </div>
 
                                     <hr />
@@ -54,11 +54,11 @@
                                                                         type="number" groupingUsed="true" /> đ</td>
                                                     <td>${product.brand.name}</td>
                                                     <td>
-                                                        <a href="/admin/product/${product.id}"
+                                                        <a href="/admin/products/${product.id}"
                                                             class="btn btn-success">Chi tiết</a>
-                                                        <a href="/admin/product/update/${product.id}"
+                                                        <a href="/admin/products/update/${product.id}"
                                                             class="btn btn-warning">Cập nhật</a>
-                                                        <a href="/admin/product/delete/${product.id}"
+                                                        <a href="/admin/products/delete/${product.id}"
                                                             class="btn btn-danger">Xóa</a>
                                                     </td>
                                                 </tr>

@@ -88,7 +88,7 @@
                                         </div>
 
                                         <div class="align-self-center">
-                                            <a href="/order/detail/${order.id}"
+                                            <a href="/orders/detail/${order.id}"
                                                class="btn btn-outline-primary">
                                                 Xem chi tiết
                                             </a>

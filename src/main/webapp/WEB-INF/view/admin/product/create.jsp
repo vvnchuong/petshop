@@ -77,7 +77,7 @@
                                                 <div class="alert alert-danger">${error}</div>
                                             </c:if>
 
-                                            <form:form method="post" action="/admin/product/create"
+                                            <form:form method="post" action="/admin/products/create"
                                                 modelAttribute="newProduct" enctype="multipart/form-data">
 
                                                 <div class="row g-3">
@@ -228,7 +228,7 @@
 
                                                     <div class="col-12 mt-4">
                                                         <button type="submit" class="btn btn-primary">Thêm mới</button>
-                                                        <a href="/admin/product"
+                                                        <a href="/admin/products"
                                                             class="btn btn-outline-secondary ms-2">Hủy</a>
                                                     </div>
 

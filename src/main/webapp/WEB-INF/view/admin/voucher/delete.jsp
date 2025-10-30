@@ -41,7 +41,7 @@
                                             Bạn có muốn chắc chắn sẽ xóa voucher này không?
                                         </div>
                                     </div>
-                                    <form:form method="post" action="/admin/voucher/delete/${id}">
+                                    <form:form method="post" action="/admin/vouchers/delete/${id}">
                                         <button class="btn btn-danger">Xóa</button>
                                     </form:form>
                                 </div>

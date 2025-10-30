@@ -133,7 +133,7 @@
                                                 </div>
                                             </div>
                                             <div class="mt-3">
-                                                <a href="/admin/product" class="btn btn-outline-secondary">
+                                                <a href="/admin/products" class="btn btn-outline-secondary">
                                                     <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
                                                 </a>
                                             </div>

@@ -33,7 +33,7 @@
                                         <div class="col-12 mx-auto">
                                             <div class="d-flex justify-content-between">
                                                 <h3>Danh sách mã giảm giá</h3>
-                                                <a href="/admin/voucher/create" class="btn btn-primary">Thêm mã giảm
+                                                <a href="/admin/vouchers/create" class="btn btn-primary">Thêm mã giảm
                                                     giá</a>
                                             </div>
 
@@ -58,11 +58,11 @@
                                                             <td>${DateTimeUtil.formatInstant(voucher.startDate)}</td>
                                                             <td>${DateTimeUtil.formatInstant(voucher.endDate)}</td>
                                                             <td>
-                                                                <a href="/admin/voucher/${voucher.id}"
+                                                                <a href="/admin/vouchers/${voucher.id}"
                                                                     class="btn btn-success">Chi tiết</a>
-                                                                <a href="/admin/voucher/update/${voucher.id}"
+                                                                <a href="/admin/vouchers/update/${voucher.id}"
                                                                     class="btn btn-warning">Cập nhật</a>
-                                                                <a href="/admin/voucher/delete/${voucher.id}"
+                                                                <a href="/admin/vouchers/delete/${voucher.id}"
                                                                     class="btn btn-danger">Xóa</a>
                                                             </td>
                                                         </tr>

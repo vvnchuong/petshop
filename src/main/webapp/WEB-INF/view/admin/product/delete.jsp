@@ -45,7 +45,7 @@
                                             Bạn có muốn chắc chắn sẽ xóa sản phẩm này không?
                                         </div>
                                     </div>
-                                    <form:form method="post" action="/admin/product/delete/${id}">
+                                    <form:form method="post" action="/admin/products/delete/${id}">
                                         <button class="btn btn-danger">Xóa</button>
                                     </form:form>
                                 </div>

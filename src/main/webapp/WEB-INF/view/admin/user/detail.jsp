@@ -104,7 +104,7 @@
                                         </div>
 
                                         <div class="mt-3">
-                                            <a href="/admin/user" class="btn btn-outline-secondary">
+                                            <a href="/admin/users" class="btn btn-outline-secondary">
                                                 <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
                                             </a>
                                         </div>

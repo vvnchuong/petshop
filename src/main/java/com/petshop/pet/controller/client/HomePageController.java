@@ -38,7 +38,7 @@ public class HomePageController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String getHomePage(Model model){
         Map<Long, List<Product>> products = productService.getBestSellingProduct()
                 .stream().collect(Collectors.groupingBy(

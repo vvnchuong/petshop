@@ -29,7 +29,7 @@
                                 <div class="col-12 mx-auto">
                                     <div class="d-flex justify-content-between">
                                         <h3>Danh sách người dùng</h3>
-                                        <a href="/admin/user/create" class="btn btn-primary">Thêm người dùng</a>
+                                        <a href="/admin/users/create" class="btn btn-primary">Thêm người dùng</a>
                                     </div>
 
                                     <hr />
@@ -52,11 +52,11 @@
                                                     <td>${user.fullName}</td>
                                                     <td>${user.role.name}</td>
                                                     <td>
-                                                        <a href="/admin/user/${user.id}" class="btn btn-success">Chi
+                                                        <a href="/admin/users/${user.id}" class="btn btn-success">Chi
                                                             tiết</a>
-                                                        <a href="/admin/user/update/${user.id}"
+                                                        <a href="/admin/users/update/${user.id}"
                                                             class="btn btn-warning">Cập nhật</a>
-                                                        <a href="/admin/user/delete/${user.id}"
+                                                        <a href="/admin/users/delete/${user.id}"
                                                             class="btn btn-danger">Xóa</a>
                                                     </td>
                                                 </tr>

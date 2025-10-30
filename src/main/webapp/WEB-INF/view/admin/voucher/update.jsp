@@ -56,7 +56,7 @@
                         <h3>Cập nhật voucher</h3>
                         <hr />
 
-                        <form:form method="post" action="/admin/voucher/update/${id}" modelAttribute="currentVoucher"
+                        <form:form method="post" action="/admin/vouchers/update/${id}" modelAttribute="currentVoucher"
                           id="voucherForm" enctype="multipart/form-data">
 
                           <div class="row g-3">
@@ -150,7 +150,7 @@
 
                             <div class="col-12 mt-4">
                               <button type="submit" class="btn btn-warning">Cập nhật</button>
-                              <a href="/admin/voucher" class="btn btn-outline-secondary ms-2">Hủy</a>
+                              <a href="/admin/vouchers" class="btn btn-outline-secondary ms-2">Hủy</a>
                             </div>
 
                           </div>

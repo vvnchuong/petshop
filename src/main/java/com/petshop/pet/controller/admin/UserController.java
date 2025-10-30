@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@RequestMapping("/admin/user")
+@RequestMapping("/admin/users")
 public class UserController {
 
     private final UserService userService;
@@ -80,7 +80,7 @@ public class UserController {
 
         userService.createUser(userDTO);
 
-        return "redirect:/admin/user";
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/update/{id}")
@@ -105,7 +105,7 @@ public class UserController {
 
         userService.updateUserByAdmin(id, adminUpdateDTO);
 
-        return "redirect:/admin/user";
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/delete/{id}")
@@ -116,7 +116,7 @@ public class UserController {
     @PostMapping("/delete/{id}")
     public String deleteUser(Model model, @PathVariable("id") Long id){
         this.userService.deleteUser(id);
-        return "redirect:/admin/user";
+        return "redirect:/admin/users";
     }
 
 }

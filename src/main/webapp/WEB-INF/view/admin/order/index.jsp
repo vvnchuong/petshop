@@ -79,9 +79,9 @@
                                                             </c:choose>
                                                         </td>
                                                         <td>
-                                                            <a href="/admin/order/${order.id}"
+                                                            <a href="/admin/orders/${order.id}"
                                                                 class="btn btn-success">Chi tiết</a>
-                                                            <a href="/admin/order/update/${order.id}"
+                                                            <a href="/admin/orders/update/${order.id}"
                                                                 class="btn btn-warning">Cập nhật</a>
                                                         </td>
                                                     </tr>

@@ -36,7 +36,7 @@
                         <div class="alert alert-danger">${error}</div>
                       </c:if>
 
-                      <form:form method="post" action="/admin/voucher/create" modelAttribute="newVoucher"
+                      <form:form method="post" action="/admin/vouchers/create" modelAttribute="newVoucher"
                         enctype="multipart/form-data" id="voucherForm">
                         <div class="row g-3">
 
@@ -126,7 +126,7 @@
 
                           <div class="col-12 mt-3">
                             <button type="submit" class="btn btn-primary px-4">Thêm mới</button>
-                            <a href="/admin/voucher" class="btn btn-outline-secondary ms-2">Hủy</a>
+                            <a href="/admin/vouchers" class="btn btn-outline-secondary ms-2">Hủy</a>
                           </div>
 
                         </div>

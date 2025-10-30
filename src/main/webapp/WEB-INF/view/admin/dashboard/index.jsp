@@ -43,9 +43,8 @@
                                                 <div class="card-body">Tổng số người dùng: ${totalUser}</div>
                                                 <div
                                                     class="card-footer d-flex align-items-center justify-content-between">
-                                                    <a class="small text-white stretched-link" href="/admin/user">Xem
-                                                        chi
-                                                        tiết</a>
+                                                    <a class="small text-white stretched-link" href="/admin/users">
+                                                        Xem chi tiết</a>
                                                     <div class="small text-white"><i class="fas fa-angle-right"></i>
                                                     </div>
                                                 </div>
@@ -56,7 +55,7 @@
                                                 <div class="card-body">Tổng số sản phẩm: ${totalProduct}</div>
                                                 <div
                                                     class="card-footer d-flex align-items-center justify-content-between">
-                                                    <a class="small text-white stretched-link" href="/admin/product">Xem
+                                                    <a class="small text-white stretched-link" href="/admin/products">Xem
                                                         chi
                                                         tiết</a>
                                                     <div class="small text-white"><i class="fas fa-angle-right"></i>
@@ -69,7 +68,7 @@
                                                 <div class="card-body">Tổng số đơn hàng: ${totalOrder}</div>
                                                 <div
                                                     class="card-footer d-flex align-items-center justify-content-between">
-                                                    <a class="small text-white stretched-link" href="/admin/order">Xem
+                                                    <a class="small text-white stretched-link" href="/admin/orders">Xem
                                                         chi
                                                         tiết</a>
                                                     <div class="small text-white"><i class="fas fa-angle-right"></i>

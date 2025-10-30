@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
 
-                                <form action="/admin/order/update/${orderId}" method="post" class="card p-4">
+                                <form action="/admin/orders/update/${orderId}" method="post" class="card p-4">
                                     <input type="hidden" name="orderId" value="${order.id}" />
 
                                     <div class="mb-3">

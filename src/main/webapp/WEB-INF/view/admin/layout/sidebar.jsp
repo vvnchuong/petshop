@@ -22,14 +22,14 @@
           Management
         </div>
 
-        <a class="nav-link" href="/admin/user">
+        <a class="nav-link" href="/admin/users">
           <div class="sb-nav-link-icon">
             <i class="fas fa-users"></i>
           </div>
           Người dùng
         </a>
 
-        <a class="nav-link" href="/admin/product">
+        <a class="nav-link" href="/admin/products">
           <div class="sb-nav-link-icon">
             <i class="fas fa-boxes"></i>
           </div>
@@ -43,14 +43,14 @@
           Tin tức
         </a>
 
-        <a class="nav-link" href="/admin/voucher">
+        <a class="nav-link" href="/admin/vouchers">
           <div class="sb-nav-link-icon">
             <i class="fa-solid fa-ticket"></i>
           </div>
           Voucher
         </a>
 
-        <a class="nav-link" href="/admin/order">
+        <a class="nav-link" href="/admin/orders">
           <div class="sb-nav-link-icon">
             <i class="fas fa-shopping-cart"></i>
           </div>

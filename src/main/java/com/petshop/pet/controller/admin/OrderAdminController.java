@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/admin/orders")
 public class OrderAdminController {
 
     private final OrderService orderService;
@@ -21,7 +22,7 @@ public class OrderAdminController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/admin/order")
+    @GetMapping
     public String getOrderAdminPage(Model model,
                                     @Filter Specification<Order> spec,
                                     @RequestParam(name = "page", defaultValue = "1") int page,
@@ -41,7 +42,7 @@ public class OrderAdminController {
         return "admin/order/index";
     }
 
-    @GetMapping("/admin/order/{orderId}")
+    @GetMapping("/{orderId}")
     public String getOrderDetailPage(Model model,
                                      @PathVariable("orderId") long id){
 
@@ -51,7 +52,7 @@ public class OrderAdminController {
         return "admin/order/detail";
     }
 
-    @GetMapping("/admin/order/update/{orderId}")
+    @GetMapping("/update/{orderId}")
     public String getOrderUpdatePage(Model model,
                                      @PathVariable("orderId") long id){
 
@@ -61,13 +62,13 @@ public class OrderAdminController {
         return "admin/order/update";
     }
 
-    @PostMapping("/admin/order/update/{orderId}")
+    @PostMapping("/update/{orderId}")
     public String updateOrder(@ModelAttribute("order") Order newOrder,
                               @PathVariable("orderId") long id){
 
         orderService.updateOrder(id, newOrder);
 
-        return "redirect:/admin/order";
+        return "redirect:/admin/orders";
     }
 
 }

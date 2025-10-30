@@ -28,7 +28,7 @@
                             <a href="/" class="btn btn-outline-primary px-4">
                                 Tiếp tục mua sắm
                             </a>
-                            <a href="/order/detail/${orderId}" class="btn btn-primary px-4">
+                            <a href="/orders/detail/${orderId}" class="btn btn-primary px-4">
                                 Xem chi tiết đơn hàng
                             </a>
                         </div>

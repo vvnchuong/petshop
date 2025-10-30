@@ -95,8 +95,7 @@
                                                                     <c:when
                                                                         test="${not empty voucher.discountPercent and voucher.discountPercent > 0}">
                                                                         <fmt:formatNumber
-                                                                            value="${voucher.discountPercent}"
-                                                                            type="percent" />
+                                                                            value="${voucher.discountPercent}" />%
                                                                     </c:when>
                                                                     <c:when
                                                                         test="${not empty voucher.discountAmount and voucher.discountAmount > 0}">
@@ -161,7 +160,7 @@
                                                     </ul>
 
                                                     <div class="mt-4">
-                                                        <a href="/admin/voucher" class="btn btn-outline-secondary">
+                                                        <a href="/admin/vouchers" class="btn btn-outline-secondary">
                                                             <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
                                                         </a>
                                                     </div>

@@ -17,7 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/vouchers")
 public class VoucherController {
 
     private final VoucherService voucherService;
@@ -26,7 +26,7 @@ public class VoucherController {
         this.voucherService = voucherService;
     }
 
-    @GetMapping("/voucher")
+    @GetMapping
     public String getVoucherPage(Model model,
                                  @Filter Specification<Voucher> spec,
                                  @RequestParam(name = "page", defaultValue = "1") int page,
@@ -46,13 +46,13 @@ public class VoucherController {
         return "admin/voucher/index";
     }
 
-    @GetMapping("/voucher/create")
+    @GetMapping("/create")
     public String getCreateVoucherPage(Model model){
         model.addAttribute("newVoucher", new Voucher());
         return "admin/voucher/create";
     }
 
-    @GetMapping("/voucher/{id}")
+    @GetMapping("/{id}")
     public String getVoucherDetailPage(Model model,
                                        @PathVariable("id") long voucherId){
         Voucher voucher = voucherService.getVoucherById(voucherId);
@@ -61,7 +61,7 @@ public class VoucherController {
         return "admin/voucher/detail";
     }
 
-    @PostMapping("/voucher/create")
+    @PostMapping("/create")
     public String createVoucher(@Valid @ModelAttribute("newVoucher")VoucherDTO voucherDTO,
                                BindingResult bindingResult){
 
@@ -70,10 +70,10 @@ public class VoucherController {
 
         voucherService.createVoucher(voucherDTO);
 
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/vouchers";
     }
 
-    @GetMapping("/voucher/update/{id}")
+    @GetMapping("/update/{id}")
     public String getUpdateVoucherPage(Model model,
                                        @PathVariable("id") long voucherId){
 
@@ -83,7 +83,7 @@ public class VoucherController {
         return "admin/voucher/update";
     }
 
-    @PostMapping("/voucher/update/{id}")
+    @PostMapping("/update/{id}")
     public String updateVoucher(@PathVariable("id") long voucherId,
                                 @Valid @ModelAttribute("currentVoucher") VoucherUpdateDTO voucherUpdateDTO,
                                 BindingResult bindingResult){
@@ -93,18 +93,18 @@ public class VoucherController {
 
         voucherService.updateVoucher(voucherId, voucherUpdateDTO);
 
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/vouchers";
     }
 
-    @GetMapping("/voucher/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String getDeleteVoucherPage(@PathVariable("id") long voucherId){
         return "admin/voucher/delete";
     }
 
-    @PostMapping("/voucher/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteVoucher(@PathVariable("id") long voucherId){
         voucherService.deleteVoucher(voucherId);
-        return "redirect:/admin/voucher";
+        return "redirect:/admin/vouchers";
     }
 
 

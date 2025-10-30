@@ -74,7 +74,7 @@ public class OrderController {
         return "client/cart/thanks";
     }
 
-    @GetMapping("/order/history")
+    @GetMapping("/orders/history")
     public String getOrderHistoryPage(Model model,
                                       @AuthenticationPrincipal CustomUserDetails currentUser){
 
@@ -84,7 +84,7 @@ public class OrderController {
         return "client/order/index";
     }
 
-    @GetMapping("/order/detail/{id}")
+    @GetMapping("/orders/detail/{id}")
     public String getOrderDetailPage(Model model,
                                      @PathVariable("id") long orderId,
                                      @AuthenticationPrincipal CustomUserDetails currentUser){
@@ -115,7 +115,8 @@ public class OrderController {
         }else if(voucher.getUsedCount() >= voucher.getMaxUsage()){
             return ResponseEntity.badRequest().body(Map.of("error", "Số lượng sử dụng đã đạt giới hạn"));
         }else if(voucher.getMinOrder() > total){
-            return ResponseEntity.badRequest().body(Map.of("error", "Giá trị đơn hàng phải lơn hơn "+ total));
+            return ResponseEntity.badRequest().body(Map.of("error", "Giá trị đơn hàng phải lơn hơn "+
+                    voucher.getMinOrder()));
         }else if(voucher.getEndDate().isBefore(Instant.now())){
             return ResponseEntity.badRequest().body(Map.of("error", "Voucher đã hết hạn"));
         }

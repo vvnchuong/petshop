@@ -8,6 +8,7 @@ import com.petshop.pet.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/admin")
 public class DashboardController {
 
     private final OrderService orderService;
@@ -36,7 +38,7 @@ public class DashboardController {
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping("/admin")
+    @GetMapping
     public String getDashboardPage(Model model) throws JsonProcessingException {
 
         // total

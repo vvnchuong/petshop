@@ -126,7 +126,7 @@
 
                                             <li><a class="dropdown-item" href="/account">Quản lý tài khoản</a></li>
 
-                                            <li><a class="dropdown-item" href="/order/history">Lịch sử mua hàng</a></li>
+                                            <li><a class="dropdown-item" href="/orders/history">Lịch sử mua hàng</a></li>
                                             <li>
                                                 <hr class="dropdown-divider">
                                             </li>

@@ -84,7 +84,7 @@
                                             <h3>Cập nhật thông tin người dùng</h3>
                                             <hr />
 
-                                            <form:form method="post" action="/admin/user/update/${id}"
+                                            <form:form method="post" action="/admin/users/update/${id}"
                                                 modelAttribute="newUser" enctype="multipart/form-data">
 
                                                 <div class="row g-3">
@@ -143,7 +143,7 @@
 
                                                     <div class="col-12 mt-4">
                                                         <button type="submit" class="btn btn-warning">Cập nhật</button>
-                                                        <a href="/admin/user"
+                                                        <a href="/admin/users"
                                                             class="btn btn-outline-secondary ms-2">Hủy</a>
                                                     </div>
 

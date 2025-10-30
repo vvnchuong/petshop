@@ -86,7 +86,6 @@ public class AccountController {
         if(!model.containsAttribute("registerDTO"))
             model.addAttribute("registerDTO", new RegisterDTO());
 
-
         return "client/auth/login";
     }
 

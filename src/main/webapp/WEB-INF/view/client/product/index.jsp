@@ -169,7 +169,7 @@
                                                             <div
                                                                 class="p-4 border border-secondary border-top-0 rounded-bottom">
                                                                 <h4 class="multiline-ellipsis">
-                                                                    <a href="/product/${product.slug}">
+                                                                    <a href="/products/${product.slug}">
                                                                         ${product.name}
                                                                     </a>
                                                                 </h4>
@@ -182,7 +182,7 @@
                                                                         <fmt:formatNumber type="number"
                                                                             value="${product.price}" />đ
                                                                     </p>
-                                                                    <form action="/product/${product.slug}">
+                                                                    <form action="/products/${product.slug}">
                                                                         <input type="hidden"
                                                                             name="${_csrf.parameterName}"
                                                                             value="${_csrf.token}" />

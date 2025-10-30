@@ -91,7 +91,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-3">
-                                            <a href="/admin/order" class="btn btn-outline-secondary ms-2">
+                                            <a href="/admin/orders" class="btn btn-outline-secondary ms-2">
                                                 <i class="fas fa-arrow-left me-1"></i>Quay lại danh sách</a>
                                         </div>
                                     </div>

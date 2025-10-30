@@ -89,7 +89,7 @@
             </div>
 
             <div class="mt-4">
-              <a href="/order/history" class="btn btn-secondary">Quay lại lịch sử mua hàng</a>
+              <a href="/orders/history" class="btn btn-secondary">Quay lại lịch sử mua hàng</a>
             </div>
           </div>
 
