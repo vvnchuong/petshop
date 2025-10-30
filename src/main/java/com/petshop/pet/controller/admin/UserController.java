@@ -75,15 +75,10 @@ public class UserController {
         if(bindingResult.hasErrors())
             return "admin/user/create";
 
-        try {
-            String avatar = uploadService.handleUploadFile(file, "avatar", false);
-            userDTO.setAvatarUrl(avatar);
+        String avatar = uploadService.handleUploadFile(file, "avatar", false);
+        userDTO.setAvatarUrl(avatar);
 
-            userService.createUser(userDTO);
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            return "admin/user/create";
-        }
+        userService.createUser(userDTO);
 
         return "redirect:/admin/user";
     }

@@ -4,7 +4,6 @@ import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.dto.ChangePasswordDTO;
 import com.petshop.pet.domain.dto.RegisterDTO;
 import com.petshop.pet.domain.dto.UserUpdateDTO;
-import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.service.PasswordRecoveryService;
 import com.petshop.pet.service.UploadService;
 import com.petshop.pet.service.UserService;
@@ -13,13 +12,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequestMapping("/account")
 public class AccountController {
 
     private final UserService userService;
@@ -36,7 +33,7 @@ public class AccountController {
         this.recoveryService = recoveryService;
     }
 
-    @GetMapping("/account")
+    @GetMapping
     public String getAccountPage(Model model,
                                  @AuthenticationPrincipal CustomUserDetails currentUser){
 
@@ -48,7 +45,7 @@ public class AccountController {
         return "client/auth/index";
     }
 
-    @PostMapping("/account/update")
+    @PostMapping("/update")
     public String updateProfile(@Valid @ModelAttribute("userDTO") UserUpdateDTO userUpdate,
                                 BindingResult bindingResult,
                                 @RequestParam("inputFile") MultipartFile file,
@@ -68,7 +65,7 @@ public class AccountController {
         return "redirect:/account?success";
     }
 
-    @PostMapping("/account/change-password")
+    @PostMapping("/change-password")
     public String changePassword(@Valid @ModelAttribute("passwordDTO")ChangePasswordDTO passwordDTO,
                                  BindingResult bindingResult,
                                  @AuthenticationPrincipal CustomUserDetails currentUser,
@@ -79,18 +76,12 @@ public class AccountController {
             return "client/auth/index";
         }
 
-        try {
-            userService.changePasswordByUser(passwordDTO, currentUser.getUsername());
-        } catch (BusinessException e){
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("userDTO", userService.getUserUpdateDTO(currentUser.getUsername()));
-            return "client/auth/index";
-        }
+        userService.changePasswordByUser(passwordDTO, currentUser.getUsername());
 
         return "redirect:/account?passwordChanged";
     }
 
-    @GetMapping("/account/login")
+    @GetMapping("/login")
     public String getLoginPage(Model model){
         if(!model.containsAttribute("registerDTO"))
             model.addAttribute("registerDTO", new RegisterDTO());
@@ -99,7 +90,7 @@ public class AccountController {
         return "client/auth/login";
     }
 
-    @PostMapping("/account/register")
+    @PostMapping("/register")
     public String register(@Valid @ModelAttribute RegisterDTO registerDTO,
                            BindingResult bindingResult,
                            Model model) {
@@ -109,18 +100,13 @@ public class AccountController {
             return "client/auth/login";
         }
 
-        try {
-            userService.registerAccount(registerDTO);
-            model.addAttribute("success", "Account created successfully!");
-        } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("register", true);
-        }
+        userService.registerAccount(registerDTO);
+        model.addAttribute("success", "Account created successfully!");
 
         return "client/auth/login";
     }
 
-    @GetMapping("/account/forgot-password")
+    @GetMapping("/forgot-password")
     public String forgotPasswordPage(Model model){
         if(!model.containsAttribute("email"))
             model.addAttribute("email", "");
@@ -128,26 +114,24 @@ public class AccountController {
         return "client/auth/forgot-password";
     }
 
-    @PostMapping("/account/forgot-password")
+    @PostMapping("/forgot-password")
     public String handleForgotPassword(@RequestParam("email") String email, Model model){
-        try {
-            recoveryService.generateResetToken(email);
-            model.addAttribute("message", "Vui lòng kiểm tra email của bạn.");
-        } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
-        }
+        recoveryService.generateResetToken(email);
+
+        model.addAttribute("message", "Vui lòng kiểm tra email của bạn.");
         model.addAttribute("email", email);
+
         return "client/auth/forgot-password";
     }
 
-    @GetMapping("/account/reset-password")
+    @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam("token") String token, Model model){
         model.addAttribute("token", token);
 
         return "client/auth/reset-password";
     }
 
-    @PostMapping("/account/reset-password")
+    @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam("token") String token,
                                       @RequestParam("password") String password,
                                       @RequestParam("confirmPassword") String confirmPassword,
@@ -158,13 +142,7 @@ public class AccountController {
             return "client/auth/reset-password";
         }
 
-        try {
-            recoveryService.resetPassword(token, password);
-        } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("token", token);
-            return "client/auth/reset-password";
-        }
+        recoveryService.resetPassword(token, password);
 
         return "redirect:/account/login?resetSuccess";
     }

@@ -1,31 +1,21 @@
 package com.petshop.pet.controller.client;
 
-import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.Category;
 import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
-import com.petshop.pet.domain.User;
 import com.petshop.pet.service.CategoryService;
 import com.petshop.pet.service.PetTypeService;
 import com.petshop.pet.service.ProductService;
-import com.petshop.pet.service.UserService;
 import com.petshop.pet.utils.PageableUtil;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -70,15 +60,7 @@ public class HomePageController {
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
-        PetType petType;
-        try {
-            petType = petTypeService.getPetTypeBySlug(pet);
-        } catch (RuntimeException e) {
-            if ("Pet type not found".equals(e.getMessage())) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pet type not found");
-            }
-            throw e;
-        }
+        PetType petType = petTypeService.getPetTypeBySlug(pet);
 
         List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
 

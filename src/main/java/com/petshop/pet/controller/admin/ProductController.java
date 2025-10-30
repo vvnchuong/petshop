@@ -3,7 +3,6 @@ package com.petshop.pet.controller.admin;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.dto.ProductCreateDTO;
 import com.petshop.pet.domain.dto.ProductUpdateDTO;
-import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UploadService;
 import com.turkraft.springfilter.boot.Filter;
@@ -105,12 +104,7 @@ public class ProductController {
         String imageUpdate = uploadService.handleUploadFile(file, "product", false);
         productUpdateDTO.setImageUrl(imageUpdate);
 
-        try {
-            productService.updateProduct(productId, productUpdateDTO);
-        } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
-            return "admin/product/update";
-        }
+        productService.updateProduct(productId, productUpdateDTO);
 
         return "redirect:/admin/product";
     }
@@ -123,12 +117,8 @@ public class ProductController {
     @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") long productId,
                                 Model model){
-        try {
-            productService.deleteProduct(productId);
-        } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
-            return "admin/product/delete";
-        }
+
+        productService.deleteProduct(productId);
 
         return "redirect:/admin/product";
     }

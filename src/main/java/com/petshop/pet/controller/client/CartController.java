@@ -1,7 +1,6 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
-import com.petshop.pet.domain.Cart;
 import com.petshop.pet.domain.CartDetail;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.User;
@@ -14,12 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
@@ -40,7 +39,7 @@ public class CartController {
         this.cartDetailService = cartDetailService;
     }
 
-    @PostMapping("/cart/{productSlug}")
+    @PostMapping("/{productSlug}")
     @ResponseBody
     public Map<String, Object> addProductToCart(@PathVariable("productSlug") String slug,
                                                 @AuthenticationPrincipal CustomUserDetails currentUser,
@@ -60,7 +59,7 @@ public class CartController {
         return response;
     }
 
-    @GetMapping("/cart")
+    @GetMapping
     public String getCartPage(Model model,
                               @AuthenticationPrincipal CustomUserDetails currentUser){
 
@@ -78,14 +77,14 @@ public class CartController {
         return "client/cart/index";
     }
 
-    @PostMapping("/cart/update")
+    @PostMapping("/update")
     @ResponseBody
     public void updateCart(@RequestParam("id") Long cardDetailId,
                            @RequestParam("quantity") Integer quantity){
         cartDetailService.updateQuantity(cardDetailId, quantity);
     }
 
-    @PostMapping("/cart/delete/{productSlug}")
+    @PostMapping("/delete/{productSlug}")
     @ResponseBody
     public void deleteProduct(@PathVariable("productSlug") String slug,
                               @AuthenticationPrincipal CustomUserDetails currentUser){

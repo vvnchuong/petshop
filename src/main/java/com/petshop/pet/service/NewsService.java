@@ -69,7 +69,7 @@ public class NewsService {
             news.setSlug(SlugUtil.toSlug(news.getTitle()));
 
         if(newsRepository.existsBySlug(news.getSlug()))
-            throw new BusinessException(ErrorCode.SLUG_ALREADY_EXISTS);
+            throw new BusinessException(ErrorCode.NEWS_ALREADY_EXISTS);
 
         newsRepository.save(news);
     }
@@ -85,7 +85,7 @@ public class NewsService {
 
         String newSlug = SlugUtil.toSlug(news.getTitle());
         if(!newSlug.equals(news.getSlug()) && newsRepository.existsBySlug(newSlug))
-            throw new BusinessException(ErrorCode.SLUG_ALREADY_EXISTS);
+            throw new BusinessException(ErrorCode.NEWS_ALREADY_EXISTS);
 
         news.setSlug(newSlug);
 

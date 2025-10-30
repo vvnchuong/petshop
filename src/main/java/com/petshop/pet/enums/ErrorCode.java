@@ -20,7 +20,7 @@ public enum ErrorCode {
     // Product-related errors
     PRODUCT_ALREADY_ORDERED(2001, "Product already ordered", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND(2002, "Product not found", HttpStatus.NOT_FOUND),
-    SLUG_ALREADY_EXISTS(2003, "Slug already exists", HttpStatus.BAD_REQUEST),
+    PRODUCT_ALREADY_EXISTS(2003, "Slug already exists", HttpStatus.BAD_REQUEST),
 
     // Order-related errors
     STOCK_QUANTITY_INVALID(3001, "Stock must be greater than 0", HttpStatus.BAD_REQUEST),
@@ -37,7 +37,8 @@ public enum ErrorCode {
     VOUCHER_NOT_FOUND(6002, "Voucher not found", HttpStatus.NOT_FOUND),
 
     // New-related errors
-    NEWS_NOT_FOUND(7001, "News not found", HttpStatus.NOT_FOUND),
+    NEWS_ALREADY_EXISTS(7001, "News already exists", HttpStatus.BAD_REQUEST),
+    NEWS_NOT_FOUND(7002, "News not found", HttpStatus.NOT_FOUND),
 
     // File-related errors
     IMAGE_NOT_SELECTED(8001, "Please choose an image to upload", HttpStatus.BAD_REQUEST),

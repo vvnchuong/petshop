@@ -4,7 +4,6 @@ import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.News;
 import com.petshop.pet.domain.dto.NewsCreateDTO;
 import com.petshop.pet.domain.dto.NewsUpdateDTO;
-import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.service.NewsService;
 import com.petshop.pet.service.UploadService;
 import com.turkraft.springfilter.boot.Filter;
@@ -130,12 +129,7 @@ public class NewsAdminController {
         String thumbnail = uploadService.handleUploadFile(file, "thumbnail", false);
         newsUpdateDTO.setThumbnail(thumbnail);
 
-        try {
-            newsService.updateNews(newsUpdateDTO, newsId, currentUser.getUsername());
-        } catch (BusinessException e) {
-            model.addAttribute("error", e.getMessage());
-            return "admin/news/update";
-        }
+        newsService.updateNews(newsUpdateDTO, newsId, currentUser.getUsername());
 
         return "redirect:/admin/news";
     }

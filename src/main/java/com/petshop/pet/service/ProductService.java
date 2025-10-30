@@ -51,7 +51,7 @@ public class ProductService {
         }
 
         if(productRepository.existsBySlug(product.getSlug()))
-            throw new BusinessException(ErrorCode.SLUG_ALREADY_EXISTS);
+            throw new BusinessException(ErrorCode.PRODUCT_ALREADY_EXISTS);
 
         productRepository.save(product);
     }
@@ -65,7 +65,7 @@ public class ProductService {
         String newSlug = SlugUtil.toSlug(product.getName());
 
         if(!newSlug.equals(product.getSlug()) && productRepository.existsBySlug(newSlug))
-            throw new BusinessException(ErrorCode.SLUG_ALREADY_EXISTS);
+            throw new BusinessException(ErrorCode.PRODUCT_ALREADY_EXISTS);
 
         product.setSlug(newSlug);
 

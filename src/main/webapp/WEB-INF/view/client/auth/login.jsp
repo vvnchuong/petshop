@@ -77,6 +77,10 @@
                                     <button class="tab-btn" id="registerTab">Đăng ký</button>
                                 </div>
 
+                                <c:if test="${not empty error}">
+                                    <div class="alert alert-danger text-center">${error}</div>
+                                </c:if>
+
                                 <!-- LOGIN FORM -->
                                 <div id="loginForm">
                                     <form method="post" action="/doLogin">
@@ -114,10 +118,6 @@
                                 </div>
 
                                 <!-- REGISTER FORM -->
-                                <c:if test="${not empty error}">
-                                    <div class="alert alert-danger text-center">${error}</div>
-                                </c:if>
-
                                 <div id="registerForm" style="display: none;">
                                     <form:form method="post" action="/account/register" modelAttribute="registerDTO">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
