@@ -95,13 +95,7 @@
                                                     <div class="col-md-6">
                                                         <label class="form-label">Thương hiệu</label>
                                                         <form:select class="form-select" path="brand.id">
-                                                            <form:option value="1">Royal Canin</form:option>
-                                                            <form:option value="2">Pedigree</form:option>
-                                                            <form:option value="3">Whiskas</form:option>
-                                                            <form:option value="4">Sanicat</form:option>
-                                                            <form:option value="5">SOS</form:option>
-                                                            <form:option value="6">Me-O</form:option>
-                                                            <form:option value="7">SmartHeart</form:option>
+                                                            <form:options items="${brands}" itemValue="id" itemLabel="name" />
                                                         </form:select>
                                                     </div>
 
@@ -191,7 +185,7 @@
                                                         <c:set var="errorShortDesc">
                                                             <form:errors path="shortDesc" cssClass="invalid-feedback" />
                                                         </c:set>
-                                                        <label class="form-label">Mô tả ngắn</label>
+                                                        <label class="form-label required">Mô tả ngắn</label>
                                                         <form:textarea
                                                             class="form-control ${not empty errorShortDesc ? 'is-invalid' : ''}"
                                                             path="shortDesc" rows="2" />${errorShortDesc}
@@ -202,7 +196,7 @@
                                                             <form:errors path="description"
                                                                 cssClass="invalid-feedback" />
                                                         </c:set>
-                                                        <label class="form-label">Mô tả chi tiết</label>
+                                                        <label class="form-label required">Mô tả chi tiết</label>
                                                         <form:textarea
                                                             class="form-control ${not empty errorDescription ? 'is-invalid' : ''}"
                                                             path="description" rows="4" />${errorDescription}

@@ -38,7 +38,7 @@ public class NewsAdminController {
     }
 
     @GetMapping
-    public String getNewsPage(Model model,
+    public String getNewsAdminPage(Model model,
                               @Filter Specification<News> spec,
                               @RequestParam(name = "page", defaultValue = "1") int page,
                               @PageableDefault(size = 5) Pageable pageableDefault){
@@ -58,7 +58,7 @@ public class NewsAdminController {
     }
 
     @GetMapping("/{id}")
-    public String getNewsDetailPage(@PathVariable("id") long newsId,
+    public String getNewsDetailAdminPage(@PathVariable("id") long newsId,
                                     Model model){
 
         News news = newsService.getNewsById(newsId);

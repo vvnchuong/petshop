@@ -34,16 +34,13 @@
                         font-weight: 600;
                     }
 
-                    /* CSS cho ảnh preview */
                     #avatarPreview {
                         max-height: 250px;
                         max-width: 250px;
-                        /* Thêm max-width */
                         margin-top: 15px;
                         border-radius: 6px;
                         border: 1px solid #dee2e6;
                         object-fit: cover;
-                        /* Đảm bảo ảnh không bị méo */
                     }
                 </style>
 
@@ -51,15 +48,13 @@
                     $(document).ready(() => {
                         const avatarFile = $("#avatarFile");
                         avatarFile.change(function (e) {
-                            // Kiểm tra file có tồn tại không
                             if (e.target.files && e.target.files[0]) {
                                 const imgURL = URL.createObjectURL(e.target.files[0]);
                                 $("#avatarPreview").attr("src", imgURL);
                                 $("#avatarPreview").css({ "display": "block" });
                             } else {
-                                // Nếu hủy chọn file
                                 $("#avatarPreview").css({ "display": "none" });
-                                $("#avatarPreview").attr("src", ""); // Xóa src
+                                $("#avatarPreview").attr("src", "");
                             }
                         });
                     }); 

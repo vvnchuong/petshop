@@ -21,17 +21,12 @@
                     <style>
                         .product-image {
                             max-width: 100%;
-                            /* Đảm bảo ảnh responsive */
                             max-height: 400px;
-                            /* Giới hạn chiều cao */
                             border-radius: 8px;
-                            /* Bo góc */
                             border: 1px solid #dee2e6;
                             object-fit: cover;
-                            /* Chống méo ảnh */
                         }
 
-                        /* Căn chỉnh danh sách chi tiết */
                         .list-group-item {
                             padding-top: 1rem;
                             padding-bottom: 1rem;
@@ -42,13 +37,11 @@
                             color: #495057;
                             display: inline-block;
                             min-width: 150px;
-                            /* Tăng chiều rộng cho các nhãn dài */
                         }
 
                         .list-group-item .detail-value {
                             color: #212529;
                             word-break: break-word;
-                            /* Ngăn vỡ layout nếu mô tả quá dài */
                         }
                     </style>
                 </head>

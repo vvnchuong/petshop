@@ -36,6 +36,13 @@
           Sản phẩm
         </a>
 
+        <a class="nav-link" href="/admin/brands">
+          <div class="sb-nav-link-icon">
+            <i class="fa-solid fa-cat"></i>
+          </div>
+          Thương hiệu
+        </a>
+
         <a class="nav-link" href="/admin/news">
           <div class="sb-nav-link-icon">
             <i class="fa-solid fa-newspaper"></i>

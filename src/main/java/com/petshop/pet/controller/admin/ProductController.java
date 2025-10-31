@@ -1,8 +1,10 @@
 package com.petshop.pet.controller.admin;
 
+import com.petshop.pet.domain.Brand;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.dto.ProductCreateDTO;
 import com.petshop.pet.domain.dto.ProductUpdateDTO;
+import com.petshop.pet.service.BrandService;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.UploadService;
 import com.turkraft.springfilter.boot.Filter;
@@ -18,21 +20,27 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin/products")
 public class ProductController {
 
     private final ProductService productService;
 
+    private final BrandService brandService;
+
     private final UploadService uploadService;
 
     public ProductController(ProductService productService,
+                             BrandService brandService,
                              UploadService uploadService){
         this.productService = productService;
+        this.brandService = brandService;
         this.uploadService = uploadService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String getProductPage(Model model,
                                  @Filter Specification<Product> spec,
                                  @RequestParam(name = "page", defaultValue = "1") int page,
@@ -63,6 +71,10 @@ public class ProductController {
     @GetMapping("/create")
     public String getCreateProductPage(Model model){
         model.addAttribute("newProduct", new ProductCreateDTO());
+
+        List<Brand> brands = brandService.getListBrands();
+        model.addAttribute("brands", brands);
+
         return "admin/product/create";
     }
 
@@ -88,6 +100,10 @@ public class ProductController {
                                        @PathVariable("id") long productId){
         Product product = productService.getProductById(productId);
         model.addAttribute("newProduct", product);
+
+        List<Brand> brands = brandService.getListBrands();
+        model.addAttribute("brands", brands);
+
         return "admin/product/update";
     }
 

@@ -35,7 +35,6 @@ public class ProductCreateDTO {
     @Min(value = 1, message = "Stock must be >= 1")
     Integer stock;
 
-    @NotBlank(message = "Image is required")
     String imageUrl;
 
     Subcategory subcategory;

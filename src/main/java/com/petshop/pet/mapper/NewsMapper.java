@@ -27,7 +27,7 @@ public interface NewsMapper {
 
     @AfterMapping
     default void setUpdatedAt(@MappingTarget News news){
-        news.setCreatedAt(Instant.now());
+        news.setUpdatedAt(Instant.now());
     }
 
     @AfterMapping

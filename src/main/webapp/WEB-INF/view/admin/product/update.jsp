@@ -102,15 +102,9 @@
                                                     </div>
 
                                                     <div class="col-md-6">
-                                                        <label class="form-label required">Thương hiệu</label>
+                                                        <label class="form-label">Thương hiệu</label>
                                                         <form:select class="form-select" path="brand.id">
-                                                            <form:option value="1">Royal Canin</form:option>
-                                                            <form:option value="2">Pedigree</form:option>
-                                                            <form:option value="3">Whiskas</form:option>
-                                                            <form:option value="4">Sanicat</form:option>
-                                                            <form:option value="5">SOS</form:option>
-                                                            <form:option value="6">Me-O</form:option>
-                                                            <form:option value="7">SmartHeart</form:option>
+                                                            <form:options items="${brands}" itemValue="id" itemLabel="name" />
                                                         </form:select>
                                                     </div>
 
