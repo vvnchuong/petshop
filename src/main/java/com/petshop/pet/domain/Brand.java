@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,13 @@ public class Brand {
 
     @Column(columnDefinition = "MEDIUMTEXT")
     String description;
+
+    String logoUrl;
+
+    String slug;
+
+    Instant createdAt;
+    Instant updatedAt;
 
     @OneToMany(mappedBy = "brand")
     List<Product> products = new ArrayList<>();
