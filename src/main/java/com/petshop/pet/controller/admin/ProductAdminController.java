@@ -24,7 +24,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/products")
-public class ProductController {
+public class ProductAdminController {
 
     private final ProductService productService;
 
@@ -32,9 +32,9 @@ public class ProductController {
 
     private final UploadService uploadService;
 
-    public ProductController(ProductService productService,
-                             BrandService brandService,
-                             UploadService uploadService){
+    public ProductAdminController(ProductService productService,
+                                  BrandService brandService,
+                                  UploadService uploadService){
         this.productService = productService;
         this.brandService = brandService;
         this.uploadService = uploadService;
