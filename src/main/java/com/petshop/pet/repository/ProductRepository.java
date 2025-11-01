@@ -67,6 +67,8 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
                                                  @Param("maxPrice") Double maxPrice,
                                                  Pageable pageable);
 
-    boolean existsBySlug(String slug);
+    boolean existsBySlug(String productSlug);
+
+    Page<Product> findByBrandSlug(Specification<Product> spec, Pageable page, String brandSlug);
 
 }

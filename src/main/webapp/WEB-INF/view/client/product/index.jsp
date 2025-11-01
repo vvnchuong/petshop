@@ -241,7 +241,7 @@
                             const totalPages = Number("${totalPages}");
                             const petSlug = "${petSlug}";
                             const subSlug = "${subcategorySlug}";
-                            const size = 4;
+                            const size = 12;
                             const sort = "${currentSort}";
 
                             $('#loadMoreBtn').on('click', function () {
@@ -299,7 +299,7 @@
                             const petSlug = "${petSlug}";
                             const subSlug = "${subcategorySlug}";
                             const sort = "${currentSort}";
-                            const size = 4;
+                            const size = 12;
 
                             $('#rangeInput').on('input', function () {
                                 $('#amount').text($(this).val());
@@ -357,7 +357,7 @@
                         const petSlug = "${petSlug}";
                         const subSlug = "${subcategorySlug}";
                         const sort = "${currentSort}";
-                        const size = 4;
+                        const size = 12;
                         let typingTimer;
 
                         $("#searchInput").on("input", function () {

@@ -144,4 +144,14 @@ public class ProductService {
         return productRepository.searchPetProductsBySubcategory(pet, sub, keyword, maxPrice, pageable);
     }
 
+    public Page<Product> getAllProductsByBrand(Specification<Product> spec, Pageable pageable, String brandSlug) {
+        Specification<Product> brandSpec = (root, query, cb) ->
+                cb.equal(root.get("brand").get("slug"), brandSlug);
+
+        Specification<Product> finalSpec = spec == null ? brandSpec : spec.and(brandSpec);
+
+        return productRepository.findAll(finalSpec, pageable);
+    }
+
+
 }

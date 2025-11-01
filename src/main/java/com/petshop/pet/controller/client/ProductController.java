@@ -1,29 +1,145 @@
 package com.petshop.pet.controller.client;
 
+import com.petshop.pet.domain.Category;
+import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
+import com.petshop.pet.service.CategoryService;
+import com.petshop.pet.service.PetTypeService;
 import com.petshop.pet.service.ProductService;
+import com.petshop.pet.utils.PageableUtil;
+import com.turkraft.springfilter.boot.Filter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
-@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService){
+    private final PetTypeService petTypeService;
+
+    private final CategoryService categoryService;
+
+    public ProductController(ProductService productService,
+                             PetTypeService petTypeService,
+                             CategoryService categoryService){
         this.productService = productService;
+        this.petTypeService = petTypeService;
+        this.categoryService = categoryService;
     }
 
-    @GetMapping("/{productName}")
+    @GetMapping("/{pet}")
+    public String getShopPetPage(Model model,
+                                 @PathVariable("pet") String pet,
+                                 @Filter Specification<Product> spec,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "12") int size,
+                                 @RequestParam(defaultValue = "default") String sort,
+                                 @RequestParam(required = false) Double maxPrice,
+                                 @RequestParam(required = false) String keyword){
+
+        Pageable pageable = PageableUtil.createPageable(page, size, sort);
+
+        PetType petType = petTypeService.getPetTypeBySlug(pet);
+
+        List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
+
+        Page<Product> petProducts;
+        if(keyword != null && !keyword.isBlank()){
+            petProducts = productService.searchPetProductsByPet(pet, keyword, maxPrice, pageable);
+        }else {
+            petProducts = productService.getAllPetProducts(pet, spec, pageable, maxPrice);
+        }
+
+        model.addAttribute("products", petProducts.getContent());
+        model.addAttribute("currentPage", petProducts.getNumber());
+        model.addAttribute("totalPages", petProducts.getTotalPages());
+        model.addAttribute("totalElements", petProducts.getTotalElements());
+        model.addAttribute("petSlug", pet);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("petType", petType);
+        model.addAttribute("categories", categories);
+        model.addAttribute("maxPrice", maxPrice);
+
+        return "client/product/index";
+    }
+
+    @GetMapping("/{pet}/{subcategory}")
+    public String getSubPetPage(Model model,
+                                @PathVariable("pet") String pet,
+                                @PathVariable("subcategory") String sub,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "12") int size,
+                                @RequestParam(defaultValue = "default") String sort,
+                                @RequestParam(required = false) Double maxPrice,
+                                @RequestParam(required = false) String keyword) {
+
+        Pageable pageable = PageableUtil.createPageable(page, size, sort);
+
+        PetType petType = petTypeService.getPetTypeBySlug(pet);
+
+        List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
+
+        Page<Product> subProducts;
+        if(keyword != null && !keyword.isBlank()){
+            subProducts = productService.searchPetProductsBySubcategory(pet, sub, keyword, maxPrice, pageable);
+        }else{
+            subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable, maxPrice);
+        }
+
+
+        model.addAttribute("products", subProducts.getContent());
+        model.addAttribute("currentPage", subProducts.getNumber());
+        model.addAttribute("totalPages", subProducts.getTotalPages());
+        model.addAttribute("totalElements", subProducts.getTotalElements());
+        model.addAttribute("petSlug", pet);
+        model.addAttribute("subcategorySlug", sub);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("petType", petType);
+        model.addAttribute("categories", categories);
+        model.addAttribute("maxPrice", maxPrice);
+
+        return "client/product/index";
+    }
+
+    @GetMapping("/products/{productName}")
     public String getProductDetail(Model model,
                                    @PathVariable("productName") String productName){
         Product productDetail = productService.getProductBySlug(productName);
         model.addAttribute("product", productDetail);
         return "client/product/detail";
+    }
+
+    @GetMapping("/brands/{brandSlug}")
+    public String getProductsByBrandPage(Model model,
+                                         @PathVariable("brandSlug") String slug,
+                                         @Filter Specification<Product> spec,
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "12") int size,
+                                         @RequestParam(defaultValue = "default") String sort,
+                                         @RequestParam(required = false) Double maxPrice){
+
+        Pageable pageable = PageableUtil.createPageable(page, size, sort);
+
+        Page<Product> brandProducts = productService.getAllProductsByBrand(spec, pageable, slug);
+
+        model.addAttribute("products", brandProducts.getContent());
+        model.addAttribute("currentPage", brandProducts.getNumber());
+        model.addAttribute("totalPages", brandProducts.getTotalPages());
+        model.addAttribute("totalElements", brandProducts.getTotalElements());
+        model.addAttribute("brandSlug", slug);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("maxPrice", maxPrice);
+
+        return "client/brand/product-list";
     }
 
 }

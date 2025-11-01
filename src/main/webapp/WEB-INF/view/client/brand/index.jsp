@@ -82,7 +82,7 @@
             <c:forEach var="brand" items="${brands}">
               <div class="col-12 col-sm-6 col-lg-4">
                 <div class="card h-100 d-flex flex-column">
-                  <a href="">
+                  <a href="/brands/${brand.slug}">
                     <img class="card-img-top" src="/admin/images/brands/${brand.logoUrl}" />
                   </a>
                 </div>

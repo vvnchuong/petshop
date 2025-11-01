@@ -85,6 +85,10 @@
                                         </div>
                                     </div>
                                 </li>
+                                
+                                <li class="nav-item">
+                                    <a href="/brands" class="nav-link">THƯƠNG HIỆU</a>
+                                </li>
 
                                 <li class="nav-item">
                                     <a href="/news" class="nav-link">TIN THÚ CƯNG</a>
