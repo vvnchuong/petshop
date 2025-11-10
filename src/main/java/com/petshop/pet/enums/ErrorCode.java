@@ -20,7 +20,7 @@ public enum ErrorCode {
     // Product-related errors
     PRODUCT_ALREADY_ORDERED(2001, "Product already ordered", HttpStatus.BAD_REQUEST),
     PRODUCT_NOT_FOUND(2002, "Product not found", HttpStatus.NOT_FOUND),
-    PRODUCT_ALREADY_EXISTS(2003, "Slug already exists", HttpStatus.BAD_REQUEST),
+    PRODUCT_ALREADY_EXISTS(2003, "Product already exists", HttpStatus.BAD_REQUEST),
 
     // Order-related errors
     STOCK_QUANTITY_INVALID(3001, "Stock must be greater than 0", HttpStatus.BAD_REQUEST),
@@ -52,6 +52,10 @@ public enum ErrorCode {
     // Brand-related errors
     BRAND_ALREADY_EXISTS(10001, "Brand already exists", HttpStatus.BAD_REQUEST),
     BRAND_NOT_FOUND(10002, "Brand not found", HttpStatus.NOT_FOUND),
+
+    // Payment-related errors
+    PAYMENT_FAILED(11000, "Payment failed", HttpStatus.BAD_REQUEST),
+    PAYMENT_INVALID_SIGNATURE(11001, "Invalid payment signature", HttpStatus.BAD_REQUEST),
 
     // email error code
 //    EMAIL_SEND_FAILED(9003, "Failed to send email", HttpStatus.INTERNAL_SERVER_ERROR)

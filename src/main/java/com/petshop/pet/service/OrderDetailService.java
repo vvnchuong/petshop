@@ -33,4 +33,8 @@ public class OrderDetailService {
         orderDetailRepository.saveAll(orderDetails);
     }
 
+    public List<OrderDetail> getAllByOrder(Order order){
+        return orderDetailRepository.findAllByOrder(order);
+    }
+
 }

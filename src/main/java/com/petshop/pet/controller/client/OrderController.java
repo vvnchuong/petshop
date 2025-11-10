@@ -1,16 +1,10 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
-import com.petshop.pet.domain.CartDetail;
-import com.petshop.pet.domain.Order;
-import com.petshop.pet.domain.User;
-import com.petshop.pet.domain.Voucher;
+import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.CheckoutRequestDTO;
 
-import com.petshop.pet.service.CartDetailService;
-import com.petshop.pet.service.OrderService;
-import com.petshop.pet.service.UserService;
-import com.petshop.pet.service.VoucherService;
+import com.petshop.pet.service.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -26,6 +20,8 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    private final OrderDetailService orderDetailService;
+
     private final UserService userService;
 
     private final VoucherService voucherService;
@@ -33,10 +29,12 @@ public class OrderController {
     private final CartDetailService cartDetailService;
 
     public OrderController(OrderService orderService,
+                           OrderDetailService orderDetailService,
                            UserService userService,
                            VoucherService voucherService,
                            CartDetailService cartDetailService){
         this.orderService = orderService;
+        this.orderDetailService = orderDetailService;
         this.userService = userService;
         this.voucherService = voucherService;
         this.cartDetailService = cartDetailService;
@@ -65,9 +63,14 @@ public class OrderController {
     @PostMapping("/checkout")
     public String placeOrder(@ModelAttribute CheckoutRequestDTO checkoutRequestDTO,
                              @AuthenticationPrincipal CustomUserDetails currentUser,
-                             Model model) {
+                             Model model){
 
-        Order order = orderService.placeOrder(checkoutRequestDTO, currentUser);
+        Order order = orderService.createOrder(checkoutRequestDTO, currentUser);
+
+        if("VNPAY".equalsIgnoreCase(checkoutRequestDTO.getPaymentMethod().toString())) {
+            double totalPrice = order.getTotalAmount();
+            return "redirect:/vnpay/create?orderId=" + order.getId() + "&amount=" + totalPrice;
+        }
 
         model.addAttribute("orderId", order.getId());
 
@@ -91,6 +94,13 @@ public class OrderController {
 
         Order order = orderService.getOrderByIdAndUser(orderId, currentUser.getUsername());
 
+        double totalPrice = 0;
+        List<OrderDetail> orderDetails = orderDetailService.getAllByOrder(order);
+        for(OrderDetail orderDetail : orderDetails){
+            totalPrice += orderDetail.getPrice() * orderDetail.getQuantity();
+        }
+
+        model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("order", order);
         return "client/order/detail";
     }

@@ -5,7 +5,8 @@ public enum Status {
     PENDING("Chờ xử lý"),
     SHIPPING("Đang giao"),
     DELIVERED("Đã giao"),
-    CANCELLED("Đã hủy");
+    CANCELLED("Đã hủy"),
+    FAILED("Thanh toán không thành công");
 
     private final String name;
 

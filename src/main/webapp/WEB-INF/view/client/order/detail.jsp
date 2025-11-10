@@ -58,6 +58,14 @@
                 <p>Địa chỉ: <strong>${order.shippingAddress}</strong></p>
                 <p>Phương thức thanh toán: <strong>${order.paymentMethod}</strong></p>
                 <p>Tổng tiền:<strong class="text-danger">
+                    <fmt:formatNumber value="${totalPrice}" type="number" groupingUsed="true" /> đ
+                  </strong>
+                </p>
+                <p>Giảm giá:<strong class="text-danger">
+                    <fmt:formatNumber value="${totalPrice - order.totalAmount}" type="number" groupingUsed="true" /> đ
+                  </strong>
+                </p>
+                <p>Thành tiền:<strong class="text-danger">
                     <fmt:formatNumber value="${order.totalAmount}" type="number" groupingUsed="true" /> đ
                   </strong>
                 </p>
@@ -73,7 +81,7 @@
                       alt="${orderDetail.product.name}" class="rounded border" width="80" height="80">
 
                     <div class="ms-3 flex-grow-1">
-                      <a href="/product/${orderDetail.product.slug}">
+                      <a href="/products/${orderDetail.product.slug}">
                         <h6 class="mb-1">${orderDetail.product.name}</h6>
                       </a>
                       <p class="mb-1">Số lượng: ${orderDetail.quantity}</p>

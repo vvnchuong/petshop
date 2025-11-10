@@ -1,6 +1,8 @@
 package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.Order;
+import com.petshop.pet.domain.OrderDetail;
+import com.petshop.pet.service.OrderDetailService;
 import com.petshop.pet.service.OrderService;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
@@ -12,14 +14,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin/orders")
 public class OrderAdminController {
 
     private final OrderService orderService;
 
-    public OrderAdminController(OrderService orderService){
+    private final OrderDetailService orderDetailService;
+
+    public OrderAdminController(OrderService orderService,
+                                OrderDetailService orderDetailService){
         this.orderService = orderService;
+        this.orderDetailService = orderDetailService;
     }
 
     @GetMapping
@@ -47,6 +55,14 @@ public class OrderAdminController {
                                      @PathVariable("orderId") long id){
 
         Order order = orderService.getOrderById(id);
+        List<OrderDetail> orderDetails = orderDetailService.getAllByOrder(order);
+        double totaPrice = 0;
+
+        for(OrderDetail orderDetail : orderDetails){
+            totaPrice += orderDetail.getPrice() * orderDetail.getQuantity();
+        }
+
+        model.addAttribute("totalPrice", totaPrice);
         model.addAttribute("order", order);
 
         return "admin/order/detail";

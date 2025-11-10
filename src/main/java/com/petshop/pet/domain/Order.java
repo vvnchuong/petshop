@@ -23,6 +23,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    @Column(unique = true, nullable = false, updatable = false)
+    String orderCode;
+
     double totalAmount;
 
     String receiverName;
@@ -39,6 +42,9 @@ public class Order {
     PaymentMethod paymentMethod;
 
     String shippingAddress;
+
+    String responseCode;
+    String transactionCode;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

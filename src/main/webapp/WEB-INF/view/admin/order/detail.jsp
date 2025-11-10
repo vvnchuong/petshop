@@ -34,6 +34,7 @@
                                         <h2 class="mb-4">Chi tiết đơn hàng #${order.id}</h2>
                                         <div class="card mb-4">
                                             <div class="card-body">
+                                                <p><strong>Mã đơn hàng:</strong> ${order.orderCode}</p>
                                                 <p><strong>Ngày đặt:</strong> ${DateTimeUtil.formatInstant(order.createdAt)}</p>
                                                 <p>
                                                     <strong>Trạng thái: </strong>
@@ -62,6 +63,14 @@
                                                 <p><strong>Địa chỉ:</strong> ${order.shippingAddress}</p>
                                                 <p><strong>Phương thức thanh toán:</strong> ${order.paymentMethod}</p>
                                                 <p><strong>Tổng tiền:</strong>
+                                                    <fmt:formatNumber value="${totalPrice}" type="number"
+                                                        groupingUsed="true" /> đ
+                                                </p>
+                                                <p><strong>Giảm giá:</strong>
+                                                    <fmt:formatNumber value="${totalPrice - order.totalAmount}" type="number"
+                                                        groupingUsed="true" /> đ
+                                                </p>
+                                                <p><strong>Thành tiền:</strong>
                                                     <fmt:formatNumber value="${order.totalAmount}" type="number"
                                                         groupingUsed="true" /> đ
                                                 </p>

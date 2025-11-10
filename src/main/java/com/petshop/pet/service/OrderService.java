@@ -4,20 +4,21 @@ import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.CheckoutRequestDTO;
 import com.petshop.pet.enums.ErrorCode;
+import com.petshop.pet.enums.Status;
 import com.petshop.pet.exception.BusinessException;
-import com.petshop.pet.repository.CartRepository;
-import com.petshop.pet.repository.OrderDetailRepository;
 import com.petshop.pet.repository.OrderRepository;
-import com.petshop.pet.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,33 +63,65 @@ public class OrderService {
     }
 
     @Transactional
-    public Order placeOrder(CheckoutRequestDTO dto,
-                           CustomUserDetails currentUser){
-
+    public Order createOrder(CheckoutRequestDTO dto, CustomUserDetails currentUser){
         User user = userService.getUserByUserName(currentUser.getUsername());
-
         List<CartDetail> cartDetails = cartDetailService.getAllProductsInCartByUser(currentUser.getUsername());
 
-        stockService.reserveStock(cartDetails);
-
         Voucher voucher = voucherService.checkVoucher(dto.getVoucherCode());
-
         double finalPrice = pricingService.calculateFinalPrice(cartDetails, voucher);
 
-        Order order = createOrder(dto, user, finalPrice);
-        orderRepository.save(order);
+        Order order = buildOrder(dto, user, finalPrice);
+        String orderCode = generateOrderCode();
+        order.setOrderCode(orderCode);
+        if("COD".equalsIgnoreCase(dto.getPaymentMethod().toString())){
+            stockService.reserveStock(cartDetails);
+            orderRepository.save(order);
 
-        orderDetailService.saveOrderDetails(order, cartDetails);
-
-        voucherService.increaseUsedCount(voucher);
-
-        cartDetailService.deleteAllProductInCartByCartId(user.getCart());
-        cartService.resetCart(user);
+            orderDetailService.saveOrderDetails(order, cartDetails);
+            cartDetailService.deleteAllProductInCartByCartId(user.getCart());
+            cartService.resetCart(user);
+        }else{
+            order.setStatus(Status.FAILED);
+            orderRepository.save(order);
+        }
 
         return order;
     }
 
-    private Order createOrder(CheckoutRequestDTO dto, User user, double finalPrice){
+    @Transactional
+    public void confirmOrderPayment(String username, long orderId, Map<String, String> fields){
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+
+        List<CartDetail> cartDetails = cartDetailService.getAllProductsInCartByUser(username);
+        stockService.reserveStock(cartDetails);
+        orderDetailService.saveOrderDetails(order, cartDetails);
+
+        User user = userService.getUserByUserName(username);
+        cartDetailService.deleteAllProductInCartByCartId(user.getCart());
+        cartService.resetCart(user);
+
+        String responseCode = fields.get("vnp_ResponseCode");
+        String transactionNo = fields.get("vnp_TransactionNo");
+        order.setResponseCode(responseCode);
+        order.setTransactionCode(transactionNo);
+
+        order.setStatus(Status.PENDING);
+        orderRepository.save(order);
+    }
+
+    private String generateOrderCode() {
+        SecureRandom random = new SecureRandom();
+
+        String datePart = LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("yyMMdd"));
+
+        long randomNumber = 10000000L + random.nextInt(90000000);
+
+        return datePart + randomNumber;
+    }
+
+    private Order buildOrder(CheckoutRequestDTO dto, User user, double finalPrice){
         Order order = new Order();
         order.setReceiverName(dto.getReceiverName());
         order.setReceiverPhone(dto.getReceiverPhone());
@@ -103,7 +136,9 @@ public class OrderService {
     }
 
     public List<Order> getAllOrderByUser(String username) {
-        return orderRepository.findByUserUsername(username);
+        return orderRepository.findByUserUsernameAndStatusInOrderByCreatedAtDesc(
+                username,
+                List.of(Status.PENDING, Status.SHIPPING, Status.DELIVERED, Status.CANCELLED));
     }
 
     public Order getOrderByIdAndUser(long orderId, String username){

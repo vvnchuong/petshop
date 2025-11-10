@@ -1,5 +1,6 @@
 package com.petshop.pet.repository;
 
+import com.petshop.pet.domain.Order;
 import com.petshop.pet.domain.OrderDetail;
 import com.petshop.pet.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,7 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     List<Product> findBestSellingProducts();
 
     boolean existsByProductId(long productId);
+
+    List<OrderDetail> findAllByOrder(Order order);
 
 }

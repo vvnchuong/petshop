@@ -62,7 +62,7 @@
                                     <!-- Thông tin đơn hàng -->
                                     <div class="d-flex justify-content-between flex-wrap mb-3">
                                         <div>
-                                            <h5 class="card-title mb-1">Mã đơn hàng: #${order.id}</h5>
+                                            <h5 class="card-title mb-1">Mã đơn hàng: #${order.orderCode}</h5>
                                             <p class="mb-1">
                                                 Ngày đặt: ${DateTimeUtil.formatInstant(order.createdAt)}
                                             </p>
@@ -104,7 +104,7 @@
                                                  width="80" height="80">
 
                                             <div class="ms-3 flex-grow-1">
-                                                <a href="/product/${orderDetail.product.slug}"><h6 class="mb-1">${orderDetail.product.name}</h6></a>
+                                                <a href="/products/${orderDetail.product.slug}"><h6 class="mb-1">${orderDetail.product.name}</h6></a>
                                                 <p class="mb-1">Số lượng: ${orderDetail.quantity}</p>
                                                 <p class="mb-0 text-primary fw-bold">
                                                     <fmt:formatNumber
