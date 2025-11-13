@@ -1,4 +1,4 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
 import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;

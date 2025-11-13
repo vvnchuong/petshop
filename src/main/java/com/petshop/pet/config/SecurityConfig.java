@@ -17,22 +17,18 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(UserDetailsService userDetailsService){
-        this.userDetailsService = userDetailsService;
-    }
-
     @Bean
     public SecurityFilterChain httpFilterChain(HttpSecurity httpSecurity)
             throws Exception {
         httpSecurity.authorizeHttpRequests(request -> request
                 .dispatcherTypeMatchers(DispatcherType.FORWARD,
                         DispatcherType.INCLUDE) .permitAll()
-                .requestMatchers("/", "/account/login", "/product/**",
+                .requestMatchers("/", "/account/login", "/products/**",
                         "/shop-*", "/shop-*/**", "/client/**", "/account/register",
                         "/account/forgot-password", "/account/reset-password",
-                        "/news", "news/**", "/admin/js/**",
+                        "/cart/**", "/checkout/**", "/news/**", "/brands/**",
+                        "/orders/detail/**", "/apply", "/thanks", "/payment/callback/**",
+                        "/news/**", "/admin/js/**", "/vnpay/**",
                         "/admin/images/**", "/admin/css/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())

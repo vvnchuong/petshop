@@ -1,7 +1,7 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.domain.Brand;
-import com.petshop.pet.service.BrandService;
+import com.petshop.pet.service.impl.BrandService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

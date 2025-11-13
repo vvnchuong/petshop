@@ -1,4 +1,4 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.*;
@@ -44,6 +44,8 @@ public class OrderService {
 
     private final OrderDetailService orderDetailService;
 
+    private final ProductService productService;
+
     public OrderService(OrderRepository orderRepository,
                         CartDetailService cartDetailService,
                         UserService userService,
@@ -51,7 +53,8 @@ public class OrderService {
                         CartService cartService,
                         StockService stockService,
                         PricingService pricingService,
-                        OrderDetailService orderDetailService){
+                        OrderDetailService orderDetailService,
+                        ProductService productService){
         this.orderRepository = orderRepository;
         this.cartDetailService = cartDetailService;
         this.userService = userService;
@@ -60,54 +63,87 @@ public class OrderService {
         this.stockService = stockService;
         this.pricingService = pricingService;
         this.orderDetailService = orderDetailService;
+        this.productService = productService;
     }
 
+
     @Transactional
-    public Order createOrder(CheckoutRequestDTO dto, CustomUserDetails currentUser){
-        User user = userService.getUserByUserName(currentUser.getUsername());
-        List<CartDetail> cartDetails = cartDetailService.getAllProductsInCartByUser(currentUser.getUsername());
+    public Order createOrder(CheckoutRequestDTO dto,
+                             CustomUserDetails currentUser,
+                             Map<String, Integer> guestCart,
+                             String sessionId){
+
+        User user = currentUser != null ? userService.getUserByUserName(currentUser.getUsername()) : null;
+        List<CartDetail> cartDetails;
+
+        if(currentUser != null){
+            cartDetails = cartDetailService.getAllProductsInCartByUser(currentUser.getUsername());
+        }else{
+            cartDetails = guestCart.entrySet().stream().map(e -> {
+                Product p = productService.getProductBySlug(e.getKey());
+                CartDetail cd = new CartDetail();
+                cd.setProduct(p);
+                cd.setPrice(p.getPrice());
+                cd.setQuantity(e.getValue());
+                cd.setCart(null);
+                return cd;
+            }).collect(Collectors.toList());
+        }
 
         Voucher voucher = voucherService.checkVoucher(dto.getVoucherCode());
+        voucherService.increaseUsedCount(voucher);
         double finalPrice = pricingService.calculateFinalPrice(cartDetails, voucher);
 
         Order order = buildOrder(dto, user, finalPrice);
-        String orderCode = generateOrderCode();
-        order.setOrderCode(orderCode);
-        if("COD".equalsIgnoreCase(dto.getPaymentMethod().toString())){
-            stockService.reserveStock(cartDetails);
-            orderRepository.save(order);
+        order.setOrderCode(generateOrderCode());
+        order.setSessionId(sessionId);
 
-            orderDetailService.saveOrderDetails(order, cartDetails);
-            cartDetailService.deleteAllProductInCartByCartId(user.getCart());
-            cartService.resetCart(user);
-        }else{
-            order.setStatus(Status.FAILED);
-            orderRepository.save(order);
-        }
+        order.setStatus(Status.PENDING);
+        orderRepository.save(order);
+
+        orderDetailService.saveOrderDetails(order, cartDetails);
 
         return order;
     }
 
     @Transactional
-    public void confirmOrderPayment(String username, long orderId, Map<String, String> fields){
+    public void confirmOrderPayment(long orderId, Map<String, String> paymentFields, String sessionId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
-        List<CartDetail> cartDetails = cartDetailService.getAllProductsInCartByUser(username);
-        stockService.reserveStock(cartDetails);
-        orderDetailService.saveOrderDetails(order, cartDetails);
+        if (order.getStatus() != Status.PENDING)
+            return;
 
-        User user = userService.getUserByUserName(username);
-        cartDetailService.deleteAllProductInCartByCartId(user.getCart());
-        cartService.resetCart(user);
-
-        String responseCode = fields.get("vnp_ResponseCode");
-        String transactionNo = fields.get("vnp_TransactionNo");
-        order.setResponseCode(responseCode);
-        order.setTransactionCode(transactionNo);
+        if (paymentFields != null) {
+            String responseCode = paymentFields.get("vnp_ResponseCode");
+            String transactionNo = paymentFields.get("vnp_TransactionNo");
+            order.setResponseCode(responseCode);
+            order.setTransactionCode(transactionNo);
+        }
 
         order.setStatus(Status.PENDING);
         orderRepository.save(order);
+
+        List<OrderDetail> orderDetails = orderDetailService.getAllByOrder(order);
+
+        stockService.reserveStock(orderDetails);
+
+        if(order.getUser() != null){
+            User user = order.getUser();
+            cartDetailService.deleteAllProductInCartByCartId(user.getCart());
+            cartService.resetCart(user);
+        }
+    }
+
+    @Transactional
+    public void failOrderPayment(long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+
+        if (order.getStatus() == Status.PENDING) {
+            order.setStatus(Status.FAILED);
+            orderRepository.save(order);
+        }
     }
 
     private String generateOrderCode() {
@@ -143,6 +179,11 @@ public class OrderService {
 
     public Order getOrderByIdAndUser(long orderId, String username){
         return orderRepository.findByIdAndUserUsername(orderId, username);
+    }
+
+    public Order getOrderByGuess(long orderId, String session){
+        return orderRepository.findByIdAndSessionId(orderId, session)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
     }
 
     public Page<Order> getAllOrdersByAdmin(Specification<Order> spec,

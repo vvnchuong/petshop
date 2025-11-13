@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         if(referer != null && !referer.isEmpty())
             return "redirect:" + referer;
 
-        return "redirect:/admin/brands";
+        return "redirect:/";
     }
 
 }

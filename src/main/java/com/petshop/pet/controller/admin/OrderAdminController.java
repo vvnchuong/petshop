@@ -2,8 +2,8 @@ package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.Order;
 import com.petshop.pet.domain.OrderDetail;
-import com.petshop.pet.service.OrderDetailService;
-import com.petshop.pet.service.OrderService;
+import com.petshop.pet.service.impl.OrderDetailService;
+import com.petshop.pet.service.impl.OrderService;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -56,13 +56,15 @@ public class OrderAdminController {
 
         Order order = orderService.getOrderById(id);
         List<OrderDetail> orderDetails = orderDetailService.getAllByOrder(order);
-        double totaPrice = 0;
+        double totalPrice = 0;
 
         for(OrderDetail orderDetail : orderDetails){
-            totaPrice += orderDetail.getPrice() * orderDetail.getQuantity();
+            totalPrice += orderDetail.getPrice() * orderDetail.getQuantity();
         }
 
-        model.addAttribute("totalPrice", totaPrice);
+        totalPrice = totalPrice != 0 ? totalPrice : order.getTotalAmount();
+
+        model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("order", order);
 
         return "admin/order/detail";

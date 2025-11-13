@@ -1,4 +1,4 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
 import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.ProductCreateDTO;

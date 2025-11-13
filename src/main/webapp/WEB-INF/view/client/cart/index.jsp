@@ -102,7 +102,8 @@
                                                                 style="width: 100px;">
                                                                 <div class="input-group-btn">
                                                                     <button type="button"
-                                                                        class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                                                        class="btn btn-sm btn-minus rounded-circle bg-light border"
+                                                                        data-slug="${cartDetail.product.slug}">
                                                                         <i class="fa fa-minus"></i>
                                                                     </button>
                                                                 </div>
@@ -112,7 +113,8 @@
                                                                     value="${cartDetail.quantity}" />
                                                                 <div class="input-group-btn">
                                                                     <button type="button"
-                                                                        class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                                                        class="btn btn-sm btn-plus rounded-circle bg-light border"
+                                                                        data-slug="${cartDetail.product.slug}">
                                                                         <i class="fa fa-plus"></i>
                                                                     </button>
                                                                 </div>

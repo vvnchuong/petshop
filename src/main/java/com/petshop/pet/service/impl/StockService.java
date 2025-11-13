@@ -1,10 +1,9 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
-import com.petshop.pet.domain.CartDetail;
+import com.petshop.pet.domain.OrderDetail;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
-import com.petshop.pet.repository.CartDetailRepository;
 import com.petshop.pet.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,18 +18,17 @@ public class StockService {
 
     private final ProductRepository productRepository;
 
-    public StockService(CartDetailRepository cartDetailRepository,
-                        ProductRepository productRepository){
+    public StockService(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
     @Transactional
-    public void reserveStock(List<CartDetail> cartDetails){
-        if(cartDetails == null || cartDetails.isEmpty())
+    public void reserveStock(List<OrderDetail> orderDetails){
+        if (orderDetails == null || orderDetails.isEmpty())
             return;
 
-        List<Long> productIds = cartDetails.stream()
-                .map(cd -> cd.getProduct().getId())
+        List<Long> productIds = orderDetails.stream()
+                .map(od -> od.getProduct().getId())
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -40,14 +38,14 @@ public class StockService {
                 .collect(Collectors.toMap(Product::getId, p -> p));
 
         List<Product> toSave = new ArrayList<>();
-        for(CartDetail cd : cartDetails){
-            Long pid = cd.getProduct().getId();
+        for(OrderDetail od : orderDetails){
+            Long pid = od.getProduct().getId();
             Product p = productById.get(pid);
 
             if(p == null)
                 throw new BusinessException(ErrorCode.STOCK_QUANTITY_INVALID);
 
-            int remaining = p.getStock() - cd.getQuantity();
+            int remaining = p.getStock() - od.getQuantity();
             if(remaining < 0)
                 throw new BusinessException(ErrorCode.STOCK_QUANTITY_INVALID);
 

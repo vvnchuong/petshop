@@ -1,28 +1,22 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
-import com.petshop.pet.domain.PasswordResetToken;
 import com.petshop.pet.domain.Role;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.*;
 import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.UserMapper;
-import com.petshop.pet.repository.PasswordResetTokenRepository;
 import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.UUID;
 
 @Service
 public class UserService {

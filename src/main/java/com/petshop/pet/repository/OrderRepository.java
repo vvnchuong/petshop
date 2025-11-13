@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long>,
         JpaSpecificationExecutor<Order> {
@@ -20,5 +21,7 @@ public interface OrderRepository extends JpaRepository<Order, Long>,
     List<Order> findTop10ByOrderByCreatedAtDesc();
 
     List<Order> findByCreatedAtAfter(Instant createdAt);
+
+    Optional<Order> findByIdAndSessionId(long orderId, String session);
 
 }

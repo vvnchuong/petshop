@@ -2,9 +2,9 @@ package com.petshop.pet.controller.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petshop.pet.service.OrderService;
-import com.petshop.pet.service.ProductService;
-import com.petshop.pet.service.UserService;
+import com.petshop.pet.service.impl.OrderService;
+import com.petshop.pet.service.impl.ProductService;
+import com.petshop.pet.service.impl.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

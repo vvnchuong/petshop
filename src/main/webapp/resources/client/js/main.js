@@ -136,14 +136,16 @@
     }
 
     // Hàm gọi API cập nhật server
-    function saveQuantity(id, quantity) {
-        $.post("/cart/update", { id: id, quantity: quantity })
+    function saveQuantity(id, slug, quantity) {
+        $.post("/cart/update", { id: id, slug:slug, quantity: quantity })
             .done(() => console.log("Đã lưu " + id + " = " + quantity))
             .fail(() => alert("Lỗi lưu số lượng!"));
     }
 
     $(document).ready(function () {
         $('.btn-plus, .btn-minus').on('click', function () {
+            const btn = $(this);
+            const slug = btn.data("slug");
             let input = $(this).closest('.quantity').find('.quantity-input');
             let currentVal = parseInt(input.val()) || 1;
             if ($(this).hasClass('btn-plus')) {
@@ -154,7 +156,7 @@
             updateTotals();
 
             const cartId = $(this).closest('tr').find('input[type=hidden]').val();
-            saveQuantity(cartId, input.val());
+            saveQuantity(cartId, slug, input.val());
         });
 
         $('.quantity-input').on('change', function () {
@@ -164,7 +166,8 @@
             updateTotals();
 
             const cartId = $(this).closest('tr').find('input[type=hidden]').val();
-            saveQuantity(cartId, qty);
+            const slug = $(this).closest('tr').find('.btn-plus, .btn-minus').data("slug");
+            saveQuantity(cartId, slug, qty);
         });
 
         updateTotals();

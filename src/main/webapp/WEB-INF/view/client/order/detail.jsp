@@ -49,7 +49,7 @@
                       <span class="badge bg-danger">${order.status.name}</span>
                     </c:when>
                     <c:otherwise>
-                      <span class="badge bg-secondary">${order.status.name}</span>
+                      <span class="badge bg-danger">${order.status.name}</span>
                     </c:otherwise>
                   </c:choose>
                 </p>
@@ -97,7 +97,15 @@
             </div>
 
             <div class="mt-4">
-              <a href="/orders/history" class="btn btn-secondary">Quay lại lịch sử mua hàng</a>
+              <c:choose>
+                <c:when test="${pageContext.request.userPrincipal != null}">
+                  <a href="/orders/history" class="btn btn-secondary">Quay lại lịch sử mua hàng</a>
+                </c:when>
+                <c:otherwise>
+                  <a href="/" class="btn btn-secondary">Quay lại trang chủ</a>
+                </c:otherwise>
+              </c:choose>
+
             </div>
           </div>
 

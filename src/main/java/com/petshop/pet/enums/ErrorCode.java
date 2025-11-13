@@ -56,6 +56,7 @@ public enum ErrorCode {
     // Payment-related errors
     PAYMENT_FAILED(11000, "Payment failed", HttpStatus.BAD_REQUEST),
     PAYMENT_INVALID_SIGNATURE(11001, "Invalid payment signature", HttpStatus.BAD_REQUEST),
+    PAYMENT_METHOD_NOT_SUPPORTED(11002, "Payment method is not supported", HttpStatus.BAD_REQUEST),
 
     // email error code
 //    EMAIL_SEND_FAILED(9003, "Failed to send email", HttpStatus.INTERNAL_SERVER_ERROR)

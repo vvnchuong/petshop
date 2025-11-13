@@ -1,7 +1,7 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.domain.News;
-import com.petshop.pet.service.NewsService;
+import com.petshop.pet.service.impl.NewsService;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

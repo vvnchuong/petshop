@@ -1,4 +1,4 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
 import com.petshop.pet.domain.Cart;
 import com.petshop.pet.domain.CartDetail;
@@ -58,7 +58,7 @@ public class CartService {
 
             cart.setQuantity(cart.getQuantity() + 1);
         }else{
-            cartDetail.setQuantity(cartDetail.getQuantity() + 1);
+            cartDetail.setQuantity(cartDetail.getQuantity() + quantity);
         }
 
         cartDetailRepository.save(cartDetail);

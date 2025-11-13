@@ -1,4 +1,4 @@
-package com.petshop.pet.service;
+package com.petshop.pet.service.impl;
 
 import com.petshop.pet.domain.Cart;
 import com.petshop.pet.domain.CartDetail;
@@ -53,6 +53,7 @@ public class CartDetailService {
 //                findByCartUserUsernameAndProductId(username, productId);
 //    }
 
+    @Transactional
     public void deleteAllProductInCartByCartId(Cart cart){
         cartDetailRepository.deleteAllByCart(cart);
     }
