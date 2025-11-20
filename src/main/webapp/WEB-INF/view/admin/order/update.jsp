@@ -24,7 +24,7 @@
 
                         <div id="layoutSidenav_content">
                             <main class="container py-4">
-                                <h2 class="mb-4">Cập nhật đơn hàng #${order.id}</h2>
+                                <h2 class="mb-4">Cập nhật đơn hàng #${order.orderCode}</h2>
 
                                 <c:if test="${param.success ne null}">
                                     <div class="alert alert-success">Cập nhật trạng thái thành công!</div>

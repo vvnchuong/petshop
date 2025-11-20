@@ -31,9 +31,10 @@
                             <div id="layoutSidenav_content">
                                 <div class="container">
                                     <div class="container py-4 mt-4">
-                                        <h2 class="mb-4">Chi tiết đơn hàng #${order.id}</h2>
+                                        <h2 class="mb-4">Chi tiết đơn hàng #${order.orderCode}</h2>
                                         <div class="card mb-4">
                                             <div class="card-body">
+                                                <p><strong>Id:</strong> ${order.id}</p>
                                                 <p><strong>Mã đơn hàng:</strong> ${order.orderCode}</p>
                                                 <p><strong>Ngày đặt:</strong> ${DateTimeUtil.formatInstant(order.createdAt)}</p>
                                                 <p>

@@ -117,14 +117,9 @@ public class ProductService {
         return productRepository.findAll(petSpec, page);
     }
 
-
     public Product getProductBySlug(String slug){
         return productRepository.findBySlug(slug)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
-    }
-
-    public long countTotalProducts(){
-        return productRepository.count();
     }
 
     public List<Product> getBestSellingProduct(){

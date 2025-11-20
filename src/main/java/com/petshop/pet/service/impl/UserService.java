@@ -106,17 +106,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public long countTotalUsers(){
-        return userRepository.count();
-    }
-
-    public long countNewUsersToday(){
-        Instant startOfToday = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"))
-                .atStartOfDay(ZoneId.of("Asia/Ho_Chi_Minh"))
-                .toInstant();
-        return userRepository.countByCreatedAtAfter(startOfToday);
-    }
-
     public void registerAccount(RegisterDTO registerDTO) {
 
         validateUniqueUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail());

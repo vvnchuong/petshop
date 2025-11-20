@@ -39,7 +39,7 @@
                                         <table class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>Id</th>
+                                                    <th>Mã đơn hàng</th>
                                                     <th>Họ tên khách hàng</th>
                                                     <th>Địa chỉ giao hàng</th>
                                                     <th>Tổng tiền</th>
@@ -50,7 +50,7 @@
                                             <tbody>
                                                 <c:forEach var="order" items="${orders}">
                                                     <tr>
-                                                        <td>${order.id}</td>
+                                                        <td>${order.orderCode}</td>
                                                         <td>${order.receiverName}</td>
                                                         <td>${order.shippingAddress}</td>
                                                         <td>
