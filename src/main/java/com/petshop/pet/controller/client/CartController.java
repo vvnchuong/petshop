@@ -1,22 +1,16 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
-import com.petshop.pet.domain.CartDetail;
-import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.User;
-import com.petshop.pet.service.impl.CartDetailService;
-import com.petshop.pet.service.impl.CartService;
-import com.petshop.pet.service.impl.ProductService;
-import com.petshop.pet.service.impl.UserService;
+import com.petshop.pet.domain.dto.CartDataDTO;
+import com.petshop.pet.service.impl.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -25,20 +19,20 @@ public class CartController {
 
     private final CartService cartService;
 
-    private final ProductService productService;
-
     private final UserService userService;
 
     private final CartDetailService cartDetailService;
 
+    private final CartFacadeService cartFacadeService;
+
     public CartController(CartService cartService,
-                          ProductService productService,
                           UserService userService,
-                          CartDetailService cartDetailService){
+                          CartDetailService cartDetailService,
+                          CartFacadeService cartFacadeService){
         this.cartService = cartService;
-        this.productService = productService;
         this.userService = userService;
         this.cartDetailService = cartDetailService;
+        this.cartFacadeService = cartFacadeService;
     }
 
     @PostMapping("/{productSlug}")
@@ -50,24 +44,19 @@ public class CartController {
 
         Map<String, Object> response = new HashMap<>();
 
-        if (currentUser != null) {
+        if(currentUser != null){
             cartService.addProductToCart(currentUser.getUsername(), slug, quantity);
             User user = userService.getUserByUserName(currentUser.getUsername());
-            int cartQuantity = cartService.getCartQuantity(user);
-            response.put("cartQuantity", cartQuantity);
+            response.put("cartQuantity", cartService.getCartQuantity(user));
         }else{
-            Map<String, Integer> sessionCart = (Map<String, Integer>) session.getAttribute("guestCart");
-            if(sessionCart == null)
-                sessionCart = new HashMap<>();
+            cartFacadeService.addGuestProduct(slug, quantity, session);
+            Map<String, Integer> guestCart = (Map<String, Integer>) session.getAttribute("guestCart");
 
-            sessionCart.put(slug, sessionCart.getOrDefault(slug, 0) + quantity);
-            session.setAttribute("guestCart", sessionCart);
-
-            int totalQuantity = sessionCart.size();
-            response.put("cartQuantity", totalQuantity);
+            response.put("cartQuantity", guestCart != null ? guestCart.size() : 0);
         }
 
         response.put("message", "Added to cart");
+
         return response;
     }
 
@@ -76,32 +65,11 @@ public class CartController {
                               @AuthenticationPrincipal CustomUserDetails currentUser,
                               HttpSession session){
 
-        List<CartDetail> cartDetails;
-        double totalPrice = 0;
+        CartDataDTO cartDataDTO = cartFacadeService.getCart(currentUser, session);
 
-        if(currentUser != null){
-            cartDetails = cartDetailService.getAllProductsInCartByUser(currentUser.getUsername());
-        }else{
-            Map<String, Integer> sessionCart = (Map<String, Integer>) session.getAttribute("guestCart");
-            cartDetails = new ArrayList<>();
-            if(sessionCart != null){
-                for (Map.Entry<String, Integer> entry : sessionCart.entrySet()) {
-                    Product product = productService.getProductBySlug(entry.getKey());
-                    CartDetail temp = new CartDetail();
-                    temp.setProduct(product);
-                    temp.setPrice(product.getPrice());
-                    temp.setQuantity(entry.getValue());
-                    cartDetails.add(temp);
-                }
-            }
-        }
+        model.addAttribute("cartDetails", cartDataDTO.getCartDetails());
+        model.addAttribute("totalPrice", cartDataDTO.getTotal());
 
-        for(CartDetail c : cartDetails){
-            totalPrice += c.getPrice() * c.getQuantity();
-        }
-
-        model.addAttribute("cartDetails", cartDetails);
-        model.addAttribute("totalPrice", totalPrice);
         return "client/cart/index";
     }
 
@@ -112,12 +80,11 @@ public class CartController {
                            @RequestParam("quantity") Integer quantity,
                            @AuthenticationPrincipal CustomUserDetails currentUser,
                            HttpSession session){
+
         if(currentUser != null) {
             cartDetailService.updateQuantity(cardDetailId, quantity);
         }else{
-            Map<String, Integer> sessionCart = (Map<String, Integer>) session.getAttribute("guestCart");
-            sessionCart.put(slug, quantity);
-            session.setAttribute("guestCart", sessionCart);
+            cartFacadeService.updateGuestCart(slug, quantity, session);
         }
 
     }
@@ -131,9 +98,7 @@ public class CartController {
         if(currentUser != null){
             cartDetailService.deleteProductInCartDetail(slug, currentUser.getUsername());
         }else{
-            Map<String, Integer> sessionCart = (Map<String, Integer>) session.getAttribute("guestCart");
-            sessionCart.remove(slug);
-            session.setAttribute("guestCart", sessionCart);
+            cartFacadeService.deleteGuestProduct(slug, session);
         }
     }
 

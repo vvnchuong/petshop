@@ -48,11 +48,6 @@ public class CartDetailService {
         cartDetailRepository.deleteByProductSlug(slug);
     }
 
-//    public void addToCart(String username, Long productId, Integer quantity) {
-//        CartDetail cartDetail = cartDetailRepository.
-//                findByCartUserUsernameAndProductId(username, productId);
-//    }
-
     @Transactional
     public void deleteAllProductInCartByCartId(Cart cart){
         cartDetailRepository.deleteAllByCart(cart);

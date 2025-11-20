@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,5 +68,36 @@ public class CartFacadeService {
         }
         return list;
     }
+
+    public void addGuestProduct(String slug, int quantity, HttpSession session){
+        Map<String, Integer> guestCart = (Map<String, Integer>) session.getAttribute("guestCart");
+
+        if (guestCart == null)
+            guestCart = new HashMap<>();
+
+        guestCart.put(slug, guestCart.getOrDefault(slug, 0) + quantity);
+        session.setAttribute("guestCart", guestCart);
+    }
+
+    public void updateGuestCart(String slug, int quantity, HttpSession session){
+        Map<String, Integer> guestCart =
+                (Map<String, Integer>) session.getAttribute("guestCart");
+        if(guestCart == null)
+            return;
+
+        guestCart.put(slug, quantity);
+        session.setAttribute("guestCart", guestCart);
+    }
+
+    public void deleteGuestProduct(String slug, HttpSession session){
+        Map<String, Integer> guestCart =
+                (Map<String, Integer>) session.getAttribute("guestCart");
+
+        if (guestCart != null){
+            guestCart.remove(slug);
+            session.setAttribute("guestCart", guestCart);
+        }
+    }
+
 
 }
