@@ -7,6 +7,7 @@ import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.BrandMapper;
 import com.petshop.pet.repository.BrandRepository;
+import com.petshop.pet.service.BrandService;
 import com.petshop.pet.utils.SlugUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,32 +17,36 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BrandService {
+public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
 
     private final BrandMapper brandMapper;
 
-    public BrandService(BrandRepository brandRepository,
-                        BrandMapper brandMapper){
+    public BrandServiceImpl(BrandRepository brandRepository,
+                            BrandMapper brandMapper){
         this.brandRepository = brandRepository;
         this.brandMapper = brandMapper;
     }
 
+    @Override
     public Page<Brand> getAllBrands(Specification<Brand> spec,
                                     Pageable page){
         return brandRepository.findAll(spec, page);
     }
 
+    @Override
     public List<Brand> getListBrands(){
         return brandRepository.findAll();
     }
 
+    @Override
     public Brand getBrandById(long brandId){
         return brandRepository.findById(brandId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BRAND_NOT_FOUND));
     }
 
+    @Override
     public void createBrand(BrandCreateDTO brandCreateDTO){
         Brand brand = brandMapper.toBrand(brandCreateDTO);
 
@@ -55,6 +60,7 @@ public class BrandService {
         brandRepository.save(brand);
     }
 
+    @Override
     public void updateBrand(long brandId, BrandUpdateDTO brandUpdateDTO){
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BRAND_NOT_FOUND));
@@ -70,6 +76,7 @@ public class BrandService {
         brandRepository.save(brand);
     }
 
+    @Override
     public void deleteBrand(long brandId){
         brandRepository.findById(brandId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BRAND_NOT_FOUND));

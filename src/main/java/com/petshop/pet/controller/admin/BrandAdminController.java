@@ -3,7 +3,7 @@ package com.petshop.pet.controller.admin;
 import com.petshop.pet.domain.Brand;
 import com.petshop.pet.domain.dto.BrandCreateDTO;
 import com.petshop.pet.domain.dto.BrandUpdateDTO;
-import com.petshop.pet.service.impl.BrandService;
+import com.petshop.pet.service.BrandService;
 import com.petshop.pet.service.impl.UploadService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
