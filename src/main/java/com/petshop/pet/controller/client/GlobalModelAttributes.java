@@ -2,8 +2,8 @@ package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.service.UserService;
 import com.petshop.pet.service.impl.CartService;
-import com.petshop.pet.service.impl.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;

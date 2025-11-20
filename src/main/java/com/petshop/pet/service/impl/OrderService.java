@@ -8,6 +8,7 @@ import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.enums.Status;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.OrderRepository;
+import com.petshop.pet.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

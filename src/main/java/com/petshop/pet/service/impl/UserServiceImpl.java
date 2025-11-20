@@ -8,18 +8,15 @@ import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.UserMapper;
 import com.petshop.pet.repository.RoleRepository;
 import com.petshop.pet.repository.UserRepository;
+import com.petshop.pet.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -29,26 +26,29 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder,
-                       UserMapper userMapper){
+    public UserServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           UserMapper userMapper){
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
     }
 
+    @Override
     public Page<User> getAllUsers(Specification<User> spec,
                                   Pageable page){
         return userRepository.findAll(spec, page);
     }
 
+    @Override
     public User getUserById(long id){
         return userRepository.findById(id).
                 orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Override
     public void createUser(AdminCreateUserDTO userDTO){
 
         validateUniqueUsernameAndEmail(userDTO.getUsername(), userDTO.getEmail());
@@ -60,6 +60,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
     public void updateUserByAdmin(long id, AdminUpdateDTO adminUpdateDTO){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -69,21 +70,25 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
     public void deleteUser(long id){
         userRepository.deleteById(id);
     }
 
+    @Override
     public User getUserByUserName(String username){
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
+    @Override
     public UserUpdateDTO getUserUpdateDTO(String username){
         User user = getUserByUserName(username);
 
         return userMapper.toUserDTO(user);
     }
 
+    @Override
     public void updateUserByUser(String username, UserUpdateDTO userUpdate){
         User user = getUserByUserName(username);
 
@@ -92,10 +97,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void changePasswordByUser(ChangePasswordDTO passwordDTO, String username) {
+    @Override
+    public void changePasswordByUser(ChangePasswordDTO passwordDTO, String username){
         User user = getUserByUserName(username);
 
-        if (!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword()))
+        if(!passwordEncoder.matches(passwordDTO.getOldPassword(), user.getPassword()))
             throw new BusinessException(ErrorCode.OLD_PASSWORD_INCORRECT);
 
         if(!passwordDTO.getNewPassword().equals(passwordDTO.getConfirmPassword()))
@@ -106,7 +112,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void registerAccount(RegisterDTO registerDTO) {
+    @Override
+    public void registerAccount(RegisterDTO registerDTO){
 
         validateUniqueUsernameAndEmail(registerDTO.getUsername(), registerDTO.getEmail());
 
