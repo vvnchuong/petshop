@@ -121,7 +121,7 @@
           </div>
 
           <div class="mt-4 text-center">
-            <a href="/order/history" class="btn btn-outline-primary">Xem lịch sử mua hàng</a>
+            <a href="/orders/history" class="btn btn-outline-primary">Xem lịch sử mua hàng</a>
           </div>
         </div>
 

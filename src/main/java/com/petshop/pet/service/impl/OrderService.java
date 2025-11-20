@@ -3,10 +3,12 @@ package com.petshop.pet.service.impl;
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.*;
 import com.petshop.pet.domain.dto.CheckoutRequestDTO;
+import com.petshop.pet.domain.dto.OrderDetailViewDTO;
 import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.enums.Status;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.OrderRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -174,12 +174,12 @@ public class OrderService {
                 List.of(Status.PENDING, Status.SHIPPING, Status.DELIVERED, Status.CANCELLED));
     }
 
-    public Order getOrderByIdAndUser(long orderId, String username){
-        return orderRepository.findByIdAndUserUsername(orderId, username);
+    public Order getOrderByOrderCodeAndUser(String orderCode, String username){
+        return orderRepository.findByOrderCodeAndUserUsername(orderCode, username);
     }
 
-    public Order getOrderByGuess(long orderId, String session){
-        return orderRepository.findByIdAndSessionId(orderId, session)
+    public Order getOrderByGuess(String orderCode, String session){
+        return orderRepository.findByOrderCodeAndSessionId(orderCode, session)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
     }
 
@@ -199,6 +199,28 @@ public class OrderService {
         order.setUpdatedAt(Instant.now());
 
         orderRepository.save(order);
+    }
+
+    public OrderDetailViewDTO getOrderDetail(String orderCode,
+                                             CustomUserDetails currentUser,
+                                             HttpSession session){
+
+        Order order;
+        if(currentUser != null){
+            order = getOrderByOrderCodeAndUser(orderCode, currentUser.getUsername());
+        }else{
+            order = getOrderByGuess(orderCode, session.getId());
+        }
+
+        List<OrderDetail> details = orderDetailService.getAllByOrder(order);
+
+        double total = details.stream()
+                .mapToDouble(d -> d.getPrice() * d.getQuantity())
+                .sum();
+
+        if (total == 0) total = order.getTotalAmount();
+
+        return new OrderDetailViewDTO(order, total);
     }
 
 }

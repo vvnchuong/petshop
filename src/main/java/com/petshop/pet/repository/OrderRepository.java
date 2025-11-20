@@ -17,9 +17,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>,
 
     List<Order> findByUserUsernameAndStatusInOrderByCreatedAtDesc(String username, List<Status> statuses);
 
-    Order findByIdAndUserUsername(long orderId, String username);
+    Order findByOrderCodeAndUserUsername(String orderId, String username);
 
-    Optional<Order> findByIdAndSessionId(long orderId, String session);
+    Optional<Order> findByOrderCodeAndSessionId(String orderId, String session);
 
     @Query(value = """
             SELECT status, COUNT(status) as total
@@ -37,9 +37,9 @@ public interface OrderRepository extends JpaRepository<Order, Long>,
     List<Order> findByStatusAndCreatedAtBetween(Status status, Instant start, Instant end);
 
     @Query(value = """
-        SELECT COALESCE(SUM(total_amount), 0) 
+        SELECT COALESCE(SUM(total_amount), 0)
         FROM orders
-        WHERE status = 'DELIVERED' 
+        WHERE status = 'DELIVERED'
           AND created_at BETWEEN :start AND :end
         """, nativeQuery = true)
     double sumRevenueDeliveredBetween(@Param("start") Instant start, @Param("end") Instant end);

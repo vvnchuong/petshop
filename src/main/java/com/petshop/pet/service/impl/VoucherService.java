@@ -2,6 +2,7 @@ package com.petshop.pet.service.impl;
 
 import com.petshop.pet.domain.Voucher;
 import com.petshop.pet.domain.dto.VoucherDTO;
+import com.petshop.pet.domain.dto.VoucherResultDTO;
 import com.petshop.pet.domain.dto.VoucherUpdateDTO;
 import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
@@ -11,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 public class VoucherService {
@@ -79,6 +82,30 @@ public class VoucherService {
 
         voucher.setUsedCount(voucher.getUsedCount() + 1);
         voucherRepository.save(voucher);
+    }
+
+    public VoucherResultDTO applyVoucher(String code, double total){
+        Voucher v = getVoucherByCode(code);
+
+        if(v == null || !v.isActive())
+            return VoucherResultDTO.error("Voucher không tồn tại");
+
+        if(v.getUsedCount() >= v.getMaxUsage())
+            return VoucherResultDTO.error("Số lượng sử dụng đã đạt giới hạn");
+
+        if(v.getMinOrder() > total)
+            return VoucherResultDTO.error("Giá trị đơn hàng phải lớn hơn " + v.getMinOrder());
+
+        if(v.getEndDate().isBefore(Instant.now()))
+            return VoucherResultDTO.error("Voucher đã hết hạn");
+
+        double discount = v.getDiscountAmount() != null
+                ? v.getDiscountAmount()
+                : total * v.getDiscountPercent() / 100;
+
+        double finalPrice = Math.max(total - discount, 0);
+
+        return VoucherResultDTO.ok(discount, finalPrice);
     }
 
 }

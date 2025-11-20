@@ -2,9 +2,8 @@ package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.*;
-import com.petshop.pet.domain.dto.CheckoutRequestDTO;
+import com.petshop.pet.domain.dto.*;
 
-import com.petshop.pet.domain.dto.PaymentInitiationResponse;
 import com.petshop.pet.service.impl.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,32 +21,20 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    private final OrderDetailService orderDetailService;
+    private final CartFacadeService cartFacadeService;
 
-    private final UserService userService;
+    private final CheckoutService checkoutService;
 
-    private final VoucherService voucherService;
-
-    private final CartDetailService cartDetailService;
-
-    private final ProductService productService;
-
-    private final PaymentProcessingService paymentProcessingService;
+    private final VoucherApplicationService voucherApplicationService;
 
     public OrderController(OrderService orderService,
-                           OrderDetailService orderDetailService,
-                           UserService userService,
-                           VoucherService voucherService,
-                           CartDetailService cartDetailService,
-                           ProductService productService,
-                           PaymentProcessingService paymentProcessingService){
+                           CartFacadeService cartFacadeService,
+                           VoucherApplicationService voucherApplicationService,
+                           CheckoutService checkoutService){
         this.orderService = orderService;
-        this.orderDetailService = orderDetailService;
-        this.userService = userService;
-        this.voucherService = voucherService;
-        this.cartDetailService = cartDetailService;
-        this.productService = productService;
-        this.paymentProcessingService = paymentProcessingService;
+        this.cartFacadeService = cartFacadeService;
+        this.voucherApplicationService = voucherApplicationService;
+        this.checkoutService = checkoutService;
     }
 
     @GetMapping("/checkout")
@@ -56,36 +42,12 @@ public class OrderController {
                                   @AuthenticationPrincipal CustomUserDetails currentUser,
                                   HttpSession session){
 
-        List<CartDetail> cartDetails;
-        double totalPrice = 0;
-        User user = null;
-        if(currentUser != null){
-            cartDetails = cartDetailService.
-                    getAllProductsInCartByUser(currentUser.getUsername());
+        CartDataDTO cartDataDTO = cartFacadeService.getCart(currentUser, session);
 
-            user = userService.getUserByUserName(currentUser.getUsername());
-        }else{
-            Map<String, Integer> guestCart = (Map<String, Integer>) session.getAttribute("guestCart");
-            cartDetails = new ArrayList<>();
-            if (guestCart != null) {
-                for (Map.Entry<String, Integer> entry : guestCart.entrySet()) {
-                    Product product = productService.getProductBySlug(entry.getKey());
-                    CartDetail temp = new CartDetail();
-                    temp.setProduct(product);
-                    temp.setPrice(product.getPrice());
-                    temp.setQuantity(entry.getValue());
-                    cartDetails.add(temp);
-                }
-            }
-        }
+        model.addAttribute("cartDetails", cartDataDTO.getCartDetails());
+        model.addAttribute("totalPrice", cartDataDTO.getTotal());
+        model.addAttribute("currentUser", cartDataDTO.getUser());
 
-        for(CartDetail cartDetail : cartDetails){
-            totalPrice += cartDetail.getQuantity() * cartDetail.getPrice();
-        }
-
-        model.addAttribute("cartDetails", cartDetails);
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("currentUser", user);
         return "client/cart/checkout";
     }
 
@@ -94,27 +56,20 @@ public class OrderController {
                              @AuthenticationPrincipal CustomUserDetails currentUser,
                              HttpSession session){
 
-        Map<String, Integer> guestCart = (Map<String, Integer>) session.getAttribute("guestCart");
-        String sessionId = session.getId();
+        OrderCreationResultDTO orderCreationResultDTO = checkoutService
+                .createOrderAndInitPayment(checkoutRequestDTO, currentUser, session);
 
-        Order order = orderService.createOrder(checkoutRequestDTO, currentUser, guestCart, sessionId);
+        session.setAttribute("orderCode", orderCreationResultDTO.getOrderCode());
 
-        if(currentUser == null)
-            session.removeAttribute("guestCart");
-
-        PaymentInitiationResponse paymentResponse = paymentProcessingService.initiatePayment(order);
-
-        session.setAttribute("orderId", order.getId());
-
-        return "redirect:" + paymentResponse.getRedirectUrl();
+        return "redirect:" + orderCreationResultDTO.getRedirectUrl();
     }
 
     @GetMapping("/thanks")
     public String getThanksPage(HttpSession session, Model model){
-        Long orderId = (Long) session.getAttribute("orderId");
-        model.addAttribute("orderId", orderId);
+        String orderCode = (String) session.getAttribute("orderCode");
+        model.addAttribute("orderCode", orderCode);
 
-        session.removeAttribute("orderId");
+        session.removeAttribute("orderCode");
         return "client/cart/thanks";
     }
 
@@ -128,29 +83,18 @@ public class OrderController {
         return "client/order/index";
     }
 
-    @GetMapping("/orders/detail/{id}")
+    @GetMapping("/orders/detail/{orderCode}")
     public String getOrderDetailPage(Model model,
-                                     @PathVariable("id") long orderId,
+                                     @PathVariable("orderCode") String orderCode,
                                      @AuthenticationPrincipal CustomUserDetails currentUser,
                                      HttpSession session){
 
-        Order order;
-        if(currentUser != null){
-            order = orderService.getOrderByIdAndUser(orderId, currentUser.getUsername());
-        }else{
-            order = orderService.getOrderByGuess(orderId, session.getId());
-        }
+        OrderDetailViewDTO orderDetailViewDTO = orderService
+                .getOrderDetail(orderCode, currentUser, session);
 
-        List<OrderDetail> orderDetails = orderDetailService.getAllByOrder(order);
-        double totalPrice = 0;
-        for(OrderDetail orderDetail : orderDetails){
-            totalPrice += orderDetail.getPrice() * orderDetail.getQuantity();
-        }
+        model.addAttribute("totalPrice", orderDetailViewDTO.getTotalPrice());
+        model.addAttribute("order", orderDetailViewDTO.getOrder());
 
-        totalPrice = totalPrice != 0 ? totalPrice : order.getTotalAmount();
-
-        model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("order", order);
         return "client/order/detail";
     }
 
@@ -160,57 +104,12 @@ public class OrderController {
             @AuthenticationPrincipal CustomUserDetails currentUser,
             HttpSession session) {
 
-        List<CartDetail> cartDetails;
+        VoucherResultDTO result = voucherApplicationService.applyVoucher(code, currentUser, session);
 
-        if(currentUser != null){
-            cartDetails = cartDetailService.getAllProductsInCartByUser(currentUser.getUsername());
-
-        }else{
-            Map<String, Integer> guestCart = (Map<String, Integer>) session.getAttribute("guestCart");
-            cartDetails = new ArrayList<>();
-            if (guestCart != null) {
-                for (Map.Entry<String, Integer> entry : guestCart.entrySet()) {
-                    Product product = productService.getProductBySlug(entry.getKey());
-                    CartDetail temp = new CartDetail();
-                    temp.setProduct(product);
-                    temp.setPrice(product.getPrice());
-                    temp.setQuantity(entry.getValue());
-                    cartDetails.add(temp);
-                }
-            }
-        }
-
-        double total = cartDetails.stream()
-                .mapToDouble(cd -> cd.getQuantity() * cd.getPrice()).sum();
-
-        Voucher voucher = voucherService.getVoucherByCode(code);
-        if(voucher == null){
-            return ResponseEntity.badRequest().body(Map.of("error", "Voucher không tồn tại"));
-        }else if(!voucher.isActive()){
-            return ResponseEntity.badRequest().body(Map.of("error", "Voucher không tồn tại"));
-        }else if(voucher.getUsedCount() >= voucher.getMaxUsage()){
-            return ResponseEntity.badRequest().body(Map.of("error", "Số lượng sử dụng đã đạt giới hạn"));
-        }else if(voucher.getMinOrder() > total){
-            return ResponseEntity.badRequest().body(Map.of("error", "Giá trị đơn hàng phải lơn hơn "+
-                    voucher.getMinOrder()));
-        }else if(voucher.getEndDate().isBefore(Instant.now())){
-            return ResponseEntity.badRequest().body(Map.of("error", "Voucher đã hết hạn"));
-        }
-
-        double discount;
-        if (voucher.getDiscountAmount() != null) {
-            discount = voucher.getDiscountAmount();
-        } else {
-            discount = total * voucher.getDiscountPercent() * 0.01;
-        }
-
-        double finalPrice = total - discount;
-        if (finalPrice < 0) finalPrice = 0;
-
-        return ResponseEntity.ok(Map.of(
-                "discount", discount,
-                "finalPrice", finalPrice
-        ));
+        return result.isSuccess()
+                ? ResponseEntity.ok(Map.of("discount", result.getDiscount(),
+                "finalPrice", result.getFinalPrice()))
+                : ResponseEntity.badRequest().body(Map.of("error", result.getMessage()));
     }
 
 }
