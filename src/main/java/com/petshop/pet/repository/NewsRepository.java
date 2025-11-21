@@ -16,4 +16,6 @@ public interface NewsRepository extends JpaRepository<News, Long>,
 
     List<News> findTop3ByOrderByCreatedAtDesc();
 
+    List<News> findTop6ByOrderByCreatedAtDesc();
+
 }

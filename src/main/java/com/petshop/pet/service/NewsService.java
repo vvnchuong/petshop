@@ -27,4 +27,6 @@ public interface NewsService {
 
     List<News> getLatestNewsExcept();
 
+    List<News> getFeaturedNews();
+
 }

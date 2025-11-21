@@ -137,7 +137,7 @@
 
     // Hàm gọi API cập nhật server
     function saveQuantity(id, slug, quantity) {
-        $.post("/cart/update", { id: id, slug:slug, quantity: quantity })
+        $.post("/cart/update", { id: id, slug: slug, quantity: quantity })
             .done(() => console.log("Đã lưu " + id + " = " + quantity))
             .fail(() => alert("Lỗi lưu số lượng!"));
     }

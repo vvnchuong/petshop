@@ -105,4 +105,9 @@ public class NewsServiceImpl implements NewsService {
          return newsRepository.findTop3ByOrderByCreatedAtDesc();
     }
 
+    @Override
+    public List<News> getFeaturedNews() {
+        return newsRepository.findTop6ByOrderByCreatedAtDesc();
+    }
+
 }
