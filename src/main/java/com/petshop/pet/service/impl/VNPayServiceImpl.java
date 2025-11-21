@@ -1,4 +1,4 @@
-package com.petshop.pet.service.impl; // Đổi package
+package com.petshop.pet.service.impl;
 
 import com.petshop.pet.config.VNPayConfig;
 import com.petshop.pet.domain.Order;
@@ -13,11 +13,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class VNPayService implements PaymentService {
+public class VNPayServiceImpl implements PaymentService {
 
     private final OrderService orderService;
 
-    public VNPayService(OrderService orderService){
+    public VNPayServiceImpl(OrderService orderService){
         this.orderService = orderService;;
     }
 

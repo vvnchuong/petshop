@@ -3,6 +3,7 @@ package com.petshop.pet.service.impl;
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.dto.CartDataDTO;
 import com.petshop.pet.domain.dto.VoucherResultDTO;
+import com.petshop.pet.service.VoucherService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 

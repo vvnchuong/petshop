@@ -2,7 +2,7 @@ package com.petshop.pet.controller.admin;
 
 import com.petshop.pet.domain.Order;
 import com.petshop.pet.domain.OrderDetail;
-import com.petshop.pet.service.impl.OrderDetailService;
+import com.petshop.pet.service.OrderDetailService;
 import com.petshop.pet.service.impl.OrderService;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;

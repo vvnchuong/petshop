@@ -3,6 +3,7 @@ package com.petshop.pet.controller.client;
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.domain.dto.CartDataDTO;
+import com.petshop.pet.service.CartDetailService;
 import com.petshop.pet.service.UserService;
 import com.petshop.pet.service.impl.*;
 import jakarta.servlet.http.HttpSession;
@@ -18,7 +19,7 @@ import java.util.Map;
 @RequestMapping("/cart")
 public class CartController {
 
-    private final CartService cartService;
+    private final CartServiceImpl cartService;
 
     private final UserService userService;
 
@@ -26,7 +27,7 @@ public class CartController {
 
     private final CartFacadeService cartFacadeService;
 
-    public CartController(CartService cartService,
+    public CartController(CartServiceImpl cartService,
                           UserService userService,
                           CartDetailService cartDetailService,
                           CartFacadeService cartFacadeService){

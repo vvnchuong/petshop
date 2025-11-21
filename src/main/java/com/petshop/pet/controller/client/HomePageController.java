@@ -1,7 +1,7 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.domain.Product;
-import com.petshop.pet.service.impl.ProductService;
+import com.petshop.pet.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

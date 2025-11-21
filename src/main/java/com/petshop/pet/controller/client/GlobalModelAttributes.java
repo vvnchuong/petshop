@@ -3,7 +3,7 @@ package com.petshop.pet.controller.client;
 import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.User;
 import com.petshop.pet.service.UserService;
-import com.petshop.pet.service.impl.CartService;
+import com.petshop.pet.service.impl.CartServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,11 +15,11 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalModelAttributes {
 
-    private final CartService cartService;
+    private final CartServiceImpl cartService;
 
     private final UserService userService;
 
-    public GlobalModelAttributes(CartService cartService,
+    public GlobalModelAttributes(CartServiceImpl cartService,
                                  UserService userService){
         this.cartService = cartService;
         this.userService = userService;

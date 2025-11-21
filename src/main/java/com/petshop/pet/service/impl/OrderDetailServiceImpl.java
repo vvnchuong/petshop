@@ -4,21 +4,22 @@ import com.petshop.pet.domain.CartDetail;
 import com.petshop.pet.domain.Order;
 import com.petshop.pet.domain.OrderDetail;
 import com.petshop.pet.repository.OrderDetailRepository;
+import com.petshop.pet.service.OrderDetailService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class OrderDetailService {
+public class OrderDetailServiceImpl implements OrderDetailService {
 
     private final OrderDetailRepository orderDetailRepository;
 
-    public OrderDetailService(OrderDetailRepository orderDetailRepository){
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository){
         this.orderDetailRepository = orderDetailRepository;
     }
 
+    @Override
     public void saveOrderDetails(Order order, List<CartDetail> cartDetails){
         List<OrderDetail> orderDetails = new ArrayList<>();
 
@@ -34,6 +35,7 @@ public class OrderDetailService {
         orderDetailRepository.saveAll(orderDetails);
     }
 
+    @Override
     public List<OrderDetail> getAllByOrder(Order order){
         return orderDetailRepository.findAllByOrder(order);
     }

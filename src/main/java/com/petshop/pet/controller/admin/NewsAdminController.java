@@ -4,7 +4,7 @@ import com.petshop.pet.config.CustomUserDetails;
 import com.petshop.pet.domain.News;
 import com.petshop.pet.domain.dto.NewsCreateDTO;
 import com.petshop.pet.domain.dto.NewsUpdateDTO;
-import com.petshop.pet.service.impl.NewsService;
+import com.petshop.pet.service.NewsService;
 import com.petshop.pet.service.impl.UploadService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;

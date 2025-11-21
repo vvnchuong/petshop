@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class CODService implements PaymentService {
+class CODServiceImpl implements PaymentService {
 
     private final OrderService orderService;
 
-    public CODService(OrderService orderService){
+    public CODServiceImpl(OrderService orderService){
         this.orderService = orderService;
     }
 

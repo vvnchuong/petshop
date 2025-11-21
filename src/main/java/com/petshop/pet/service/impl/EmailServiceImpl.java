@@ -1,18 +1,20 @@
 package com.petshop.pet.service.impl;
 
+import com.petshop.pet.service.EmailService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
 
-    public EmailService(JavaMailSender mailSender){
+    public EmailServiceImpl(JavaMailSender mailSender){
         this.mailSender = mailSender;
     }
 
+    @Override
     public void sendSimpleMessage(String to, String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

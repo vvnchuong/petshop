@@ -10,10 +10,11 @@ import com.petshop.pet.repository.CartDetailRepository;
 import com.petshop.pet.repository.CartRepository;
 import com.petshop.pet.repository.ProductRepository;
 import com.petshop.pet.repository.UserRepository;
+import com.petshop.pet.service.CartService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CartService {
+public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
 
@@ -23,17 +24,18 @@ public class CartService {
 
     private final UserRepository userRepository;
 
-    public CartService(CartRepository cartRepository,
-                       CartDetailRepository cartDetailRepository,
-                       ProductRepository productRepository,
-                       UserRepository userRepository){
+    public CartServiceImpl(CartRepository cartRepository,
+                           CartDetailRepository cartDetailRepository,
+                           ProductRepository productRepository,
+                           UserRepository userRepository){
         this.cartRepository = cartRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
 
-    public void addProductToCart(String username, String productSlug, Integer quantity) {
+    @Override
+    public void addProductToCart(String username, String productSlug, Integer quantity){
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
@@ -65,11 +67,13 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    @Override
     public int getCartQuantity(User user){
         Cart cart = cartRepository.findByUser(user);
         return cart != null ? cart.getQuantity() : 0;
     }
 
+    @Override
     public void resetCart(User user){
         Cart cart = cartRepository.findByUser(user);
         cart.setQuantity(0);

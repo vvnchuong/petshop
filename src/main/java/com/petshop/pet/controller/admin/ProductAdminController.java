@@ -5,7 +5,7 @@ import com.petshop.pet.domain.Product;
 import com.petshop.pet.domain.dto.ProductCreateDTO;
 import com.petshop.pet.domain.dto.ProductUpdateDTO;
 import com.petshop.pet.service.BrandService;
-import com.petshop.pet.service.impl.ProductService;
+import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.impl.UploadService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;

@@ -6,6 +6,7 @@ import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.PasswordResetTokenRepository;
 import com.petshop.pet.repository.UserRepository;
+import com.petshop.pet.service.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

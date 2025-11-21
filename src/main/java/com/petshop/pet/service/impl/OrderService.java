@@ -8,7 +8,7 @@ import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.enums.Status;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.repository.OrderRepository;
-import com.petshop.pet.service.UserService;
+import com.petshop.pet.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +34,7 @@ public class OrderService {
 
     private final VoucherService voucherService;
 
-    private final CartService cartService;
+    private final CartServiceImpl cartService;
 
     private final StockService stockService;
 
@@ -48,7 +48,7 @@ public class OrderService {
                         CartDetailService cartDetailService,
                         UserService userService,
                         VoucherService voucherService,
-                        CartService cartService,
+                        CartServiceImpl cartService,
                         StockService stockService,
                         PricingService pricingService,
                         OrderDetailService orderDetailService,
@@ -109,10 +109,10 @@ public class OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
-        if (order.getStatus() != Status.PENDING)
+        if(order.getStatus() != Status.PENDING)
             return;
 
-        if (paymentFields != null) {
+        if(paymentFields != null){
             String responseCode = paymentFields.get("vnp_ResponseCode");
             String transactionNo = paymentFields.get("vnp_TransactionNo");
             order.setResponseCode(responseCode);

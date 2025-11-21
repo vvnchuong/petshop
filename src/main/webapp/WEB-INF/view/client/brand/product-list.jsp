@@ -113,8 +113,7 @@
 
                               <li class="mt-3">
                                 <div class="d-flex justify-content-between fruite-name">
-                                  <a href="#">Khuyến mãi</a>
-                                  <span>(8)</span>
+                                  
                                 </div>
                               </li>
                             </ul>
@@ -282,7 +281,7 @@
               $('#rangeInput').on('change', function () {
                 const maxPrice = $(this).val() * 1000;
 
-                let url = "/" + brandSlug;
+                let url = "/brands/" + brandSlug;
   
                 if (maxPrice > 0) {
                   url += "?maxPrice=" + maxPrice + "&sort=" + sort + "&size=" + size;
@@ -326,7 +325,6 @@
 
           <script>
             const brandSlug = "${brandSlug}";
-            const subSlug = "${subcategorySlug}";
             const sort = "${currentSort}";
             const size = 12;
             let typingTimer;
@@ -336,10 +334,7 @@
               const keyword = $(this).val();
 
               typingTimer = setTimeout(() => {
-                let url = "/" + petSlug;
-                if (subSlug) {
-                  url += "/" + subSlug;
-                }
+                let url = "/brands/" + brandSlug;
 
                 if (keyword.trim() !== "") {
                   url += "?keyword=" + encodeURIComponent(keyword)

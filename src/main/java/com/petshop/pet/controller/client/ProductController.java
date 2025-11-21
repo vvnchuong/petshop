@@ -3,9 +3,9 @@ package com.petshop.pet.controller.client;
 import com.petshop.pet.domain.Category;
 import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
-import com.petshop.pet.service.impl.CategoryService;
+import com.petshop.pet.service.CategoryService;
+import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.impl.PetTypeService;
-import com.petshop.pet.service.impl.ProductService;
 import com.petshop.pet.utils.PageableUtil;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
@@ -55,7 +55,7 @@ public class ProductController {
         Page<Product> petProducts;
         if(keyword != null && !keyword.isBlank()){
             petProducts = productService.searchPetProductsByPet(pet, keyword, maxPrice, pageable);
-        }else {
+        }else{
             petProducts = productService.getAllPetProducts(pet, spec, pageable, maxPrice);
         }
 
@@ -95,7 +95,6 @@ public class ProductController {
             subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable, maxPrice);
         }
 
-
         model.addAttribute("products", subProducts.getContent());
         model.addAttribute("currentPage", subProducts.getNumber());
         model.addAttribute("totalPages", subProducts.getTotalPages());
@@ -125,11 +124,18 @@ public class ProductController {
                                          @RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "12") int size,
                                          @RequestParam(defaultValue = "default") String sort,
-                                         @RequestParam(required = false) Double maxPrice){
+                                         @RequestParam(required = false) Double maxPrice,
+                                         @RequestParam(required = false) String keyword){
 
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
-        Page<Product> brandProducts = productService.getAllProductsByBrand(spec, pageable, slug);
+        Page<Product> brandProducts;
+
+        if(keyword != null && !keyword.isBlank()){
+            brandProducts = productService.searchPetProductByBrand(slug, keyword, pageable, maxPrice);
+        }else{
+            brandProducts = productService.getAllProductsByBrand(spec, pageable, slug, maxPrice);
+        }
 
         model.addAttribute("products", brandProducts.getContent());
         model.addAttribute("currentPage", brandProducts.getNumber());
@@ -138,6 +144,7 @@ public class ProductController {
         model.addAttribute("brandSlug", slug);
         model.addAttribute("currentSort", sort);
         model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("brandSlug", slug);
 
         return "client/brand/product-list";
     }

@@ -8,6 +8,7 @@ import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.VoucherMapper;
 import com.petshop.pet.repository.VoucherRepository;
+import com.petshop.pet.service.VoucherService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,28 +17,31 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 
 @Service
-public class VoucherService {
+public class VoucherServiceImpl implements VoucherService {
 
     private final VoucherRepository voucherRepository;
 
     private final VoucherMapper voucherMapper;
 
-    public VoucherService(VoucherRepository voucherRepository,
-                          VoucherMapper voucherMapper){
+    public VoucherServiceImpl(VoucherRepository voucherRepository,
+                              VoucherMapper voucherMapper){
         this.voucherRepository = voucherRepository;
         this.voucherMapper = voucherMapper;
     }
 
+    @Override
     public Page<Voucher> getAllVouchers(Specification<Voucher> spec,
                                         Pageable page){
         return voucherRepository.findAll(spec, page);
     }
 
+    @Override
     public Voucher getVoucherById(long voucherId){
         return voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
     }
 
+    @Override
     public void createVoucher(VoucherDTO voucherDTO){
         if(voucherRepository.findByCode(voucherDTO.getCode()).isPresent()){
             throw new BusinessException(ErrorCode.VOUCHER_ALREADY_EXISTS);
@@ -48,6 +52,7 @@ public class VoucherService {
         }
     }
 
+    @Override
     public void updateVoucher(long voucherId , VoucherUpdateDTO voucherUpdateDTO){
         Voucher voucher = voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
@@ -57,6 +62,7 @@ public class VoucherService {
         voucherRepository.save(voucher);
     }
 
+    @Override
     public void deleteVoucher(long voucherId){
         voucherRepository.findById(voucherId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
@@ -64,11 +70,13 @@ public class VoucherService {
         voucherRepository.deleteById(voucherId);
     }
 
+    @Override
     public Voucher getVoucherByCode(String code){
         return voucherRepository.findByCode(code)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOUCHER_NOT_FOUND));
     }
 
+    @Override
     public Voucher checkVoucher(String code){
         if(code == null || code.isEmpty())
             return null;
@@ -76,6 +84,7 @@ public class VoucherService {
         return getVoucherByCode(code);
     }
 
+    @Override
     public void increaseUsedCount(Voucher voucher){
         if(voucher == null)
             return;
@@ -84,6 +93,7 @@ public class VoucherService {
         voucherRepository.save(voucher);
     }
 
+    @Override
     public VoucherResultDTO applyVoucher(String code, double total){
         Voucher v = getVoucherByCode(code);
 

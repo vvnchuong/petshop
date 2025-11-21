@@ -8,6 +8,7 @@ import com.petshop.pet.enums.ErrorCode;
 import com.petshop.pet.exception.BusinessException;
 import com.petshop.pet.mapper.NewsMapper;
 import com.petshop.pet.repository.NewsRepository;
+import com.petshop.pet.service.NewsService;
 import com.petshop.pet.service.UserService;
 import com.petshop.pet.utils.SlugUtil;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class NewsService {
+public class NewsServiceImpl implements NewsService {
 
     private final NewsRepository newsRepository;
 
@@ -28,9 +29,9 @@ public class NewsService {
 
     private final NewsMapper newMapper;
 
-    public NewsService(NewsRepository newRepository,
-                       UserService userService,
-                       NewsMapper newMapper){
+    public NewsServiceImpl(NewsRepository newRepository,
+                           UserService userService,
+                           NewsMapper newMapper){
         this.newsRepository = newRepository;
         this.userService = userService;
         this.newMapper = newMapper;

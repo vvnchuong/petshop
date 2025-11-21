@@ -3,7 +3,7 @@ package com.petshop.pet.controller.admin;
 import com.petshop.pet.domain.Voucher;
 import com.petshop.pet.domain.dto.VoucherDTO;
 import com.petshop.pet.domain.dto.VoucherUpdateDTO;
-import com.petshop.pet.service.impl.VoucherService;
+import com.petshop.pet.service.VoucherService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

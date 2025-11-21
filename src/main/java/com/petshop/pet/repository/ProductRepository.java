@@ -1,10 +1,8 @@
 package com.petshop.pet.repository;
 
-import com.petshop.pet.domain.CartDetail;
 import com.petshop.pet.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,10 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
         JpaSpecificationExecutor<Product> {
 
     Optional<Product> findBySlug(String slug);
-
-//    List<Product> findByCartDetails(List<CartDetail> cartDetails);
-
-    List<Product> findByCartDetails_IdIn(List<Long> cartDetailIds);
 
     List<Product> findByIdIn(List<Long> productIds);
 
@@ -67,8 +61,22 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
                                                  @Param("maxPrice") Double maxPrice,
                                                  Pageable pageable);
 
-    boolean existsBySlug(String productSlug);
+    @Query(value = "SELECT p.id, p.name, p.description, p.short_desc, " +
+            "p.price, p.stock, p.image_url, p.created_at, " +
+            "p.updated_at, p.slug, p.subcategory_id, p.brand_id " +
+            "FROM products p " +
+            "JOIN brands b " +
+            "ON p.brand_id = b.id " +
+            "WHERE b.slug = :brandSlug " +
+            "AND (:keyword IS NULL OR LOWER(p.name) " +
+            "LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND (:maxPrice IS NULL OR p.price <= :maxPrice)",
+            nativeQuery = true)
+    Page<Product> searchPetProductByBrand(@Param("brandSlug") String brandSlug,
+                                          @Param("keyword") String keyword,
+                                          @Param("maxPrice") Double maxPrice,
+                                          Pageable pageable);
 
-    Page<Product> findByBrandSlug(Specification<Product> spec, Pageable page, String brandSlug);
+    boolean existsBySlug(String productSlug);
 
 }
