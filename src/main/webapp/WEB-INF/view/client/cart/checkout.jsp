@@ -53,19 +53,45 @@
                     <div class="bg-light rounded p-4">
                       <h3 class="mb-4">Thông tin người nhận</h3>
                       <div class="mb-3">
-                        <label for="fullName" class="form-label">Họ và tên</label>
+                        <label for="fullName" class="form-label">Họ và tên <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="fullName" name="receiverName"
                           value="${currentUser.fullName}" placeholder="Nhập họ tên" required>
                       </div>
                       <div class="mb-3">
-                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <label for="phone" class="form-label">Số điện thoại <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="phone" value="${currentUser.phone}"
                           name="receiverPhone" placeholder="Nhập số điện thoại" required>
                       </div>
+
                       <div class="mb-3">
-                        <label for="address" class="form-label">Địa chỉ giao hàng</label>
-                        <textarea class="form-control" id="address" name="receiverAddress" rows="3"
-                          placeholder="Nhập địa chỉ" required>${currentUser.address}</textarea>
+                        <label class="form-label">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+
+                        <div class="row g-2 mb-2">
+                          <div class="col-md-6 mb-2">
+                            <select class="form-select" id="province" required>
+                              <option>Chọn Tỉnh/Thành</option>
+                            </select>
+                          </div>
+
+                          <div class="col-md-6">
+                            <select class="form-select" id="district" required disabled>
+                              <option>Chọn Quận/Huyện</option>
+                            </select>
+                          </div>
+
+                          <div class="col-md-6">
+                            <select class="form-select" id="ward" required disabled>
+                              <option>Chọn Phường/Xã</option>
+                            </select>
+                          </div>
+
+                          <div class="col-md-6">
+                            <input type="text" class="form-control" id="houseNumber"
+                              placeholder="Số nhà, tên đường, tòa nhà..." required>
+                          </div>
+                        </div>
+
+                        <input type="hidden" id="fullAddress" name="receiverAddress" value="${currentUser.address}">
                       </div>
                     </div>
                   </div>
@@ -172,7 +198,103 @@
           <script src="/client/lib/lightbox/js/lightbox.min.js"></script>
           <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
           <script src="/client/js/main.js"></script>
-          
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+          <script>
+            $(document).ready(function () {
+              $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
+                if (data_tinh.error == 0) {
+                  $.each(data_tinh.data, function (key_tinh, val_tinh) {
+                    $("#province").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
+                  });
+                }
+              });
+
+              $("#province").change(function (e) {
+                var idtinh = $(this).val();
+                $("#district").html('<option value="">Chọn Quận/Huyện</option>').prop('disabled', true);
+                $("#ward").html('<option value="">Chọn Phường/Xã</option>').prop('disabled', true);
+
+                if (idtinh !== "") {
+                  $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm', function (data_quan) {
+                    if (data_quan.error == 0) {
+                      $("#district").prop('disabled', false);
+                      $.each(data_quan.data, function (key_quan, val_quan) {
+                        $("#district").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
+                      });
+                    }
+                  });
+                }
+                updateFullAddress();
+              });
+
+              $("#district").change(function (e) {
+                var idquan = $(this).val();
+                $("#ward").html('<option value="">Chọn Phường/Xã</option>').prop('disabled', true);
+
+                if (idquan !== "") {
+                  $.getJSON('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm', function (data_phuong) {
+                    if (data_phuong.error == 0) {
+                      $("#ward").prop('disabled', false);
+                      $.each(data_phuong.data, function (key_phuong, val_phuong) {
+                        $("#ward").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
+                      });
+                    }
+                  });
+                }
+                updateFullAddress();
+              });
+
+              $("#ward, #houseNumber").change(function () {
+                updateFullAddress();
+              });
+
+              $("#houseNumber").on('input', function () {
+                updateFullAddress();
+              });
+
+              function updateFullAddress() {
+                var provinceText = $("#province option:selected").text();
+                var districtText = $("#district option:selected").text();
+                var wardText = $("#ward option:selected").text();
+                var houseVal = $("#houseNumber").val();
+
+                var addressParts = [];
+
+                if (houseVal && houseVal.trim() !== "") addressParts.push(houseVal);
+                if ($("#ward").val() !== "") addressParts.push(wardText);
+                if ($("#district").val() !== "") addressParts.push(districtText);
+                if ($("#province").val() !== "") addressParts.push(provinceText);
+
+                $("#fullAddress").val(addressParts.join(", "));
+              }
+            });
+          </script>
+          <script>
+            const form = document.querySelector('form');
+            const province = document.getElementById('province');
+            const district = document.getElementById('district');
+            const ward = document.getElementById('ward');
+            const houseNumber = document.getElementById('houseNumber');
+
+            form.addEventListener('submit', function (e) {
+              const houseVal = houseNumber.value.trim();
+              const wardText = $("#ward option:selected").text();
+              const districtText = $("#district option:selected").text();
+              const provinceText = $("#province option:selected").text();
+
+              const addressParts = [];
+              if (houseVal) addressParts.push(houseVal);
+              if ($("#ward").val() !== "") addressParts.push(wardText);
+              if ($("#district").val() !== "") addressParts.push(districtText);
+              if ($("#province").val() !== "") addressParts.push(provinceText);
+
+              const hiddenInput = document.getElementById('fullAddress');
+              if (hiddenInput) {
+                hiddenInput.value = addressParts.join(", ");
+              }
+            });
+          </script>
+
         </body>
 
         </html>
