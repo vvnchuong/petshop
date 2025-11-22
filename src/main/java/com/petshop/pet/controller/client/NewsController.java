@@ -1,7 +1,9 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.domain.News;
+import com.petshop.pet.domain.dto.SendCommentDTO;
 import com.petshop.pet.service.NewsService;
+import com.petshop.pet.service.impl.SendCommentService;
 import com.turkraft.springfilter.boot.Filter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,10 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,8 +22,12 @@ public class NewsController {
 
     private final NewsService newsService;
 
-    public NewsController(NewsService newsService){
+    private final SendCommentService sendCommentService;
+
+    public NewsController(NewsService newsService,
+                          SendCommentService sendCommentService){
         this.newsService = newsService;
+        this.sendCommentService = sendCommentService;
     }
 
     @GetMapping
@@ -58,6 +61,13 @@ public class NewsController {
         model.addAttribute("latestNews", latest3);
 
         return "client/news/detail";
+    }
+
+    @PostMapping("/comment")
+    public String sendComment(@ModelAttribute SendCommentDTO sendCommentDTO){
+        sendCommentService.sendComment(sendCommentDTO);
+
+        return "redirect:/news/" + sendCommentDTO.getNews().getSlug() + "?sent=true";
     }
 
 }
