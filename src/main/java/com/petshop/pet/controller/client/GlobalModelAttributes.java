@@ -1,7 +1,9 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.config.CustomUserDetails;
+import com.petshop.pet.domain.Category;
 import com.petshop.pet.domain.User;
+import com.petshop.pet.service.CategoryService;
 import com.petshop.pet.service.UserService;
 import com.petshop.pet.service.impl.CartServiceImpl;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
@@ -19,10 +22,14 @@ public class GlobalModelAttributes {
 
     private final UserService userService;
 
+    private final CategoryService categoryService;
+
     public GlobalModelAttributes(CartServiceImpl cartService,
-                                 UserService userService){
+                                 UserService userService,
+                                 CategoryService categoryService){
         this.cartService = cartService;
         this.userService = userService;
+        this.categoryService = categoryService;
     }
 
     @ModelAttribute("cartQuantity")
@@ -45,6 +52,11 @@ public class GlobalModelAttributes {
             return userService.getUserByUserName(currentUser.getUsername());
         }
         return null;
+    }
+
+    @ModelAttribute("categories")
+    public List<Category> addCategoriesToModel(){
+        return categoryService.getAllCategories();
     }
 
 }

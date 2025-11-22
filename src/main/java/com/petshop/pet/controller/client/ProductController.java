@@ -1,7 +1,6 @@
 package com.petshop.pet.controller.client;
 
 import com.petshop.pet.domain.Brand;
-import com.petshop.pet.domain.Category;
 import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
 import com.petshop.pet.service.BrandService;
@@ -28,8 +27,6 @@ public class ProductController {
 
     private final PetTypeService petTypeService;
 
-    private final CategoryService categoryService;
-
     private final BrandService brandService;
 
     public ProductController(ProductService productService,
@@ -38,7 +35,6 @@ public class ProductController {
                              BrandService brandService){
         this.productService = productService;
         this.petTypeService = petTypeService;
-        this.categoryService = categoryService;
         this.brandService = brandService;
     }
 
@@ -56,8 +52,6 @@ public class ProductController {
 
         PetType petType = petTypeService.getPetTypeBySlug(pet);
 
-        List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
-
         Page<Product> petProducts;
         if(keyword != null && !keyword.isBlank()){
             petProducts = productService.searchPetProductsByPet(pet, keyword, maxPrice, pageable);
@@ -74,7 +68,6 @@ public class ProductController {
         model.addAttribute("petSlug", pet);
         model.addAttribute("currentSort", sort);
         model.addAttribute("petType", petType);
-        model.addAttribute("categories", categories);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("brands", brands);
 
@@ -83,7 +76,7 @@ public class ProductController {
 
     @GetMapping("/{pet}/{subcategory}")
     public String getSubPetPage(Model model,
-                                @PathVariable("pet") String pet,
+                                @PathVariable("petType") String pet,
                                 @PathVariable("subcategory") String sub,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "12") int size,
@@ -94,8 +87,6 @@ public class ProductController {
         Pageable pageable = PageableUtil.createPageable(page, size, sort);
 
         PetType petType = petTypeService.getPetTypeBySlug(pet);
-
-        List<Category> categories = categoryService.getAllByPetTypeByPetTypeId(petType.getId());
 
         Page<Product> subProducts;
         if(keyword != null && !keyword.isBlank()){
@@ -114,7 +105,6 @@ public class ProductController {
         model.addAttribute("subcategorySlug", sub);
         model.addAttribute("currentSort", sort);
         model.addAttribute("petType", petType);
-        model.addAttribute("categories", categories);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("brands", brands);
 

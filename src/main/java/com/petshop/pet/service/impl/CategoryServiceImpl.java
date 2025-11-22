@@ -17,8 +17,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllByPetTypeByPetTypeId(long petTypeId){
-        return categoryRepository.findDistinctBySubcategoriesPetTypeId(petTypeId);
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
 }

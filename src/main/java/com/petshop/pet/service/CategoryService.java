@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CategoryService {
 
-    List<Category> getAllByPetTypeByPetTypeId(long petTypeId);
+    List<Category> getAllCategories();
 
 }
