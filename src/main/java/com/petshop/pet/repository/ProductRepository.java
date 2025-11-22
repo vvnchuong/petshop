@@ -18,9 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
 
     List<Product> findByIdIn(List<Long> productIds);
 
-    @Query(value = "SELECT p.id, p.name, p.description, p.short_desc, " +
-            "p.price, p.stock, p.image_url, p.created_at, " +
-            "p.updated_at, p.slug, p.subcategory_id, p.brand_id " +
+    @Query(value = "SELECT p.* " +
             "FROM products p " +
             "JOIN subcategories s ON p.subcategory_id = s.id " +
             "WHERE s.pet_type_id = (SELECT pt.id FROM pet_types pt WHERE pt.slug = :petSlug) " +
@@ -38,9 +36,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
                                          @Param("maxPrice") Double maxPrice,
                                          Pageable pageable);
 
-    @Query(value = "SELECT p.id, p.name, p.description, p.short_desc, " +
-            "p.price, p.stock, p.image_url, p.created_at, " +
-            "p.updated_at, p.slug, p.subcategory_id, p.brand_id " +
+    @Query(value = "SELECT p.* " +
             "FROM products p " +
             "JOIN subcategories s ON p.subcategory_id = s.id " +
             "WHERE s.pet_type_id = (SELECT pt.id FROM pet_types pt WHERE pt.slug = :petSlug) " +
@@ -61,9 +57,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
                                                  @Param("maxPrice") Double maxPrice,
                                                  Pageable pageable);
 
-    @Query(value = "SELECT p.id, p.name, p.description, p.short_desc, " +
-            "p.price, p.stock, p.image_url, p.created_at, " +
-            "p.updated_at, p.slug, p.subcategory_id, p.brand_id " +
+    @Query(value = "SELECT p.* " +
             "FROM products p " +
             "JOIN brands b " +
             "ON p.brand_id = b.id " +
@@ -78,5 +72,31 @@ public interface ProductRepository extends JpaRepository<Product, Long>,
                                           Pageable pageable);
 
     boolean existsBySlug(String productSlug);
+
+    @Query(value = "SELECT p.* " +
+            "FROM products p " +
+            "JOIN order_detail od " +
+            "ON p.id = od.product_id " +
+            "GROUP BY p.id " +
+            "ORDER BY SUM(od.quantity) DESC " +
+            "LIMIT 8",
+            nativeQuery = true)
+    List<Product> findBestSellingProducts();
+
+    @Query(value = "SELECT p.* " +
+            "FROM products p " +
+            "JOIN subcategories s " +
+            "ON p.subcategory_id = s.id " +
+            "JOIN categories c " +
+            "ON s.category_id = c.id " +
+            "JOIN order_detail od " +
+            "ON p.id = od.product_id " +
+            "WHERE c.name = :categoryName " +
+            "AND p.id <> :productId " +
+            "GROUP BY p.id " +
+            "ORDER BY SUM(od.quantity) DESC " +
+            "LIMIT 8", nativeQuery = true)
+    List<Product> findRelatedProducts(@Param("categoryName") String categoryName,
+                                      @Param("productId") Long productId);
 
 }

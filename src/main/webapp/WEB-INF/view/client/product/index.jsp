@@ -108,8 +108,24 @@
                                   </div>
                                 </li>
                               </c:forEach>
+                              <li class="mb-2">
+                                <button class="btn btn-toggle d-flex justify-content-between w-100"
+                                  data-bs-toggle="collapse" data-bs-target="#collapse${loop.index}"
+                                  aria-expanded="false">
+                                  Thương hiệu
+                                  <i class="bi bi-chevron-down"></i>
+                                </button>
+                                <div class="collapse mt-1" id="collapse${loop.index}">
+                                  <ul class="list-unstyled ms-3">
+                                    <c:forEach var="brand" items="${brands}">
+                                      <a href="/brands/${brand.slug}" class="d-block py-1">
+                                        ${brand.name}
+                                      </a>
+                                    </c:forEach>
+                                  </ul>
+                                </div>
+                              </li>
                             </ul>
-
                           </div>
                         </div>
                         <div class="col-lg-12">
@@ -122,8 +138,6 @@
                             </output>
                           </div>
                         </div>
-
-
                       </div>
                     </div>
 

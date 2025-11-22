@@ -37,4 +37,6 @@ public interface ProductService {
 
     Page<Product> getAllProductsByBrand(Specification<Product> spec, Pageable pageable, String brandSlug, Double maxPrice);
 
+    List<Product> getRelatedProducts(Product productDetail);
+
 }

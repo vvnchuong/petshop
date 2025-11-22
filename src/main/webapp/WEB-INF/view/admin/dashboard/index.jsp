@@ -309,9 +309,7 @@
           <script>
             Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#292b2c';
-
-            // --- SỬA 6: JavaScript cũng phải gọi từ data ---
-            // Lưu ý: data.dateLabelsJson bản chất đã là chuỗi JSON, nên ta để trong dấu nháy đơn
+            
             const dateLabels = JSON.parse('${data.dateLabelsJson}');
             const revenueValues = JSON.parse('${data.revenueValuesJson}');
 
@@ -364,7 +362,6 @@
               }
             });
 
-            // --- SỬA 7: Chart Status cũng sửa tương tự ---
             const orderStatusLabels = JSON.parse('${data.orderStatusLabelsJson}');
             const orderStatusValues = JSON.parse('${data.orderStatusValuesJson}');
             const ctxBar = document.getElementById("myPieChart");

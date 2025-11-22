@@ -1,8 +1,10 @@
 package com.petshop.pet.controller.client;
 
+import com.petshop.pet.domain.Brand;
 import com.petshop.pet.domain.Category;
 import com.petshop.pet.domain.PetType;
 import com.petshop.pet.domain.Product;
+import com.petshop.pet.service.BrandService;
 import com.petshop.pet.service.CategoryService;
 import com.petshop.pet.service.ProductService;
 import com.petshop.pet.service.impl.PetTypeService;
@@ -28,12 +30,16 @@ public class ProductController {
 
     private final CategoryService categoryService;
 
+    private final BrandService brandService;
+
     public ProductController(ProductService productService,
                              PetTypeService petTypeService,
-                             CategoryService categoryService){
+                             CategoryService categoryService,
+                             BrandService brandService){
         this.productService = productService;
         this.petTypeService = petTypeService;
         this.categoryService = categoryService;
+        this.brandService = brandService;
     }
 
     @GetMapping("/{pet}")
@@ -59,6 +65,8 @@ public class ProductController {
             petProducts = productService.getAllPetProducts(pet, spec, pageable, maxPrice);
         }
 
+        List<Brand> brands = brandService.getListBrands();
+
         model.addAttribute("products", petProducts.getContent());
         model.addAttribute("currentPage", petProducts.getNumber());
         model.addAttribute("totalPages", petProducts.getTotalPages());
@@ -68,6 +76,7 @@ public class ProductController {
         model.addAttribute("petType", petType);
         model.addAttribute("categories", categories);
         model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("brands", brands);
 
         return "client/product/index";
     }
@@ -95,6 +104,8 @@ public class ProductController {
             subProducts = productService.getAllProductsByPetAndSubcategory(pet, sub, pageable, maxPrice);
         }
 
+        List<Brand> brands = brandService.getListBrands();
+
         model.addAttribute("products", subProducts.getContent());
         model.addAttribute("currentPage", subProducts.getNumber());
         model.addAttribute("totalPages", subProducts.getTotalPages());
@@ -105,6 +116,7 @@ public class ProductController {
         model.addAttribute("petType", petType);
         model.addAttribute("categories", categories);
         model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("brands", brands);
 
         return "client/product/index";
     }
@@ -113,7 +125,12 @@ public class ProductController {
     public String getProductDetail(Model model,
                                    @PathVariable("productName") String productName){
         Product productDetail = productService.getProductBySlug(productName);
+
+        List<Product> relatedProducts = productService.getRelatedProducts(productDetail); // temp -> Apriori
+
         model.addAttribute("product", productDetail);
+        model.addAttribute("relatedProducts", relatedProducts);
+
         return "client/product/detail";
     }
 
@@ -137,6 +154,8 @@ public class ProductController {
             brandProducts = productService.getAllProductsByBrand(spec, pageable, slug, maxPrice);
         }
 
+        List<Brand> brands = brandService.getListBrands();
+
         model.addAttribute("products", brandProducts.getContent());
         model.addAttribute("currentPage", brandProducts.getNumber());
         model.addAttribute("totalPages", brandProducts.getTotalPages());
@@ -145,6 +164,7 @@ public class ProductController {
         model.addAttribute("currentSort", sort);
         model.addAttribute("maxPrice", maxPrice);
         model.addAttribute("brandSlug", slug);
+        model.addAttribute("brands", brands);
 
         return "client/brand/product-list";
     }

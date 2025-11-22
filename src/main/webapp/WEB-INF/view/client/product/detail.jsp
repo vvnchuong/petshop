@@ -1,214 +1,311 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-            <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+		<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+			<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-                <!DOCTYPE html>
-                <html lang="en">
+				<!DOCTYPE html>
+				<html lang="en">
 
-                <head>
-                    <meta charset="utf-8">
-                    <title>Chi tiết sản phẩm</title>
-                    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-                    <meta content="" name="keywords">
-                    <meta content="" name="description">
+				<head>
+					<meta charset="utf-8">
+					<title>Chi tiết sản phẩm</title>
+					<meta content="width=device-width, initial-scale=1.0" name="viewport">
+					<meta content="" name="keywords">
+					<meta content="" name="description">
 
-                    <!-- Google Web Fonts -->
-                    <link rel="preconnect" href="https://fonts.googleapis.com">
-                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                    <link
-                        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
-                        rel="stylesheet">
+					<!-- Google Web Fonts -->
+					<link rel="preconnect" href="https://fonts.googleapis.com">
+					<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+					<link
+						href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+						rel="stylesheet">
 
-                    <!-- Icon Font Stylesheet -->
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
-                    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
-                        rel="stylesheet">
+					<!-- Icon Font Stylesheet -->
+					<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+					<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-                    <!-- Libraries Stylesheet -->
-                    <link href="/client/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-                    <link href="/client/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-
-                    <!-- Customized Bootstrap Stylesheet -->
-                    <link href="/client/css/bootstrap.min.css" rel="stylesheet">
-
-                    <!-- Template Stylesheet -->
-                    <link href="/client/css/style.css" rel="stylesheet">
+					<!-- Libraries Stylesheet -->
+					<link href="/client/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+					<link href="/client/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
 
-                </head>
+					<!-- Customized Bootstrap Stylesheet -->
+					<link href="/client/css/bootstrap.min.css" rel="stylesheet">
 
-                <body>
+					<!-- Template Stylesheet -->
+					<link href="/client/css/style.css" rel="stylesheet">
 
-                    <!-- Spinner Start -->
-                    <div id="spinner"
-                        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-                        <div class="spinner-grow text-primary" role="status"></div>
-                    </div>
-                    <!-- Spinner End -->
+					<style>
+						.related-carousel .owl-nav .owl-prev,
+						.related-carousel .owl-nav .owl-next {
+							position: absolute;
+							top: 50%;
+							transform: translateY(-50%);
+							width: 45px;
+							height: 45px;
+							background: #81c408 !important;
+							color: #fff !important;
+							border-radius: 50%;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 20px;
+							transition: all 0.5s ease;
+							opacity: 0;
+							visibility: hidden;
+						}
 
+						.related-carousel:hover .owl-nav .owl-prev,
+						.related-carousel:hover .owl-nav .owl-next {
+							opacity: 1;
+							visibility: visible;
+						}
 
-                    <jsp:include page="../layout/header.jsp" />
+						.related-carousel .owl-nav .owl-prev {
+							left: -40px;
+						}
 
+						.related-carousel:hover .owl-nav .owl-prev {
+							left: -10px;
+						}
 
-                    <!-- Modal Search Start -->
-                    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-fullscreen">
-                            <div class="modal-content rounded-0">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body d-flex align-items-center">
-                                    <div class="input-group w-75 mx-auto d-flex">
-                                        <input type="search" class="form-control p-3" placeholder="keywords"
-                                            aria-describedby="search-icon-1">
-                                        <span id="search-icon-1" class="input-group-text p-3"><i
-                                                class="fa fa-search"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Modal Search End -->
+						.related-carousel .owl-nav .owl-next {
+							right: -40px;
+						}
 
+						.related-carousel:hover .owl-nav .owl-next {
+							right: -10px;
+						}
+						.related-carousel .owl-nav .owl-prev:hover,
+						.related-carousel .owl-nav .owl-next:hover {
+							background: #f59c1a !important;
+						}
+					</style>
 
+				</head>
 
-                    <!-- Single Product Start -->
-                    <div class="container-fluid py-5 mt-5">
-                        <div class="container py-5">
-                            <div class="row g-4 mb-5">
-                                <div>
-                                    <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
-                                            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                                            <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm
-                                            </li>
-                                        </ol>
-                                    </nav>
-                                </div>
+				<body>
 
-                                <div class="row g-4">
-                                    <div class="col-lg-6">
-                                        <div class="border rounded">
-                                            <a href="#">
-                                                <img src="/admin/images/product/${product.imageUrl}"
-                                                    class="img-fluid rounded" alt="Image">
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <h4 class="fw-bold mb-3">${product.name}</h4>
-                                        <p class="mb-3">Thương hiệu: ${product.brand.name}</p>
-                                        <h5 class="fw-bold mb-3">
-                                            <fmt:formatNumber type="number" value="${product.price}" /> đ</p>
-                                        </h5>
-                                        <p class="mb-4">${product.shortDesc}</p>
-                                        <div class="input-group product-detail-quantity mb-5" style="width: 100px;">
-                                            <div class="input-group-btn">
-                                                <button
-                                                    class="btn btn-sm btn-minus-detail rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                            <input type="text" class="form-control form-control-sm text-center border-0"
-                                                value="1">
-                                            <div class="input-group-btn">
-                                                <button
-                                                    class="btn btn-sm btn-plus-detail rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <c:choose>
-                                            <c:when test="${product.stock > 0}">
-                                                <a href="javascript:void(0);" id="addToCartBtn"
-                                                    data-slug="${product.slug}"
-                                                    class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
-                                                    <i class="fa fa-shopping-bag me-2 text-primary"></i>Thêm vào giỏ
-                                                    hàng
-                                                </a>
-                                            </c:when>
-
-                                            <c:otherwise>
-                                                <button class="btn btn-danger rounded-pill px-4 py-2 mb-4" disabled>
-                                                    HẾT HÀNG
-                                                </button>
-                                            </c:otherwise>
-                                        </c:choose>
+					<!-- Spinner Start -->
+					<div id="spinner"
+						class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+						<div class="spinner-grow text-primary" role="status"></div>
+					</div>
+					<!-- Spinner End -->
 
 
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <nav>
-                                            <div class="nav nav-tabs mb-3">
-                                                <button class="nav-link active border-white border-bottom-0"
-                                                    type="button" role="tab" id="nav-about-tab" data-bs-toggle="tab"
-                                                    data-bs-target="#nav-about" aria-controls="nav-about"
-                                                    aria-selected="true">Mô tả</button>
-                                            </div>
-                                        </nav>
-                                        <div class="tab-content mb-5">
-                                            <div class="tab-pane active" id="nav-about" role="tabpanel"
-                                                aria-labelledby="nav-about-tab">
-                                                ${product.description}
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
+					<jsp:include page="../layout/header.jsp" />
 
 
-                            </div>
-
-                        </div>
-                    </div>
-                    <!-- Single Product End -->
-
-
-                    <!-- Footer Start -->
-                    <jsp:include page="../layout/footer.jsp"></jsp:include>
-                    <!-- Footer End -->
-
-                    <!-- Back to Top -->
-                    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-                            class="fa fa-arrow-up"></i></a>
-
-
-                    <!-- JavaScript Libraries -->
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="/client/lib/easing/easing.min.js"></script>
-                    <script src="/client/lib/waypoints/waypoints.min.js"></script>
-                    <script src="/client/lib/lightbox/js/lightbox.min.js"></script>
-                    <script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
-
-                    <!-- Template Javascript -->
-                    <script src="/client/js/main.js"></script>
-
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-    const quantityInput = document.querySelector('.product-detail-quantity input');
-
-    document.querySelector('.btn-plus-detail').addEventListener('click', function () {
-        let val = parseInt(quantityInput.value) || 1;
-        quantityInput.value = val + 1;
-    });
-
-    document.querySelector('.btn-minus-detail').addEventListener('click', function () {
-        let val = parseInt(quantityInput.value) || 1;
-        if (val > 1) quantityInput.value = val - 1;
-    });
-});
-
-                    </script>
+					<!-- Modal Search Start -->
+					<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-fullscreen">
+							<div class="modal-content rounded-0">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body d-flex align-items-center">
+									<div class="input-group w-75 mx-auto d-flex">
+										<input type="search" class="form-control p-3" placeholder="keywords"
+											aria-describedby="search-icon-1">
+										<span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal Search End -->
 
 
-                </body>
 
-                </html>
+					<!-- Single Product Start -->
+					<div class="container-fluid py-5 mt-5">
+						<div class="container py-5">
+							<div class="row g-4 mb-5">
+								<div>
+									<nav aria-label="breadcrumb">
+										<ol class="breadcrumb">
+											<li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+											<li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm
+											</li>
+										</ol>
+									</nav>
+								</div>
+
+								<div class="row g-4">
+									<div class="col-lg-6">
+										<div class="border rounded">
+											<a href="#">
+												<img src="/admin/images/product/${product.imageUrl}" class="img-fluid rounded" alt="Image">
+											</a>
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<h4 class="fw-bold mb-3">${product.name}</h4>
+										<p class="mb-3">Thương hiệu: ${product.brand.name}</p>
+										<h5 class="fw-bold mb-3">
+											<fmt:formatNumber type="number" value="${product.price}" /> đ</p>
+										</h5>
+										<p class="mb-4">${product.shortDesc}</p>
+										<div class="input-group product-detail-quantity mb-5" style="width: 100px;">
+											<div class="input-group-btn">
+												<button class="btn btn-sm btn-minus-detail rounded-circle bg-light border">
+													<i class="fa fa-minus"></i>
+												</button>
+											</div>
+											<input type="text" class="form-control form-control-sm text-center border-0" value="1">
+											<div class="input-group-btn">
+												<button class="btn btn-sm btn-plus-detail rounded-circle bg-light border">
+													<i class="fa fa-plus"></i>
+												</button>
+											</div>
+										</div>
+
+										<c:choose>
+											<c:when test="${product.stock > 0}">
+												<a href="javascript:void(0);" id="addToCartBtn" data-slug="${product.slug}"
+													class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+													<i class="fa fa-shopping-bag me-2 text-primary"></i>Thêm vào giỏ
+													hàng
+												</a>
+											</c:when>
+
+											<c:otherwise>
+												<button class="btn btn-danger rounded-pill px-4 py-2 mb-4" disabled>
+													HẾT HÀNG
+												</button>
+											</c:otherwise>
+										</c:choose>
+
+
+									</div>
+									<div class="col-lg-12">
+										<nav>
+											<div class="nav nav-tabs mb-3">
+												<button class="nav-link active border-white border-bottom-0" type="button" role="tab"
+													id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about" aria-controls="nav-about"
+													aria-selected="true">Mô tả</button>
+											</div>
+										</nav>
+										<div class="tab-content mb-5">
+											<div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+												${product.description}
+											</div>
+										</div>
+									</div>
+
+									<div class="container-fluid py-5">
+										<h3 class="fw-bold mb-4">Sản phẩm liên quan</h3>
+										<div class="owl-carousel owl-theme related-carousel justify-content-center">
+											<c:forEach var="item" items="${relatedProducts}">
+												<div class="border border-primary rounded position-relative fruite-item">
+													<div class="fruite-img">
+														<img src="/admin/images/product/${item.imageUrl}" class="img-fluid w-100 rounded-top"
+															alt="${item.name}" style="height: 200px; object-fit: cover;">
+													</div>
+													<div class="p-4 border-top-0 rounded-bottom">
+														<h4 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+															<a href="/products/${item.slug}" class="text-dark text-decoration-none">${item.name}</a>
+														</h4>
+														<p
+															style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 3em;">
+															${item.shortDesc}
+														</p>
+														<div class="d-flex flex-lg-wrap justify-content-center flex-column align-items-center">
+															<p class="text-dark fs-5 fw-bold mb-2">
+																<fmt:formatNumber type="number" value="${item.price}" /> đ
+															</p>
+															<a href="/products/${item.slug}"
+																class="btn border border-secondary rounded-pill px-3 text-primary">
+																<i class="fa fa-shopping-bag me-2 text-primary"></i> Xem sản phẩm
+															</a>
+														</div>
+													</div>
+												</div>
+											</c:forEach>
+										</div>
+									</div>
+
+								</div>
+
+
+							</div>
+
+						</div>
+					</div>
+					<!-- Single Product End -->
+
+
+					<!-- Footer Start -->
+					<jsp:include page="../layout/footer.jsp"></jsp:include>
+					<!-- Footer End -->
+
+					<!-- Back to Top -->
+					<a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+							class="fa fa-arrow-up"></i></a>
+
+
+					<!-- JavaScript Libraries -->
+					<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+					<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+					<script src="/client/lib/easing/easing.min.js"></script>
+					<script src="/client/lib/waypoints/waypoints.min.js"></script>
+					<script src="/client/lib/lightbox/js/lightbox.min.js"></script>
+					<script src="/client/lib/owlcarousel/owl.carousel.min.js"></script>
+
+					<!-- Template Javascript -->
+					<script src="/client/js/main.js"></script>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', function () {
+							const quantityInput = document.querySelector('.product-detail-quantity input');
+
+							document.querySelector('.btn-plus-detail').addEventListener('click', function () {
+								let val = parseInt(quantityInput.value) || 1;
+								quantityInput.value = val + 1;
+							});
+
+							document.querySelector('.btn-minus-detail').addEventListener('click', function () {
+								let val = parseInt(quantityInput.value) || 1;
+								if (val > 1) quantityInput.value = val - 1;
+							});
+						});
+
+					</script>
+
+					<script>
+						$(document).ready(function () {
+							$(".related-carousel").owlCarousel({
+								autoplay: true,
+								smartSpeed: 1000,
+								margin: 25,
+								dots: false,
+								loop: true,
+								nav: true,
+								navText: [
+									'<i class="bi bi-arrow-left"></i>',
+									'<i class="bi bi-arrow-right"></i>'
+								],
+								responsive: {
+									0: {
+										items: 1
+									},
+									576: {
+										items: 2
+									},
+									768: {
+										items: 3
+									},
+									992: {
+										items: 4
+									}
+								}
+							});
+						});
+					</script>
+
+
+				</body>
+
+				</html>

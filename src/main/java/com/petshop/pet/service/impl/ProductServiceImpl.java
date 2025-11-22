@@ -130,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getBestSellingProduct(){
-        return orderDetailRepository.findBestSellingProducts();
+        return productRepository.findBestSellingProducts();
     }
 
     @Override
@@ -170,6 +170,14 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return productRepository.findAll(brandSpec, pageable);
+    }
+
+    @Override
+    public List<Product> getRelatedProducts(Product productDetail) {
+        String categoryName = productDetail.getSubcategory().getCategory().getName();
+        Long productId = productDetail.getId();
+
+        return productRepository.findRelatedProducts(categoryName, productId);
     }
 
 
