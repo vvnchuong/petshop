@@ -10,7 +10,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface VoucherMapper {
 
-    @Mapping(source = "voucherUsages", target = "voucherUsages")
     Voucher toVoucher(VoucherDTO voucherDTO);
 
     @Mapping(target = "usedCount", ignore = true)

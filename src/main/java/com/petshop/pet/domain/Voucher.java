@@ -7,8 +7,6 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -42,8 +40,5 @@ public class Voucher {
     Double minOrder; // gia tri toi thieu
 
     boolean active;
-
-    @OneToMany(mappedBy = "voucher")
-    List<VoucherUsage> voucherUsages = new ArrayList<>();
 
 }

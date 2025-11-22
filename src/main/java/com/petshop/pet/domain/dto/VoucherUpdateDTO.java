@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.Instant;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -45,7 +44,5 @@ public class VoucherUpdateDTO {
     Double minOrder;
 
     boolean active;
-
-    List<VoucherUsageDTO> voucherUsages;
 
 }
