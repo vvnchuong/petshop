@@ -76,7 +76,7 @@ public class ProductController {
 
     @GetMapping("/{pet}/{subcategory}")
     public String getSubPetPage(Model model,
-                                @PathVariable("petType") String pet,
+                                @PathVariable("pet") String pet,
                                 @PathVariable("subcategory") String sub,
                                 @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "12") int size,

@@ -28,7 +28,7 @@
                         <h6 class="fw-bold border-bottom pb-2">${item.name}</h6>
                         <c:forEach var="subCategory" items="${item.subcategories}">
                           <c:if test="${subCategory.petType.id == 2}">
-                            <a class="dropdown-item" href="/shop-meo/${subCategory.slug}">
+                            <a class="dropdown-item" href="/shop-cho/${subCategory.slug}">
                               ${subCategory.name}
                             </a>
                           </c:if>
