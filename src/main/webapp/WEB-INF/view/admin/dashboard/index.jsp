@@ -309,7 +309,7 @@
           <script>
             Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
             Chart.defaults.global.defaultFontColor = '#292b2c';
-            
+
             const dateLabels = JSON.parse('${data.dateLabelsJson}');
             const revenueValues = JSON.parse('${data.revenueValuesJson}');
 
@@ -374,7 +374,22 @@
               SHIPPING: "Đang giao"
             };
 
-            const convertOrderStatusLabels = orderStatusLabels.map(status => statusMap[status] || status);
+            const statusColorMap = {
+              CANCELLED: '#dc3545',
+              DELIVERED: '#198754',
+              FAILED: '#6c757d',
+              PENDING: '#ffc107',
+              SHIPPING: '#0dcaf0',
+              DEFAULT: '#6610f2'
+            };
+
+            const convertOrderStatusLabels = orderStatusLabels.map(
+              status => statusMap[status] || status
+            );
+
+            const backgroundColors = orderStatusLabels.map(
+              status => statusColorMap[status] || statusColorMap.DEFAULT
+            );
 
             const myBarChart = new Chart(ctxBar, {
               type: 'bar',
@@ -383,21 +398,28 @@
                 datasets: [{
                   label: "Số lượng",
                   data: orderStatusValues,
-                  backgroundColor: [
-                    '#dc3545', '#198754', '#6c757d', '#ffc107', '#0dcaf0', '#6610f2'
-                  ],
+                  backgroundColor: backgroundColors,
                   borderWidth: 1
                 }]
               },
               options: {
                 scales: {
                   xAxes: [{ gridLines: { display: false }, ticks: { fontStyle: 'bold' } }],
-                  yAxes: [{ ticks: { beginAtZero: true, callback: function (value) { if (value % 1 === 0) { return value; } } } }]
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true,
+                      callback: function (value) {
+                        if (value % 1 === 0) { return value; }
+                      }
+                    }
+                  }]
                 },
                 legend: { display: false },
                 plugins: {
                   datalabels: {
-                    anchor: 'end', align: 'top', color: '#292b2c',
+                    anchor: 'end',
+                    align: 'top',
+                    color: '#292b2c',
                     font: { weight: 'bold', size: 13 },
                     formatter: function (value) { return value; }
                   }
@@ -405,6 +427,7 @@
               },
               plugins: [ChartDataLabels]
             });
+
           </script>
         </body>
 

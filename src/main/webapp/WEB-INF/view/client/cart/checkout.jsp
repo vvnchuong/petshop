@@ -69,19 +69,19 @@
                         <div class="row g-2 mb-2">
                           <div class="col-md-6 mb-2">
                             <select class="form-select" id="province" required>
-                              <option>Chọn Tỉnh/Thành</option>
+                              <option value="" disabled selected>Chọn Tỉnh/Thành</option>
                             </select>
                           </div>
 
                           <div class="col-md-6">
-                            <select class="form-select" id="district" required disabled>
-                              <option>Chọn Quận/Huyện</option>
+                            <select class="form-select" id="district" required>
+                              <option value="" disabled selected>Chọn Quận/Huyện</option>
                             </select>
                           </div>
 
                           <div class="col-md-6">
-                            <select class="form-select" id="ward" required disabled>
-                              <option>Chọn Phường/Xã</option>
+                            <select class="form-select" id="ward" required>
+                              <option value="" disabled selected>Chọn Phường/Xã</option>
                             </select>
                           </div>
 
@@ -269,6 +269,7 @@
               }
             });
           </script>
+          
           <script>
             const form = document.querySelector('form');
             const province = document.getElementById('province');
